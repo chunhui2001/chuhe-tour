@@ -6,8 +6,7 @@ import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
-import io.vertx.ext.sql.SQLClient;
-import io.vertx.rxjava.ext.jdbc.JDBCClient;
+import io.vertx.rxjava.ext.sql.SQLClient;
 
 import java.util.HashMap;
 import java.util.List;
@@ -26,4 +25,12 @@ public interface ChuheDbService {
 
     @Fluent
     ChuheDbService fetchAllProducts(Handler<AsyncResult<List<JsonObject>>> resultHandler);
+
+    @Fluent
+    ChuheDbService createProducts(JsonObject product, Handler<AsyncResult<Long>> resultHandler);
+
+    @Fluent
+    ChuheDbService lastIncrementId(Handler<AsyncResult<Long>> resultHandler);
+
+
 }

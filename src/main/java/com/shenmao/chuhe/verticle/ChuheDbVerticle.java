@@ -1,23 +1,24 @@
 package com.shenmao.chuhe.verticle;
 
+import com.shenmao.chuhe.commons.PropertyParser;
 import com.shenmao.chuhe.database.chuhe.ChuheDbService;
 import com.shenmao.chuhe.database.chuhe.ChuheSqlQuery;
 import com.shenmao.chuhe.database.wikipage.WikiPageDbService;
 import com.shenmao.chuhe.database.wikipage.WikiSqlQuery;
 import io.vertx.core.Future;
 import io.vertx.core.json.JsonObject;
-import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.LoggerFactory;
-import io.vertx.ext.asyncsql.MySQLClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import io.vertx.rxjava.ext.asyncsql.MySQLClient;
 import io.vertx.ext.mongo.MongoClient;
-import io.vertx.ext.sql.SQLClient;
+import io.vertx.rxjava.ext.sql.SQLClient;
 import io.vertx.rxjava.core.AbstractVerticle;
-import io.vertx.rxjava.ext.jdbc.JDBCClient;
 import io.vertx.serviceproxy.ServiceBinder;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Properties;
 
@@ -77,7 +78,9 @@ public class ChuheDbVerticle extends AbstractVerticle {
                 .put("username", "root")
                 .put("password", "Cc");
 
-        SQLClient mySQLClient  = MySQLClient.createShared(vertx.getDelegate(), mySQLClientConfig);
+//        SQLClient mySQLClient  = MySQLClient.createShared(vertx.getDelegate(), mySQLClientConfig);
+
+        SQLClient mySQLClient  = MySQLClient.createShared(vertx, mySQLClientConfig);
 
         return mySQLClient;
 
@@ -120,13 +123,16 @@ public class ChuheDbVerticle extends AbstractVerticle {
             queriesInputStream = getClass().getResourceAsStream("/properties/chuhe-db-queries.properties");
         }
 
-        Properties queriesProps = new Properties(); queriesProps.load(queriesInputStream); queriesInputStream.close();
+        Properties queriesProps = new PropertyParser();
+        queriesProps.load(new InputStreamReader(queriesInputStream, "utf-8"));
+        queriesInputStream.close();
         sqlQueries.put(ChuheSqlQuery.CREATE_PRODUCTS_TABLE, queriesProps.getProperty("create-products-table"));
         sqlQueries.put(ChuheSqlQuery.ALL_PRODUCTS, queriesProps.getProperty("all-products"));
         sqlQueries.put(ChuheSqlQuery.GET_PRODUCT, queriesProps.getProperty("get-product"));
         sqlQueries.put(ChuheSqlQuery.CREATE_PRODUCT, queriesProps.getProperty("create-product"));
         sqlQueries.put(ChuheSqlQuery.SAVE_PRODUCT, queriesProps.getProperty("save-product"));
         sqlQueries.put(ChuheSqlQuery.DELETE_PRODUCT, queriesProps.getProperty("delete-product"));
+        sqlQueries.put(ChuheSqlQuery.LAST_INSERT_ID, queriesProps.getProperty("last_insert_id"));
 
         return  sqlQueries;
     }

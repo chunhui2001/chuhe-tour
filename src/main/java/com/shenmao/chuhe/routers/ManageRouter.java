@@ -11,6 +11,7 @@ import io.vertx.rxjava.ext.web.handler.AuthHandler;
 
 import static com.shenmao.chuhe.verticle.ChuheDbVerticle.CONFIG_CHUHEDB_QUEUE;
 import static io.vertx.core.http.HttpMethod.GET;
+import static io.vertx.core.http.HttpMethod.POST;
 
 
 public class ManageRouter implements ChuheRouter {
@@ -38,7 +39,11 @@ public class ManageRouter implements ChuheRouter {
 
         this.router
                 .routeWithRegex(GET, "/products" + GlobalHandlers._SUPPORT_EXTS_PATTERN)
-                .handler(manageHandlers::products);
+                .handler(manageHandlers::productsList);
+
+        this.router
+                .routeWithRegex(POST, "/products" + GlobalHandlers._SUPPORT_EXTS_PATTERN)
+                .handler(manageHandlers::productsSave);
     }
 
 

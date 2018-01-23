@@ -7,8 +7,8 @@ import com.shenmao.chuhe.serialization.ChainSerialization;
 import io.vertx.core.Handler;
 import io.vertx.rxjava.core.Vertx;
 import io.vertx.core.json.JsonObject;
-import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import io.vertx.ext.auth.jwt.JWTOptions;
 import io.vertx.ext.bridge.BridgeEventType;
 import io.vertx.ext.bridge.PermittedOptions;
@@ -166,7 +166,7 @@ public class PortalHandlers {
           .serialize();
 
       } else {
-        logger.error(reply.cause());
+        logger.error(reply.cause().getMessage());
       }
 
     });

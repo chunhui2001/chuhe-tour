@@ -1,7 +1,11 @@
 package com.shenmao.chuhe.serialization;
 
+import com.shenmao.chuhe.exceptions.PurposeException;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.RoutingContext;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 public class ChainSerialization {
 
@@ -86,6 +90,23 @@ public class ChainSerialization {
     return this;
   }
 
+  public ChainSerialization putFlashMessage(String msg) {
+    this._context.session().put("flashMessage", msg);
+    return this;
+  }
+
+  public ChainSerialization putException(Throwable exception) {
+    this._context.put("exception", exception);
+    return this;
+  }
+
+  public ChainSerialization putFlashException(Throwable exception) {
+    StringWriter exceptionTrace = new StringWriter();
+    exception.printStackTrace(new PrintWriter(exceptionTrace));
+    this._context.session().put("flashException", exceptionTrace.toString());
+    return this;
+  }
+
   public ChainSerialization putErrorTrace(String error) {
     this._context.put("errorTrace", error);
     return this;
@@ -95,6 +116,12 @@ public class ChainSerialization {
     SerializeOptions serializeOptions = this._context.get("serializeOptions");
     serializeOptions.putConfig("ws_endpoint", endpoint);
     return this;
+  }
+
+  public void redirect(String url) {
+
+    this._context.response().setStatusCode(302).putHeader("Location", url).end();
+
   }
 
 }

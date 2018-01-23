@@ -1,4 +1,4 @@
-package com.shenmao.chuhe.commons.handlebarhelpers;
+package com.shenmao.chuhe.commons.handlebarhelper;
 
 import com.github.jknack.handlebars.Helper;
 import com.github.jknack.handlebars.Options;

@@ -117,6 +117,11 @@
       <scope>test</scope>
     </dependency>
 
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>23.6-jre</version>
+    </dependency>
 
     <dependency>
       <groupId>com.fasterxml</groupId>
@@ -153,8 +158,12 @@
             <filesets>
               <fileset>
                 <directory>${project.basedir}/src/main/generated</directory>
-                  <directory>${project.basedir}/uploads</directory>
-                  <directory>${project.basedir}/db_wiki</directory>
+              </fileset>
+              <fileset>
+                <directory>${project.basedir}/uploads</directory>
+              </fileset>
+              <fileset>
+                <directory>${project.basedir}/db_wiki</directory>
               </fileset>
             </filesets>
           </configuration>

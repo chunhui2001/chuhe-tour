@@ -1,11 +1,14 @@
 package com.shenmao.chuhe.serialization;
 
 import com.shenmao.chuhe.exceptions.HbsTemplateParseException;
-import com.shenmao.chuhe.commons.handlebarhelpers.CompareHelper;
+import com.shenmao.chuhe.commons.handlebarhelper.CompareHelper;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.templ.HandlebarsTemplateEngine;
 import io.vertx.ext.web.templ.TemplateEngine;
+
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 public class HtmlSerialization {
 
@@ -47,10 +50,44 @@ public class HtmlSerialization {
       return;
     }
 
+    int code = context.get("statusRealCode") != null ? context.get("statusRealCode") : context.statusCode();
+    String errorTrace = context.get("errorTrace") != null ? context.get("errorTrace").toString() : null;
+
+    StringWriter exceptionTrace = new StringWriter();
+    Throwable exception =  context.get("exception");
+    String flashException = context.session().get("flashException");
+
+
+    if (exception != null || flashException != null) {
+
+        if (flashException != null) {
+            errorTrace = flashException;
+            context.session().remove("flashException");
+        } else {
+            exception.printStackTrace(new PrintWriter(exceptionTrace));
+            errorTrace = exceptionTrace.toString();
+        }
+
+        context.put("errorTrace", errorTrace);
+        if (code == -1) code = 501;
+    }
+
+    code = code == -1 ? 200 : code;
+
+    String flashMessage = context.session().get("flashMessage");
+    String viewMessage = context.response().getStatusMessage();
+
+    if (flashMessage != null) {
+        context.session().remove("flashMessage");
+        context.put("flashMessage", flashMessage);
+    }
+
     context.response().putHeader("Content-Type", "text/html;charset=UTF-8");
+    context.put("viewError", errorTrace != null || exception != null);
+    context.put("viewCode", code);
     context.put("viewData", viewData);
     context.put("viewUser", viewUser);
-    context.put("viewMessage", context.response().getStatusMessage());
+    context.put("viewMessage", viewMessage);
 
     if (context.get("X-XSRF-TOKEN") != null) {
       context.put("xsrfToken", context.get("X-XSRF-TOKEN"));

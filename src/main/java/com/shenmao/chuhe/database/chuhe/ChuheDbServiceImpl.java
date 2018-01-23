@@ -1,15 +1,18 @@
 package com.shenmao.chuhe.database.chuhe;
 
+import com.google.common.base.Strings;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import io.vertx.core.logging.Logger;
-import io.vertx.core.logging.LoggerFactory;
-import io.vertx.ext.sql.SQLClient;
+import io.vertx.rxjava.ext.sql.SQLClient;
 import io.vertx.rx.java.RxHelper;
-import io.vertx.rxjava.ext.jdbc.JDBCClient;
 import io.vertx.ext.sql.SQLConnection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import rx.Observable;
+import rx.functions.Action1;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,14 +22,14 @@ public class ChuheDbServiceImpl implements ChuheDbService {
 
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ChuheDbServiceImpl.class);
-    private final HashMap<ChuheSqlQuery, String> sqlQueriesPages;
+    private final HashMap<ChuheSqlQuery, String> sqlQueries;
     private final SQLClient dbClient;
 
     ChuheDbServiceImpl(SQLClient dbClient, HashMap<ChuheSqlQuery, String> sqlQueries,
                        Handler<AsyncResult<ChuheDbService>> readyHandler) {
 
         this.dbClient = dbClient;
-        this.sqlQueriesPages = sqlQueries;
+        this.sqlQueries = sqlQueries;
 
         this.createProductsTable(voidAsyncResult -> {
             readyHandler.handle(Future.succeededFuture(this));
@@ -42,8 +45,8 @@ public class ChuheDbServiceImpl implements ChuheDbService {
                 LOGGER.error("Could not open Chuhe database connection", ar.cause());
                 resultHandler.handle(Future.failedFuture(ar.cause()));
             } else {
-                SQLConnection connection = ar.result();
-                connection.execute(sqlQueriesPages.get(ChuheSqlQuery.CREATE_PRODUCTS_TABLE), create -> {
+                SQLConnection connection = ar.result().getDelegate();
+                connection.execute(sqlQueries.get(ChuheSqlQuery.CREATE_PRODUCTS_TABLE), create -> {
                     connection.close();
                     if (create.succeeded())
                         resultHandler.handle(Future.succeededFuture());
@@ -56,37 +59,73 @@ public class ChuheDbServiceImpl implements ChuheDbService {
         });
     }
 
+
+    @Override
+    public ChuheDbService lastIncrementId(Handler<AsyncResult<Long>> resultHandler) {
+
+        this.dbClient.rxQuerySingle(sqlQueries.get(ChuheSqlQuery.LAST_INSERT_ID))
+                .map(a -> a.getLong(0))
+                .subscribe(RxHelper.toSubscriber(resultHandler));
+        return this;
+    }
+
     @Override
     public ChuheDbService fetchAllProducts(Handler<AsyncResult<List<JsonObject>>> resultHandler) {
 
+        String allProductSql = sqlQueries.get(ChuheSqlQuery.ALL_PRODUCTS);
+        LOGGER.info( allProductSql);
 
-        JsonObject p1 = new JsonObject()
-                .put("wiki_page_title", "firt wiki page")
-                .put("wiki_page_id", 1)
-                .put("markdown", "markdown 1")
-                .put("page_content", "page_content 1");
+        this.dbClient.rxQuery(allProductSql)
+                .flatMapObservable(res -> Observable.from(res.getRows()))
+                .map(product -> {
 
-        JsonObject p2 = new JsonObject()
-                .put("wiki_page_title", "second wiki page")
-                .put("wiki_page_id", 2)
-                .put("markdown", "markdown 1")
-                .put("page_content", "page_content 2");
+                    byte[] productDesc = product.getBinary("product_desc");
 
-        List<JsonObject> list = new ArrayList<>();
+                    if (productDesc != null) {
+                        return product.put("product_desc", new String(productDesc));
+                    } else {
+                        return product.put("product_desc", productDesc);
+                    }
 
-        list.add(p1);
-        list.add(p2);
-        list.stream().sorted();
-
-//        this.dbClient.rxQuery(sqlQueriesPages.get(ChuheSqlQuery.ALL_PRODUCTS))
-//                .map(a -> {
-//                    System.out.println(a.getRows().size() + ",,, fetchAllProducts 1");
-//                    return list;
-//                })
-//                .subscribe(RxHelper.toSubscriber(resultHandler));
-
-        resultHandler.handle(Future.succeededFuture(list));
+                })
+                // .sorted()
+                .collect(ArrayList<JsonObject>::new, List::add)
+                .subscribe(RxHelper.toSubscriber(resultHandler));
 
         return this;
     }
+
+
+    @Override
+    public ChuheDbService createProducts(JsonObject product, Handler<AsyncResult<Long>> resultHandler) {
+
+        String createProductSql = sqlQueries.get(ChuheSqlQuery.CREATE_PRODUCT);
+        LOGGER.info( createProductSql);
+
+        JsonArray data = new JsonArray()
+                .add(product.getString("productName"))
+                .add(product.getString("productUnit"))
+                .add(product.getDouble("productPrice"));
+
+        if (Strings.emptyToNull(product.getString("productSpec")) == null) {
+            data.addNull();
+        }
+
+        if (Strings.emptyToNull(product.getString("productDesc")) == null) {
+            data.addNull();
+        }
+
+        this.dbClient.updateWithParams(createProductSql, data, reply -> {
+
+            if (reply.succeeded()) {
+                resultHandler.handle(Future.succeededFuture(reply.result().getKeys().getLong(0)));
+            } else {
+                resultHandler.handle(Future.failedFuture(reply.cause()));
+            }
+        });
+
+
+        return this;
+    }
+
 }

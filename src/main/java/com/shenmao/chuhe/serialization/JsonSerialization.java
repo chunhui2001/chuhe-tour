@@ -3,6 +3,9 @@ package com.shenmao.chuhe.serialization;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.RoutingContext;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 public class JsonSerialization {
 
   public static void serialize(RoutingContext context, SerializeOptions options) {
@@ -16,8 +19,20 @@ public class JsonSerialization {
     int code = context.get("statusRealCode") != null ? (int)context.get("statusRealCode") : context.statusCode();
     String errorTrace = context.get("errorTrace") != null ? context.get("errorTrace").toString() : null;
 
+    StringWriter exceptionTrace = new StringWriter();
+    Throwable exception =  context.get("exception");
+
+    if (exception != null) {
+      exception.printStackTrace(new PrintWriter(exceptionTrace));
+      errorTrace = exceptionTrace.toString();
+      if (code == -1) code = 501;
+    }
+
+    code = code == -1 ? 200 : code;
+
     JsonObject jsonObject = new JsonObject()
-      .put("code", code == -1 ? 200 : code)
+      .put("error", errorTrace != null || exception != null)
+      .put("code", code)
       .put("message", context.response().getStatusMessage())
       .put("data", contextData);
 

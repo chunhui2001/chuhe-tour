@@ -1,6 +1,7 @@
 package com.shenmao.chuhe.database.wikipage;
 
 public enum WikiSqlQuery {
+
   CREATE_WIKI_PAGES_TABLE,
   ALL_WIKI_PAGES,
   GET_WIKI_PAGE,
