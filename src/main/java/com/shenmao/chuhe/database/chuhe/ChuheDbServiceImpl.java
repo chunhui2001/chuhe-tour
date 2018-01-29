@@ -175,6 +175,30 @@ public class ChuheDbServiceImpl implements ChuheDbService {
     }
 
 
+    @Override
+    public ChuheDbService updateProduct(Long productId, JsonObject product, Handler<AsyncResult<Boolean>> resultHandler) {
+        String updateProductSql = sqlQueries.get(ChuheSqlQuery.SAVE_PRODUCT);
+        LOGGER.info(updateProductSql);
+
+        JsonArray sqlParams = new JsonArray()
+                .add(product.getString("productName"))
+                .add(product.getString("productUnit"))
+                .add(product.getDouble("productPrice"))
+                .add(product.getString("productSpec"))
+                .add(product.getString("productDesc"))
+                .add(productId);
+
+        this.dbClient.updateWithParams(updateProductSql, sqlParams, reply -> {
+            if (reply.succeeded()) {
+                resultHandler.handle(Future.succeededFuture(true));
+            } else {
+                resultHandler.handle(Future.failedFuture(reply.cause()));
+            }
+        });
+
+        return this;
+    }
+
 
 
     @Override

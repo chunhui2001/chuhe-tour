@@ -36,5 +36,5 @@ public class ManageRouter implements ChuheRouter {
     public Router getRouter() {
         return this.router;
     }
-    
+
 }

@@ -31,6 +31,9 @@ public interface ChuheDbService {
     ChuheDbService createProducts(JsonObject product, Handler<AsyncResult<Long>> resultHandler);
 
     @Fluent
+    ChuheDbService updateProduct(Long productId, JsonObject product, Handler<AsyncResult<Boolean>> resultHandler);
+
+    @Fluent
     ChuheDbService fetchProductById(Long productId, Handler<AsyncResult<JsonObject>> resultHandler);
 
     @Fluent

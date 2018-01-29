@@ -3,7 +3,9 @@ package com.shenmao.chuhe.handlers.manage;
 import com.google.common.base.Strings;
 import com.shenmao.chuhe.database.chuhe.ChuheDbService;
 import com.shenmao.chuhe.serialization.ChainSerialization;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import io.vertx.rxjava.ext.web.Router;
 import io.vertx.rxjava.ext.web.RoutingContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +34,7 @@ public class ManageProductsHandlers {
     }
 
     /**
-     * 商品详细信息
+     * 产品详细信息
      * @param routingContext
      */
     public void productDetail(RoutingContext routingContext) {
@@ -43,7 +45,7 @@ public class ManageProductsHandlers {
 
         ChainSerialization chainSerialization = ChainSerialization.create(routingContext.getDelegate())
                 .putViewName("/man/products/products_" + detailOrEditPage + ".html")
-                .putMessage("所有商品列表");
+                .putMessage("产品详细信息");
 
         this.chuheDbService.fetchProductById(productId, reply -> {
 
@@ -54,20 +56,26 @@ public class ManageProductsHandlers {
                 return;
             }
 
+            if (reply.result().fieldNames().size() == 0) {
+                routingContext.reroute("/not-found");
+                //chainSerialization.putContextData(reply.result()).redirect("/not-found");
+                return;
+            }
+
             chainSerialization.putContextData(reply.result()).serialize();
 
         });
     }
 
     /**
-     * 所有商品列表,
+     * 所有产品列表,
      * @param routingContext
      */
     public void productsList(RoutingContext routingContext) {
 
         ChainSerialization chainSerialization = ChainSerialization.create(routingContext.getDelegate())
                 .putViewName("/man/products/products_index.html")
-                .putMessage("所有商品列表");
+                .putMessage("所有产品列表");
 
         chuheDbService.fetchAllProducts(reply -> {
 
@@ -87,12 +95,7 @@ public class ManageProductsHandlers {
 
     }
 
-
-    /**
-     * 保存一个商品,
-     * @param routingContext
-     */
-    public void productsSave(RoutingContext routingContext) {
+    private JsonObject getProductObject(RoutingContext routingContext) {
 
         String productName = Strings.nullToEmpty(routingContext.request().getParam("product_name")).trim();
         String productUnit = Strings.nullToEmpty(routingContext.request().getParam("product_unit")).trim();
@@ -101,12 +104,22 @@ public class ManageProductsHandlers {
         String productDesc = Strings.nullToEmpty(routingContext.request().getParam("product_desc")).trim();
 
 
-        JsonObject product = new JsonObject()
-                    .put("productName", productName)
+        return new JsonObject()
+                .put("productName", productName)
                 .put("productUnit", productUnit)
                 .put("productPrice", productPrice)
                 .put("productSpec", productSpec)
                 .put("productDesc", productDesc);
+    }
+
+
+    /**
+     * 保存一个产品,
+     * @param routingContext
+     */
+    public void productsSave(RoutingContext routingContext) {
+
+        JsonObject product = getProductObject(routingContext);
 
         chuheDbService.createProducts(product, reply -> {
 
@@ -150,11 +163,22 @@ public class ManageProductsHandlers {
 
         Long productId = Long.parseLong(routingContext.pathParam("param0"));
 
-        ChainSerialization.create(routingContext.getDelegate())
-                .putFlashMessage("成功保存一个产品 [" + productId + "]")
-                .redirect(routingContext.normalisedPath());
+        JsonObject product = getProductObject(routingContext);
 
-        //routingContext.response().end(productId + "," + routingContext.request().method());
+        this.chuheDbService.updateProduct(productId, product, reply -> {
+
+            if (reply.succeeded()) {
+                ChainSerialization.create(routingContext.getDelegate())
+                        .putFlashMessage("成功保存一个产品 [" + productId + "]")
+                        .redirect(routingContext.normalisedPath());
+            } else {
+                ChainSerialization.create(routingContext.getDelegate())
+                        // .putFlashMessage(reply.cause().getMessage())
+                        .putFlashException(reply.cause())
+                        .redirect(routingContext.normalisedPath());
+            }
+        });
+
     }
 
 
