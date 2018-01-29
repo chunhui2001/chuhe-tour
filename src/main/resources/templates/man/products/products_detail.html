@@ -1,0 +1,53 @@
+{{#partial "blocks/title"}}
+<title>产品管理 - 产品详情</title>
+{{/partial}}
+
+
+
+{{#partial "content" }}
+<h1>产品管理 - 产品详情</h1>
+
+{{#if errorTrace }}
+<pre>{{errorTrace}}</pre>
+{{/if}}
+
+{{#if flashMessage}}
+<div style="color: brown">
+    {{flashMessage}}
+</div>
+{{/if}}
+
+<div>
+
+    <form action="/mans/products/{{viewData.product_id}}"
+          onsubmit="if(!confirm('确认删除么?')){return false;}"
+          method="post">
+        <input type="hidden" name="_method" value="delete" />
+        产品编号: {{viewData.product_id}} <br />
+        产品名称: {{viewData.product_name}} <br />
+        产品单位: {{viewData.product_unit}} <br />
+        产品单价: {{viewData.product_price}} <br />
+        产品规格: {{viewData.product_spec}} <br />
+        产品描述: {{viewData.product_desc}} <br />
+        创建时间: {{viewData.created_at}} <br />
+        更新时间: {{viewData.last_updated}} <br />
+
+        <input type="submit" value="删除" />
+        <a href="/mans/products/{{viewData.product_id}}/edit">编辑</a>
+        <a href="/mans/products">返回列表</a>
+    </form>
+
+</div>
+
+{{/partial}}
+
+
+
+{{#partial "blocks/script"}}
+<script type="text/javascript" id="r_1">
+
+</script>
+{{/partial}}
+
+
+{{> layouts/layout_default}}

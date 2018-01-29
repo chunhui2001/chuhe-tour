@@ -1,11 +1,11 @@
 {{#partial "blocks/title"}}
-<title>产品管理</title>
+<title>产品管理 - 所有产品</title>
 {{/partial}}
 
 
 
 {{#partial "content" }}
-<h1>产品管理 {{viewData.length}}</h1>
+<h1>产品管理 - 所有产品</h1>
 
 {{#if errorTrace }}
 <pre>{{errorTrace}}</pre>
@@ -30,13 +30,42 @@
 
 <div>
 
-    {{#compare viewData.length 'eq' 0 }}
-    <p>当前还没有任何产品 ~</p>
-    {{/compare}}
+    <table>
+        <thead>
+            <tr>
+                <th>产品编号</th>
+                <th>产品名称</th>
+                <th>单位</th>
+                <th>单价</th>
+                <th>规格</th>
+                <th>产品描述</th>
+                <th>更新时间</th>
+                <th>&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
 
-    {{#each viewData}}
-    <div class="row">{{product_id}}, {{product_name}}, {{product_unit}}, {{product_price}}, {{product_desc}}</div>
-    {{/each}}
+            {{#compare viewData.length 'gt' 0 }}
+                {{#each viewData}}
+                <tr>
+                    <td>{{product_id}}</td>
+                    <td>{{product_name}}</td>
+                    <td>{{product_unit}}</td>
+                    <td>{{product_price}}</td>
+                    <td>{{product_spec}}</td>
+                    <td>{{product_desc}}</td>
+                    <td>{{last_updated}}</td>
+                    <td><a href="/mans/products/{{product_id}}">详情</a></td>
+                </tr>
+                {{/each}}
+            {{/compare}}
+
+            {{#compare viewData.length 'eq' 0 }}
+            <td colspan="7">当前还没有任何产品 ~</td>
+            {{/compare}}
+
+        </tbody>
+    </table>
 
 
 </div>

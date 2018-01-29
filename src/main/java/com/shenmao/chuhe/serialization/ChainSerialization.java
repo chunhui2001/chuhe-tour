@@ -112,6 +112,12 @@ public class ChainSerialization {
     return this;
   }
 
+  public ChainSerialization putExceptionClass(String className) {
+    this._context.put("exceptionClassName", className);
+    return this;
+  }
+
+
   public ChainSerialization setWsEndpoint(String endpoint) {
     SerializeOptions serializeOptions = this._context.get("serializeOptions");
     serializeOptions.putConfig("ws_endpoint", endpoint);

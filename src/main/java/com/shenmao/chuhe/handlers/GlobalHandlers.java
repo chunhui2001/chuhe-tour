@@ -84,6 +84,9 @@ public class GlobalHandlers {
   public void errorPageHandler(RoutingContext routingContext, PurposeException exception) {
 
     PurposeException purposeException = exception == null ? null : exception;
+    String exceptionClassName = null;
+
+
 
     if (purposeException == null && routingContext.failure() instanceof  PurposeException) {
       purposeException = (PurposeException) routingContext.failure();
@@ -94,11 +97,15 @@ public class GlobalHandlers {
     int errorCode = 500;
 
     if (purposeException != null) {
+      exceptionClassName = purposeException.getClass().getName();
       purposeException.printStackTrace(new PrintWriter(errorsTrace));
       errorCode = purposeException.getErrorCode();
     } else {
+      exceptionClassName = routingContext.failure().getClass().getName();
       routingContext.failure().printStackTrace(new PrintWriter(errorsTrace));
     }
+
+    System.out.println(exceptionClassName + ", exceptionName");
 
     ChainSerialization.create(routingContext.getDelegate())
       .setStatusCode(201)
@@ -107,6 +114,7 @@ public class GlobalHandlers {
       .putMessage(errorMessage)
       .putContextData(new JsonObject())
       .putErrorTrace(errorsTrace.toString())
+      .putExceptionClass(exceptionClassName)
       .serialize();
 
   }

@@ -30,8 +30,40 @@ public class GlobalRouter implements ChuheRouter {
         return this.router;
     }
 
-
     private void globalRouter() {
+
+
+        this.router.route("/*").handler(routingContext -> {
+
+            if (routingContext.request().method() == HttpMethod.GET) {
+                routingContext.next();
+                return;
+            }
+
+            String realMethod = routingContext.request().getParam("_method");
+
+            if (realMethod == null || realMethod.trim().isEmpty()) {
+                routingContext.next();
+                return;
+            }
+
+            if (routingContext.request().method() == HttpMethod.POST) {
+
+                HttpMethod putOrDelete = null;
+
+                if (realMethod.toLowerCase().equals("delete")) putOrDelete = HttpMethod.DELETE;
+                if (realMethod.toLowerCase().equals("put")) putOrDelete = HttpMethod.PUT;
+
+                if (putOrDelete != null) {
+                    routingContext.reroute(putOrDelete, routingContext.normalisedPath());
+                    return;
+                }
+
+            }
+
+            routingContext.next();
+
+        });
 
         // throw error purpose
         this.router.routeWithRegex(HttpMethod.GET, "/throw" + GlobalHandlers._SUPPORT_EXTS_PATTERN).handler(routingContext -> {
@@ -49,8 +81,7 @@ public class GlobalRouter implements ChuheRouter {
 
         // not have route matchs
         this.router.route("/*").handler(globalHandlers::notFoundHandler);
+
     }
-
-
 
 }

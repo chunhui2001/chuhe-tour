@@ -5,6 +5,7 @@ import io.vertx.codegen.annotations.ProxyGen;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
+import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 import io.vertx.rxjava.ext.sql.SQLClient;
 
@@ -30,7 +31,9 @@ public interface ChuheDbService {
     ChuheDbService createProducts(JsonObject product, Handler<AsyncResult<Long>> resultHandler);
 
     @Fluent
-    ChuheDbService lastIncrementId(Handler<AsyncResult<Long>> resultHandler);
+    ChuheDbService fetchProductById(Long productId, Handler<AsyncResult<JsonObject>> resultHandler);
 
+    @Fluent
+    ChuheDbService deleteProductById(Long productId, Handler<AsyncResult<Boolean>> resultHandler);
 
 }

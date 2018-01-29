@@ -71,7 +71,8 @@ public class PortalRouter  implements ChuheRouter {
   private void indexRouter() {
 
     // 首页
-    this.router.route(HttpMethod.GET, "/").handler(routingContext -> routingContext.reroute("/index"));
+    this.router.route(HttpMethod.GET, "/").handler(routingContext ->
+            routingContext.reroute("/index"));
     this.router.routeWithRegex(HttpMethod.GET, "/index" + GlobalHandlers._SUPPORT_EXTS_PATTERN).handler(defaultHandlers::indexHandler);
 
   }
