@@ -84,4 +84,12 @@ public class GlobalRouter implements ChuheRouter {
 
     }
 
+
+    public static String getRouter(String... str) {
+        String s = (str == null || str.length == 0) ? "" : "/" + String.join("/", str) ;
+        return  s + GlobalHandlers._SUPPORT_EXTS_PATTERN;
+    }
+
+
+
 }
