@@ -52,13 +52,13 @@ public class PortalHandlers {
     String username = null;
     String password = null;
 
-    if (routingContext.getBodyAsString().isEmpty()) {
-      username = routingContext.request().getParam("username");
-      password = routingContext.request().getParam("password");
-    } else {
+    try {
       JsonObject jsonObject = routingContext.getBodyAsJson();
       username = jsonObject.getString("username");
       password = jsonObject.getString("password");
+    } catch (Exception e) {
+      username = routingContext.request().getParam("username");
+      password = routingContext.request().getParam("password");
     }
 
     JsonObject jsonObject = new JsonObject()

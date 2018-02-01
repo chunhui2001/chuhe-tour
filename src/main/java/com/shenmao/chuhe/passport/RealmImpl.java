@@ -54,7 +54,15 @@ public class RealmImpl extends AuthorizingRealm {
   protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
 
     String username = (String) authenticationToken.getPrincipal();
-    String password = new String((char[]) authenticationToken.getCredentials());
+    Object cred = authenticationToken.getCredentials();
+
+    if (cred == null) {
+      System.out.println( username + ", username");
+      System.out.println("Could not get Credentials");
+      return null;
+    }
+
+    String password = new String((char[]) cred);
 
     SubjectContext subjectContext = new DefaultSubjectContext();
     Subject subject = securityManager.createSubject(subjectContext);

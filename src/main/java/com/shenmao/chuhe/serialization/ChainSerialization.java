@@ -12,6 +12,7 @@ public class ChainSerialization {
   RoutingContext _context;
 
   private ChainSerialization(RoutingContext context) {
+
     this._context = context;
   }
 
@@ -20,10 +21,11 @@ public class ChainSerialization {
     SerializeOptions serializeOptions = context.get("serializeOptions");
 
     if (serializeOptions == null) {
-      SerializeOptions.create(context, SerializeType.HTML);
+      serializeOptions = SerializeOptions.create(context, SerializeType.HTML);
     }
 
     return new ChainSerialization(context);
+
   }
 
   public void serialize() {
@@ -126,7 +128,14 @@ public class ChainSerialization {
 
   public void redirect(String url) {
 
-    this._context.response().setStatusCode(302).putHeader("Location", url).end();
+    SerializeOptions serializeOptions = (SerializeOptions)this._context.data().get("serializeOptions");
+
+    if (serializeOptions.getType() == SerializeType.HTML) {
+      this._context.response().setStatusCode(302).putHeader("Location", url).end();
+      return;
+    }
+
+    this.serialize();
 
   }
 

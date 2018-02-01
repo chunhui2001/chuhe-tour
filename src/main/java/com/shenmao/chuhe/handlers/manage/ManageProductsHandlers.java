@@ -126,7 +126,9 @@ public class ManageProductsHandlers {
             if (reply.succeeded()) {
                 // Long newProductId = reply.result();
                 ChainSerialization.create(routingContext.getDelegate())
+                        .putContextData(reply.result())
                         .putFlashMessage("成功添加一个产品")
+                        .putMessage("添加成功返回新产品ID")
                         .redirect("/mans/products");
             } else {
                 ChainSerialization.create(routingContext.getDelegate())

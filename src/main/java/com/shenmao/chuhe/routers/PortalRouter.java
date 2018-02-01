@@ -56,6 +56,7 @@ public class PortalRouter  implements ChuheRouter {
     // 基于权限验证的 router
     this.router.route("/dashboard/*").handler(authHandler);
     this.router.route("/chat-room/*").handler(authHandler);
+    this.router.route("/wiki-page*").handler(authHandler);
 
     this.indexRouter();
     this.pingRouter();
@@ -100,6 +101,8 @@ public class PortalRouter  implements ChuheRouter {
     // curl -v -X POST -F "username=keesh" -F "password=keesh" http://localhost:8081/access_token
     // curl -v -X POST -H "Content-Type:application/x-www-form-urlencoded" -d '{"username": "keesh", "password": "keesh"}' http://localhost:8081/access_token
     // curl -v -X POST -H "Content-Type:application/json" -d '{"username": "keesh", "password": "keesh"}' http://localhost:8081/access_token
+    // http --verbose --verify no GET http://localhost:8081/wiki-page.json 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImtlZXNoIiwiY2FuQ3JlYXRlIjpmYWxzZSwiY2FuVXBkYXRlIjpmYWxzZSwiY2FuRGVsZXRlIjpmYWxzZSwiaWF0IjoxNTE3Mjk3NTA3LCJpc3MiOiJWZXJ0LngiLCJzdWIiOiJXaWtpIEFQSSJ9.of9oMouGKDsotS0YyZYzl6xv_e7ZFT7MpxD1TFBdnUA'
+
     this.router.routeWithRegex(HttpMethod.POST, "/access_token" + GlobalHandlers._SUPPORT_EXTS_PATTERN)
       .handler(defaultHandlers::accessToken);
 
@@ -150,7 +153,7 @@ public class PortalRouter  implements ChuheRouter {
 
   private void wikiPageRouter() {
 
-    this.router.route("/wiki-page").handler(defaultHandlers::wikiPage);
+    this.router.routeWithRegex("/wiki-page" + GlobalHandlers._SUPPORT_EXTS_PATTERN).handler(defaultHandlers::wikiPage);
   }
 
   private void dashboardRouter() {
