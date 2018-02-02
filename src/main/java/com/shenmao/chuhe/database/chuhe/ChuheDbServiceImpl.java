@@ -176,7 +176,7 @@ public class ChuheDbServiceImpl implements ChuheDbService {
 
 
     @Override
-    public ChuheDbService updateProduct(Long productId, JsonObject product, Handler<AsyncResult<Boolean>> resultHandler) {
+    public ChuheDbService updateProduct(Long productId, JsonObject product, Handler<AsyncResult<Integer>> resultHandler) {
         String updateProductSql = sqlQueries.get(ChuheSqlQuery.SAVE_PRODUCT);
         LOGGER.info(updateProductSql);
 
@@ -190,7 +190,7 @@ public class ChuheDbServiceImpl implements ChuheDbService {
 
         this.dbClient.updateWithParams(updateProductSql, sqlParams, reply -> {
             if (reply.succeeded()) {
-                resultHandler.handle(Future.succeededFuture(true));
+                resultHandler.handle(Future.succeededFuture(reply.result().getUpdated()));
             } else {
                 resultHandler.handle(Future.failedFuture(reply.cause()));
             }
@@ -202,7 +202,7 @@ public class ChuheDbServiceImpl implements ChuheDbService {
 
 
     @Override
-    public ChuheDbService deleteProductById(Long productId, Handler<AsyncResult<Boolean>> resultHandler) {
+    public ChuheDbService deleteProductById(Long productId, Handler<AsyncResult<Integer>> resultHandler) {
 
         String deleteProductSql = sqlQueries.get(ChuheSqlQuery.DELETE_PRODUCT);
         LOGGER.info(deleteProductSql);
@@ -212,7 +212,7 @@ public class ChuheDbServiceImpl implements ChuheDbService {
         this.dbClient.updateWithParams(deleteProductSql, sqlParam, reply -> {
 
             if (reply.succeeded()) {
-                resultHandler.handle(Future.succeededFuture(true));
+                resultHandler.handle(Future.succeededFuture(reply.result().getUpdated()));
             } else {
                 resultHandler.handle(Future.failedFuture(reply.cause()));
             }

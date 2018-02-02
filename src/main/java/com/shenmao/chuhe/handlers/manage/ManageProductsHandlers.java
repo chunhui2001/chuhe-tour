@@ -151,8 +151,13 @@ public class ManageProductsHandlers extends BaseHandler {
         this.chuheDbService.deleteProductById(productId, reply -> {
 
             if (reply.succeeded()) {
+
+                String message = reply.result() > 0 ? "成功删除一个产品 [" + productId + "]" : "产品不存在 [" + productId + "]";
+
                 ChainSerialization.create(routingContext.getDelegate())
-                        .putFlashMessage("成功删除一个产品 [" + productId + "]")
+                        .setStatusRealCode(reply.result() > 0 ? 200 : 202)
+                        .putMessage(message)
+                        .putFlashMessage(message)
                         .redirect("/mans/products");
             } else {
                 ChainSerialization.create(routingContext.getDelegate())
@@ -173,8 +178,12 @@ public class ManageProductsHandlers extends BaseHandler {
         this.chuheDbService.updateProduct(productId, product, reply -> {
 
             if (reply.succeeded()) {
+
+                String message = reply.result() > 0 ? "成功更新一个产品 [" + productId + "]" : "内容无更新或产品不存在 [" + productId + "]";
+
                 ChainSerialization.create(routingContext.getDelegate())
-                        .putFlashMessage("成功保存一个产品 [" + productId + "]")
+                        .putMessage(message)
+                        .putFlashMessage(message)
                         .redirect(routingContext.normalisedPath());
             } else {
                 ChainSerialization.create(routingContext.getDelegate())

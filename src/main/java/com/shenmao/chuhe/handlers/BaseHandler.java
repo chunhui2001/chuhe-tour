@@ -13,7 +13,7 @@ public class BaseHandler {
         try {
             requestData = routingContext.getBodyAsJson();
         } catch (Exception e) {
-            System.out.println("66455555");
+
         }
 
         return requestData;

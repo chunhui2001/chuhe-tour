@@ -30,6 +30,8 @@ public class JsonSerialization {
 
     code = code == -1 ? 200 : code;
 
+    context.response().setStatusCode(code);
+
     JsonObject jsonObject = new JsonObject()
       .put("error", errorTrace != null || exception != null)
       .put("code", code)

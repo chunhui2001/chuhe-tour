@@ -31,12 +31,12 @@ public interface ChuheDbService {
     ChuheDbService createProducts(JsonObject product, Handler<AsyncResult<Long>> resultHandler);
 
     @Fluent
-    ChuheDbService updateProduct(Long productId, JsonObject product, Handler<AsyncResult<Boolean>> resultHandler);
+    ChuheDbService updateProduct(Long productId, JsonObject product, Handler<AsyncResult<Integer>> resultHandler);
 
     @Fluent
     ChuheDbService fetchProductById(Long productId, Handler<AsyncResult<JsonObject>> resultHandler);
 
     @Fluent
-    ChuheDbService deleteProductById(Long productId, Handler<AsyncResult<Boolean>> resultHandler);
+    ChuheDbService deleteProductById(Long productId, Handler<AsyncResult<Integer>> resultHandler);
 
 }
