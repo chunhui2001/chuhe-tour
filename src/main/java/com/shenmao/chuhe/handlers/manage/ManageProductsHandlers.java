@@ -2,6 +2,7 @@ package com.shenmao.chuhe.handlers.manage;
 
 import com.google.common.base.Strings;
 import com.shenmao.chuhe.database.chuhe.ChuheDbService;
+import com.shenmao.chuhe.handlers.BaseHandler;
 import com.shenmao.chuhe.serialization.ChainSerialization;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -17,7 +18,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ManageProductsHandlers {
+public class ManageProductsHandlers extends BaseHandler {
 
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ManageProductsHandlers.class);
@@ -97,12 +98,11 @@ public class ManageProductsHandlers {
 
     private JsonObject getProductObject(RoutingContext routingContext) {
 
-        String productName = Strings.nullToEmpty(routingContext.request().getParam("product_name")).trim();
-        String productUnit = Strings.nullToEmpty(routingContext.request().getParam("product_unit")).trim();
-        Double productPrice = Double.parseDouble(Strings.nullToEmpty(routingContext.request().getParam("product_price")).trim());
-        String productSpec = Strings.nullToEmpty(routingContext.request().getParam("product_spec")).trim();
-        String productDesc = Strings.nullToEmpty(routingContext.request().getParam("product_desc")).trim();
-
+        String productName = getString(routingContext,"product_name");
+        String productUnit = getString(routingContext, "product_unit");
+        Double productPrice = getDouble(routingContext, "product_price");
+        String productSpec = getString(routingContext,"product_spec");
+        String productDesc = getString(routingContext, "product_desc");
 
         return new JsonObject()
                 .put("productName", productName)
@@ -110,6 +110,7 @@ public class ManageProductsHandlers {
                 .put("productPrice", productPrice)
                 .put("productSpec", productSpec)
                 .put("productDesc", productDesc);
+
     }
 
 
@@ -133,6 +134,8 @@ public class ManageProductsHandlers {
             } else {
                 ChainSerialization.create(routingContext.getDelegate())
                         // .putFlashMessage(reply.cause().getMessage())
+                        .putMessage(reply.cause().getMessage())
+                        .putException(reply.cause())
                         .putFlashException(reply.cause())
                         .redirect("/mans/products");
             }

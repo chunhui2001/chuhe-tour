@@ -18,8 +18,6 @@ import static com.shenmao.chuhe.verticle.WikiPageVerticle.CONFIG_WIKIDB_QUEUE;
 
 public class PortalRouter  implements ChuheRouter {
 
-  private static final int KB = 1024;
-  private static final int MB = 1024 * KB;
 
   public static PortalRouter create(Vertx vertx, AuthHandler authHandler) {
     return new PortalRouter(vertx, authHandler);
@@ -163,26 +161,8 @@ public class PortalRouter  implements ChuheRouter {
 
   public void wrapRouterHandler(Vertx vertx, Router router) {
 
-//    SessionStore sessionStore = LocalSessionStore.create(vertx, "myapp.sessionmap", 10000);
-    SessionStore sessionStore = new SessionStore(RedisSessionStore
-      .create(vertx.getDelegate(), "myapp.sessionmap", 10000)
-      .host("127.0.0.1").port(6379));
-
-    // Route: consumes and produces
-    // routeInstance.consumes("text/html").consumes("text/plain").consumes("*/json");
-    // routeInstance.produces("application/json");
-    // etc..
-
-    // vertxRouter.route().handler(CorsHandler.create("vertx\\.io").allowedMethod(HttpMethod.GET));
-    router.route().handler(ResponseTimeHandler.create());
-    // vertxRouter.route().handler(ResponseContentTypeHandler.create());
-    router.route().handler(FaviconHandler.create());
-    router.route().handler(CookieHandler.create());                      // Cookie cookie = routingContext.getCookie("cookie name here")
-    router.route().handler(BodyHandler.create().setBodyLimit(50 * MB).setUploadsDirectory("uploads"));                        // file upload and body parameters parser
-    router.route().handler(SessionHandler.create(sessionStore).setCookieHttpOnlyFlag(false));
-    //.setCookieSecureFlag(true));         // Session session = routingContext.session(); session.put("foo", "bar");
-    //router.route().handler(CSRFHandler.create("not a good secret"));
     router.route().handler(UserSessionHandler.create(AuthHandlerImpl.getAuthProvider()));
+
     router.route().failureHandler(routingContext ->  {
 
       if (routingContext.failure() instanceof VertxException
