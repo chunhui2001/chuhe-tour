@@ -36,10 +36,8 @@ public class BaseHandler {
         }
 
         MultiMap requestBody = getFormData(routingContext);
-
         if (requestBody != null && requestBody.contains(key)) {
             return routingContext.request().getParam(key);
-
         }
 
         return "";

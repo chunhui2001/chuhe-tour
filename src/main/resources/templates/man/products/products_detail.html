@@ -23,14 +23,43 @@
           onsubmit="if(!confirm('确认删除么?')){return false;}"
           method="post">
         <input type="hidden" name="_method" value="delete" />
-        产品编号: {{viewData.product_id}} <br />
-        产品名称: {{viewData.product_name}} <br />
-        产品单位: {{viewData.product_unit}} <br />
-        产品单价: {{viewData.product_price}} <br />
-        产品规格: {{viewData.product_spec}} <br />
-        产品描述: {{viewData.product_desc}} <br />
-        创建时间: {{viewData.created_at}} <br />
-        更新时间: {{viewData.last_updated}} <br />
+
+        <table>
+            <tbody>
+            <tr>
+                <td>产品编号：</td>
+                <td>{{viewData.product_id}}</td>
+            </tr>
+            <tr>
+                <td>产品名称：</td>
+                <td>{{viewData.product_name}}</td>
+            </tr>
+            <tr>
+                <td>产品单位：</td>
+                <td>{{viewData.product_unit}}</td>
+            </tr>
+            <tr>
+                <td>产品单价：</td>
+                <td>{{viewData.product_price}}</td>
+            </tr>
+            <tr>
+                <td>产品规格：</td>
+                <td>{{viewData.product_spec}}</td>
+            </tr>
+            <tr>
+                <td>创建时间：</td>
+                <td>{{viewData.created_at}}</td>
+            </tr>
+            <tr>
+                <td>更新时间：</td>
+                <td>{{viewData.last_updated}}</td>
+            </tr>
+            <tr>
+                <td style="text-align: right;vertical-align: top;">产品描述：</td>
+                <td>{{viewData.product_desc}}</td>
+            </tr>
+            </tbody>
+        </table>
 
         <input type="submit" value="删除该产品" />
         <a href="/mans/products/{{viewData.product_id}}/edit">编辑产品信息</a>

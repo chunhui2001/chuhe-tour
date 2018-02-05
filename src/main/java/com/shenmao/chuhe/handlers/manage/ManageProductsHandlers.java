@@ -4,18 +4,20 @@ import com.google.common.base.Strings;
 import com.shenmao.chuhe.database.chuhe.ChuheDbService;
 import com.shenmao.chuhe.handlers.BaseHandler;
 import com.shenmao.chuhe.serialization.ChainSerialization;
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Handler;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import io.vertx.rx.java.SingleOnSubscribeAdapter;
 import io.vertx.rxjava.ext.web.Router;
 import io.vertx.rxjava.ext.web.RoutingContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import rx.Observable;
+import rx.Single;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ManageProductsHandlers extends BaseHandler {
@@ -146,9 +148,7 @@ public class ManageProductsHandlers extends BaseHandler {
     public void productDelete(RoutingContext routingContext) {
 
         Long productId = Long.parseLong(routingContext.pathParam("param0"));
-        // String productName = routingContext.queryParam("name").get(0);
-
-        this.chuheDbService.deleteProductById(productId, reply -> {
+        productDeleteById(routingContext, productId, reply -> {
 
             if (reply.succeeded()) {
 
@@ -167,6 +167,40 @@ public class ManageProductsHandlers extends BaseHandler {
 
         });
 
+    }
+
+
+    public void productDeleteBatch(RoutingContext routingContext) {
+
+        String product_ids = getString(routingContext, "product_ids");
+
+        if (!product_ids.isEmpty()) {
+
+            Observable.from(product_ids.split(",")).map(productId -> {
+
+                productDeleteById(routingContext, Long.parseLong(productId), reply -> {
+
+                });
+
+               return Long.parseLong(productId);
+            }).subscribe(aLong -> {
+                System.out.println(aLong + ", delete completed");
+            });
+
+        }
+
+        String message = "成功删除产品 [" + product_ids + "]";
+
+        ChainSerialization.create(routingContext.getDelegate())
+                .setStatusRealCode(200)
+                .putMessage(message)
+                .putFlashMessage(message)
+                .redirect("/mans/products");
+
+    }
+
+    private void productDeleteById(RoutingContext routingContext, Long productId, Handler<AsyncResult<Integer>> resultHandler) {
+        this.chuheDbService.deleteProductById(productId, resultHandler);
     }
 
     public void productUpdate(RoutingContext routingContext) {

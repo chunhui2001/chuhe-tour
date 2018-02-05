@@ -46,6 +46,10 @@ public class ProductRouter {
         this.router.routeWithRegex(DELETE, getProductRouter(_PRODUCT_ID_ROUTE))
                 .handler(manageHandlers::productDelete);
 
+        // 批量删除
+        this.router.routeWithRegex(HttpMethod.DELETE, getProductRouter())
+                .handler(manageHandlers::productDeleteBatch);
+
         this.router.routeWithRegex(HttpMethod.PUT, getProductRouter(_PRODUCT_ID_ROUTE))
                 .handler(manageHandlers::productUpdate);
 

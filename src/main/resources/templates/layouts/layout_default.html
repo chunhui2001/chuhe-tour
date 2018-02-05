@@ -14,6 +14,16 @@
   <!-- link media="all" type="text/css" rel="stylesheet" href="/assets/libs/normalize-7.0.0.css"-->
 
   <style type="text/css">
+
+    .clearFixed {
+      float:none;
+      clear: both;
+    }
+
+    form {
+      margin: 0;
+    }
+
     input, input:hover, input:focus, input:active {
       outline:0 !important;
     }
@@ -45,6 +55,7 @@
 
   <script src="/scripts/sockjs.js"></script>
   <script src="/scripts/vertx-eventbus.js"></script>
+  <script src="/scripts/jquery/jquery-3.3.1.min.js"></script>
 
   {{#block "blocks/script"}}
   <script type="text/javascript">

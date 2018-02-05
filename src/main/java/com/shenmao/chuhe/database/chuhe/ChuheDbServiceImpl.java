@@ -92,6 +92,10 @@ public class ChuheDbServiceImpl implements ChuheDbService {
         Date create_at = null;
         Date last_updated = null;
 
+        if (!product.containsKey("product_spec") || product.getString("product_spec") == null
+                || product.getString("product_spec").trim().equals("")) {
+            product.put("product_spec", "无");
+        }
 
         try {
             create_at = _DATE_FM_T.parse(product.getString("created_at"));
@@ -115,11 +119,16 @@ public class ChuheDbServiceImpl implements ChuheDbService {
 
         byte[] productDesc = product.getBinary("product_desc");
 
-        if (productDesc != null) {
-            return product.put("product_desc", new String(productDesc));
+
+        if (!product.containsKey("product_desc")
+                || productDesc == null || (new String(productDesc)).trim().isEmpty()) {
+            product.put("product_desc", "无");
         } else {
-            return product.put("product_desc", productDesc);
+            product.put("product_desc", new String(productDesc));
         }
+
+        return product;
+
     }
 
     @Override
@@ -149,17 +158,20 @@ public class ChuheDbServiceImpl implements ChuheDbService {
         JsonArray data = new JsonArray()
                 .add(product.getString("productName"))
                 .add(product.getString("productUnit"))
-                .add(product.getDouble("productPrice"))
-                .add(product.getString("productSpec"))
-                .add(product.getString("productDesc"));
+                .add(product.getDouble("productPrice"));
 
-        if (Strings.emptyToNull(product.getString("productSpec")) == null) {
+        if (Strings.emptyToNull(product.getString("productSpec")) != null) {
+            data.add(product.getString("productSpec"));
+        } else {
             data.addNull();
         }
 
-        if (Strings.emptyToNull(product.getString("productDesc")) == null) {
+        if (Strings.emptyToNull(product.getString("productDesc")) != null) {
+            data.add(product.getString("productDesc"));
+        } else {
             data.addNull();
         }
+
 
         this.dbClient.updateWithParams(createProductSql, data, reply -> {
 
@@ -183,10 +195,25 @@ public class ChuheDbServiceImpl implements ChuheDbService {
         JsonArray sqlParams = new JsonArray()
                 .add(product.getString("productName"))
                 .add(product.getString("productUnit"))
-                .add(product.getDouble("productPrice"))
-                .add(product.getString("productSpec"))
-                .add(product.getString("productDesc"))
-                .add(productId);
+                .add(product.getDouble("productPrice"));
+
+        String productSpecStr = Strings.emptyToNull(product.getString("productSpec"));
+        String productDescStr = Strings.emptyToNull(product.getString("productDesc"));
+
+        if (productSpecStr != null && !productSpecStr.trim().equals("无")) {
+            sqlParams.add(product.getString("productSpec"));
+        } else {
+            sqlParams.addNull();
+        }
+
+        if ( productDescStr != null && !productDescStr.trim().equals("无")) {
+            sqlParams.add(product.getString("productDesc"));
+        } else {
+            sqlParams.addNull();
+        }
+
+        sqlParams.add(productId);
+
 
         this.dbClient.updateWithParams(updateProductSql, sqlParams, reply -> {
             if (reply.succeeded()) {
