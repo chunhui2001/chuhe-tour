@@ -5,6 +5,7 @@ import com.shenmao.chuhe.database.chuhe.ChuheDbService;
 import com.shenmao.chuhe.handlers.BaseHandler;
 import com.shenmao.chuhe.serialization.ChainSerialization;
 import io.vertx.core.AsyncResult;
+import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -148,24 +149,31 @@ public class ManageProductsHandlers extends BaseHandler {
     public void productDelete(RoutingContext routingContext) {
 
         Long productId = Long.parseLong(routingContext.pathParam("param0"));
-        productDeleteById(routingContext, productId, reply -> {
+        Future<Integer> future = productDeleteById(productId);
 
-            if (reply.succeeded()) {
 
-                String message = reply.result() > 0 ? "成功删除一个产品 [" + productId + "]" : "产品不存在 [" + productId + "]";
+        if (future.succeeded() || future.cause() == null) {
+//            String message = future.result() > 0 ? "成功删除一个产品 [" + productId + "]" : "产品不存在 [" + productId + "]";
+//
+//            ChainSerialization.create(routingContext.getDelegate())
+//                    .setStatusRealCode(future.result() > 0 ? 200 : 202)
+//                    .putMessage(message)
+//                    .putFlashMessage(message)
+//                    .redirect("/mans/products");
 
-                ChainSerialization.create(routingContext.getDelegate())
-                        .setStatusRealCode(reply.result() > 0 ? 200 : 202)
-                        .putMessage(message)
-                        .putFlashMessage(message)
-                        .redirect("/mans/products");
-            } else {
-                ChainSerialization.create(routingContext.getDelegate())
-                        .putFlashException(reply.cause())
-                        .redirect("/mans/products");
-            }
+            String message = "成功删除一个产品 [" + productId + "]" ;
 
-        });
+            ChainSerialization.create(routingContext.getDelegate())
+                    .setStatusRealCode(200)
+                    .putMessage(message)
+                    .putFlashMessage(message)
+                    .redirect("/mans/products");
+
+        } else {
+            ChainSerialization.create(routingContext.getDelegate())
+                    .putFlashException(future.cause())
+                    .redirect("/mans/products");
+        }
 
     }
 
@@ -178,9 +186,7 @@ public class ManageProductsHandlers extends BaseHandler {
 
             Observable.from(product_ids.split(",")).map(productId -> {
 
-                productDeleteById(routingContext, Long.parseLong(productId), reply -> {
-
-                });
+                Future<Integer> future =  productDeleteById(Long.parseLong(productId));
 
                return Long.parseLong(productId);
             }).subscribe(aLong -> {
@@ -199,8 +205,23 @@ public class ManageProductsHandlers extends BaseHandler {
 
     }
 
-    private void productDeleteById(RoutingContext routingContext, Long productId, Handler<AsyncResult<Integer>> resultHandler) {
-        this.chuheDbService.deleteProductById(productId, resultHandler);
+    private  Future<Integer> productDeleteById(Long productId) {
+
+        Future<Integer> future = Future.future();
+
+        this.chuheDbService.deleteProductById(productId, reply -> {
+            if (reply.succeeded()) {
+                System.out.println("success2");
+                future.complete(reply.result());
+            }
+            else {
+                System.out.println("failed2");
+                future.fail(reply.cause());
+            }
+        });
+
+        return future;
+
     }
 
     public void productUpdate(RoutingContext routingContext) {
