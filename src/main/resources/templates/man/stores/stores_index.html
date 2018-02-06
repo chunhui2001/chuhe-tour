@@ -1,0 +1,34 @@
+{{#partial "blocks/title"}}
+<title>进销存管理</title>
+{{/partial}}
+
+
+
+{{#partial "content" }}
+<h1>进销存管理</h1>
+
+{{#if errorTrace }}
+<pre>{{errorTrace}}</pre>
+{{/if}}
+
+{{#if flashMessage}}
+<div style="color: brown">
+    {{flashMessage}}
+</div>
+{{/if}}
+
+
+{{/partial}}
+
+
+
+{{#partial "blocks/script"}}
+<script type="text/javascript" id="r_1">
+
+
+
+</script>
+{{/partial}}
+
+
+{{> layouts/layout_default}}

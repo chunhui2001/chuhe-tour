@@ -17,7 +17,7 @@
 </div>
 {{/if}}
 
-<div>
+<div style="display: none;" class="product-new-form">
     <form action="/mans/products" method="POST">
         产品名称：<input type="text" name="product_name" required placeholder="请输入产品名称"/>  <br />
         产品单位：<input type="text" name="product_unit" required placeholder="请输入产品单位" />  <br />
@@ -29,7 +29,8 @@
     </form>
 </div>
 
-<div>
+<div style="text-align: right;">
+    <div style="display: inline-block;">
     <input type="button" id="btn-product-new" value="新增产品"  style="float:left;" />
 
     <form action="/mans/products" method="POST" style="float:left;">
@@ -38,11 +39,12 @@
         <input type="submit" id="btn-product-del" value="删除所有选中" />
     </form>
     <div class="clearFixed"></div>
+    </div>
 </div>
 
 <div>
 
-    <table>
+    <table style="width: 100%;">
         <thead>
             <tr>
                 <th><input type="checkbox" id="select-all-product" /></th>
@@ -95,6 +97,10 @@
     $(function() {
 
         setBtnDelEnabled();
+
+        $("#btn-product-new").on("click", function () {
+            $(".product-new-form").slideDown();
+        });
 
         $(".product-list :checkbox").on("click", function () {
 
