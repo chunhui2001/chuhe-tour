@@ -45,7 +45,7 @@
     <table>
         <thead>
             <tr>
-                <th>&ensp;</th>
+                <th><input type="checkbox" id="select-all-product" /></th>
                 <th>产品编号</th>
                 <th>产品名称</th>
                 <th>单位</th>
@@ -102,6 +102,19 @@
             setProductIds($(this).is(":checked"), $(this).val());
 
         });
+
+        $("table #select-all-product").on("click", function () {
+            if ($(this).is(":checked")) {
+                $(".product-list :checkbox:not(:checked)").each(function () {
+                   $(this).click();
+                });
+            } else {
+                $(".product-list :checkbox:checked").each(function () {
+                    $(this).click();
+                });
+            }
+        });
+
     });
 
     function setBtnDelEnabled() {

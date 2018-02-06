@@ -5,6 +5,7 @@ import io.vertx.codegen.annotations.Fluent;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
+import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.rxjava.ext.sql.SQLClient;
@@ -18,10 +19,7 @@ import rx.functions.Action1;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class ChuheDbServiceImpl implements ChuheDbService {
 
@@ -156,18 +154,18 @@ public class ChuheDbServiceImpl implements ChuheDbService {
         LOGGER.info( createProductSql);
 
         JsonArray data = new JsonArray()
-                .add(product.getString("productName"))
-                .add(product.getString("productUnit"))
-                .add(product.getDouble("productPrice"));
+                .add(product.getValue("product_name"))
+                .add(product.getValue("product_unit"))
+                .add(product.getValue("product_price"));
 
-        if (Strings.emptyToNull(product.getString("productSpec")) != null) {
-            data.add(product.getString("productSpec"));
+        if (Strings.emptyToNull(product.getString("product_spec")) != null) {
+            data.add(product.getString("product_spec"));
         } else {
             data.addNull();
         }
 
-        if (Strings.emptyToNull(product.getString("productDesc")) != null) {
-            data.add(product.getString("productDesc"));
+        if (Strings.emptyToNull(product.getString("product_desc")) != null) {
+            data.add(product.getString("product_desc"));
         } else {
             data.addNull();
         }
@@ -188,40 +186,68 @@ public class ChuheDbServiceImpl implements ChuheDbService {
 
 
     @Override
-    public ChuheDbService updateProduct(Long productId, JsonObject product, Handler<AsyncResult<Integer>> resultHandler) {
-        String updateProductSql = sqlQueries.get(ChuheSqlQuery.SAVE_PRODUCT);
-        LOGGER.info(updateProductSql);
+    public ChuheDbService updateProduct(Long productId, JsonObject newProduct, Handler<AsyncResult<Integer>> resultHandler) {
 
-        JsonArray sqlParams = new JsonArray()
-                .add(product.getString("productName"))
-                .add(product.getString("productUnit"))
-                .add(product.getDouble("productPrice"));
+        this.fetchProductById(productId, ar -> {
 
-        String productSpecStr = Strings.emptyToNull(product.getString("productSpec"));
-        String productDescStr = Strings.emptyToNull(product.getString("productDesc"));
-
-        if (productSpecStr != null && !productSpecStr.trim().equals("无")) {
-            sqlParams.add(product.getString("productSpec"));
-        } else {
-            sqlParams.addNull();
-        }
-
-        if ( productDescStr != null && !productDescStr.trim().equals("无")) {
-            sqlParams.add(product.getString("productDesc"));
-        } else {
-            sqlParams.addNull();
-        }
-
-        sqlParams.add(productId);
-
-
-        this.dbClient.updateWithParams(updateProductSql, sqlParams, reply -> {
-            if (reply.succeeded()) {
-                resultHandler.handle(Future.succeededFuture(reply.result().getUpdated()));
-            } else {
-                resultHandler.handle(Future.failedFuture(reply.cause()));
+            if (!ar.succeeded()) {
+                resultHandler.handle(Future.failedFuture(ar.cause()));
+                return;
             }
+
+            JsonObject product;
+            JsonObject oldProduct = ar.result();
+
+            if (oldProduct.fieldNames().size() == 0) {
+                resultHandler.handle(Future.succeededFuture(0));
+                return;
+            }
+
+            System.out.println(oldProduct.encode() + ", oldProduct");
+
+            newProduct.fieldNames().forEach(f -> {
+                oldProduct.put(f, newProduct.getValue(f));
+            });
+
+            product = oldProduct;
+
+            String updateProductSql = sqlQueries.get(ChuheSqlQuery.SAVE_PRODUCT);
+            LOGGER.info(updateProductSql);
+
+            JsonArray sqlParams = new JsonArray()
+                    .add(product.getValue("product_name"))
+                    .add(product.getValue("product_unit"))
+                    .add(product.getValue("product_price"));
+
+            String productSpecStr = Strings.emptyToNull(product.getString("product_spec"));
+            String productDescStr = Strings.emptyToNull(product.getString("product_desc"));
+
+            if (productSpecStr != null && !productSpecStr.trim().equals("无")) {
+                sqlParams.add(product.getString("product_spec"));
+            } else {
+                sqlParams.addNull();
+            }
+
+            if ( productDescStr != null && !productDescStr.trim().equals("无")) {
+                sqlParams.add(product.getString("product_desc"));
+            } else {
+                sqlParams.addNull();
+            }
+
+            sqlParams.add(productId);
+
+            this.dbClient.updateWithParams(updateProductSql, sqlParams, reply -> {
+                if (reply.succeeded()) {
+                    resultHandler.handle(Future.succeededFuture(reply.result().getUpdated()));
+                } else {
+                    resultHandler.handle(Future.failedFuture(reply.cause()));
+                }
+            });
+
+
         });
+
+
 
         return this;
     }
@@ -237,6 +263,35 @@ public class ChuheDbServiceImpl implements ChuheDbService {
         JsonArray sqlParam = new JsonArray().add(productId);
 
         this.dbClient.updateWithParams(deleteProductSql, sqlParam, reply -> {
+
+            if (reply.succeeded()) {
+                resultHandler.handle(Future.succeededFuture(reply.result().getUpdated()));
+            } else {
+                resultHandler.handle(Future.failedFuture(reply.cause()));
+            }
+        });
+
+        return this;
+    }
+
+    @Override
+    public ChuheDbService deleteProductBatch(List<Long> productIdList, Handler<AsyncResult<Integer>> resultHandler) {
+
+        String deleteProductSqlBatch = sqlQueries.get(ChuheSqlQuery.DELETE_PRODUCT_BATCH);
+
+        JsonArray sqlParam = new JsonArray();
+        StringJoiner joiner = new StringJoiner(",");
+
+        productIdList.forEach(pid -> {
+            sqlParam.add(pid);
+            joiner.add( "?");
+        });
+
+        deleteProductSqlBatch = deleteProductSqlBatch.replaceAll("_product_id_list_", joiner.toString());
+
+        LOGGER.info(deleteProductSqlBatch);
+
+        this.dbClient.updateWithParams(deleteProductSqlBatch, sqlParam, reply -> {
 
             if (reply.succeeded()) {
                 resultHandler.handle(Future.succeededFuture(reply.result().getUpdated()));

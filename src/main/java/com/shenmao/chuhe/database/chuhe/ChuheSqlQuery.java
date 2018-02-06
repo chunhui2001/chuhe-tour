@@ -9,5 +9,6 @@ public enum ChuheSqlQuery {
     GET_PRODUCT,
     CREATE_PRODUCT,
     SAVE_PRODUCT,
-    DELETE_PRODUCT
+    DELETE_PRODUCT,
+    DELETE_PRODUCT_BATCH
 }

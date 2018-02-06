@@ -9,6 +9,7 @@ import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import io.vertx.rx.java.RxHelper;
 import io.vertx.rx.java.SingleOnSubscribeAdapter;
 import io.vertx.rxjava.ext.web.Router;
 import io.vertx.rxjava.ext.web.RoutingContext;
@@ -19,6 +20,7 @@ import rx.Single;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 public class ManageProductsHandlers extends BaseHandler {
@@ -101,18 +103,45 @@ public class ManageProductsHandlers extends BaseHandler {
 
     private JsonObject getProductObject(RoutingContext routingContext) {
 
-        String productName = getString(routingContext,"product_name");
+        JsonObject result = new JsonObject();
+
+        if (paramExists(routingContext, "product_name")) {
+            result.put("product_name", getString(routingContext,"product_name"));
+        }
+
+        if (paramExists(routingContext, "product_unit")) {
+            result.put("product_unit", getString(routingContext,"product_unit"));
+        }
+
+        if (paramExists(routingContext, "product_price")) {
+            result.put("product_price", getString(routingContext,"product_price"));
+        }
+
+        if (paramExists(routingContext, "product_spec")) {
+            result.put("product_spec", getString(routingContext,"product_spec"));
+        }
+
+        if (paramExists(routingContext, "product_desc")) {
+            result.put("product_desc", getString(routingContext,"product_desc"));
+        }
+
+
+        return result;
+
+        /*String productName = getString(routingContext,"product_name");
         String productUnit = getString(routingContext, "product_unit");
         Double productPrice = getDouble(routingContext, "product_price");
         String productSpec = getString(routingContext,"product_spec");
         String productDesc = getString(routingContext, "product_desc");
 
+
+
         return new JsonObject()
-                .put("productName", productName)
-                .put("productUnit", productUnit)
-                .put("productPrice", productPrice)
-                .put("productSpec", productSpec)
-                .put("productDesc", productDesc);
+                .put("product_name", productName)
+                .put("product_unit", productUnit)
+                .put("product_price", productPrice)
+                .put("product_spec", productSpec)
+                .put("product_desc", productDesc); */
 
     }
 
@@ -151,63 +180,73 @@ public class ManageProductsHandlers extends BaseHandler {
         Long productId = Long.parseLong(routingContext.pathParam("param0"));
         Future<Integer> future = productDeleteById(productId);
 
+        future.setHandler(ar -> {
 
-        if (future.succeeded() || future.cause() == null) {
-//            String message = future.result() > 0 ? "成功删除一个产品 [" + productId + "]" : "产品不存在 [" + productId + "]";
-//
-//            ChainSerialization.create(routingContext.getDelegate())
-//                    .setStatusRealCode(future.result() > 0 ? 200 : 202)
-//                    .putMessage(message)
-//                    .putFlashMessage(message)
-//                    .redirect("/mans/products");
+            if (ar.succeeded() || ar.cause() == null) {
 
-            String message = "成功删除一个产品 [" + productId + "]" ;
+                String message = ar.result() > 0 ? "成功删除一个产品 [" + productId + "]" : "产品不存在 [" + productId + "]";
 
-            ChainSerialization.create(routingContext.getDelegate())
-                    .setStatusRealCode(200)
-                    .putMessage(message)
-                    .putFlashMessage(message)
-                    .redirect("/mans/products");
+                ChainSerialization.create(routingContext.getDelegate())
+                        .setStatusRealCode(ar.result() > 0 ? 200 : 202)
+                        .putMessage(message)
+                        .putFlashMessage(message)
+                        .redirect("/mans/products");
 
-        } else {
-            ChainSerialization.create(routingContext.getDelegate())
-                    .putFlashException(future.cause())
-                    .redirect("/mans/products");
-        }
+            } else {
+                ChainSerialization.create(routingContext.getDelegate())
+                        .putFlashException(ar.cause())
+                        .redirect("/mans/products");
+            }
+
+        });
+
+
+
 
     }
 
-
     public void productDeleteBatch(RoutingContext routingContext) {
 
+        // https://streamdata.io/blog/vert-x-and-the-async-calls-chain/
         String product_ids = getString(routingContext, "product_ids");
 
         if (!product_ids.isEmpty()) {
 
-            Observable.from(product_ids.split(",")).map(productId -> {
+            List<Long> productList = Arrays.stream(product_ids.split(","))
+                    .map(pid -> {return Long.parseLong(pid);})
+                    .collect(Collectors.toList());
 
-                Future<Integer> future =  productDeleteById(Long.parseLong(productId));
+            this.chuheDbService.deleteProductBatch(productList, reply -> {
 
-               return Long.parseLong(productId);
-            }).subscribe(aLong -> {
-                System.out.println(aLong + ", delete completed");
+                if (reply.succeeded()) {
+
+                    String message = "成功删除 " + productList.size() + " 个产品 [" + product_ids + "]";
+
+                    ChainSerialization.create(routingContext.getDelegate())
+                            .setStatusRealCode(200)
+                            .putMessage(message)
+                            .putFlashMessage(message)
+                            .redirect("/mans/products");
+
+                } else {
+                    ChainSerialization.create(routingContext.getDelegate())
+                            .putMessage("删除失败")
+                            .putFlashMessage("删除失败")
+                            .putFlashException(reply.cause())
+                            .redirect("/mans/products");
+                }
+
             });
 
         }
 
-        String message = "成功删除产品 [" + product_ids + "]";
-
-        ChainSerialization.create(routingContext.getDelegate())
-                .setStatusRealCode(200)
-                .putMessage(message)
-                .putFlashMessage(message)
-                .redirect("/mans/products");
 
     }
 
     private  Future<Integer> productDeleteById(Long productId) {
 
         Future<Integer> future = Future.future();
+
 
         this.chuheDbService.deleteProductById(productId, reply -> {
             if (reply.succeeded()) {

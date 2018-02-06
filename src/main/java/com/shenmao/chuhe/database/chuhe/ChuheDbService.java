@@ -39,4 +39,7 @@ public interface ChuheDbService {
     @Fluent
     ChuheDbService deleteProductById(Long productId, Handler<AsyncResult<Integer>> resultHandler);
 
+    @Fluent
+    ChuheDbService deleteProductBatch(List<Long> productIdList, Handler<AsyncResult<Integer>> resultHandler);
+
 }

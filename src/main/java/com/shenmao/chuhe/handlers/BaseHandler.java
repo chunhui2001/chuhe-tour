@@ -43,6 +43,22 @@ public class BaseHandler {
         return "";
     }
 
+    public boolean paramExists(RoutingContext routingContext, String key) {
+
+        JsonObject jsonData = getJsonData(routingContext);
+        MultiMap requestBody = getFormData(routingContext);
+
+        if (jsonData != null || requestBody != null) {
+            if ( (jsonData != null && jsonData.containsKey(key))
+                    || (requestBody != null && requestBody.contains(key))) {
+                return true;
+            }
+        }
+
+        return false;
+
+    }
+
     public Double getDouble(RoutingContext routingContext, String key) {
 
         JsonObject jsonData = getJsonData(routingContext);
