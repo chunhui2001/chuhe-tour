@@ -127,22 +127,6 @@ public class ManageProductsHandlers extends BaseHandler {
 
 
         return result;
-
-        /*String productName = getString(routingContext,"product_name");
-        String productUnit = getString(routingContext, "product_unit");
-        Double productPrice = getDouble(routingContext, "product_price");
-        String productSpec = getString(routingContext,"product_spec");
-        String productDesc = getString(routingContext, "product_desc");
-
-
-
-        return new JsonObject()
-                .put("product_name", productName)
-                .put("product_unit", productUnit)
-                .put("product_price", productPrice)
-                .put("product_spec", productSpec)
-                .put("product_desc", productDesc); */
-
     }
 
 

@@ -5,6 +5,7 @@ import com.shenmao.chuhe.routers.GlobalRouter;
 import io.vertx.rxjava.ext.web.Router;
 
 import static io.vertx.core.http.HttpMethod.GET;
+import static io.vertx.core.http.HttpMethod.POST;
 
 public class StoreRouter {
 
@@ -27,10 +28,27 @@ public class StoreRouter {
         return "/" + _STORE_ROUTE_PREFIX + GlobalRouter.getRouter(str);
     }
 
+    private static String getStoreReplenishRouter(String... str) {
+        return "/" + _STORE_ROUTE_PREFIX + "/replenish" + GlobalRouter.getRouter(str);
+    }
+
+    private static String getStoreSalesRouter(String... str) {
+        return "/" + _STORE_ROUTE_PREFIX + "/sales" + GlobalRouter.getRouter(str);
+    }
+
     public void init() {
 
         this.router.routeWithRegex(GET, getStoreRouter())
                 .handler(manageHandlers::storeIndex);
+
+        this.router.routeWithRegex(GET, getStoreReplenishRouter())
+                .handler(manageHandlers::storeReplenishIndex);
+
+        this.router.routeWithRegex(POST, getStoreReplenishRouter())
+                .handler(manageHandlers::storeReplenishSave);
+
+        this.router.routeWithRegex(GET, getStoreSalesRouter())
+                .handler(manageHandlers::storeSaleIndex);
     }
 
 }

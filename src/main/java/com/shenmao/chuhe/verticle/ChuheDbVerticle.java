@@ -2,9 +2,7 @@ package com.shenmao.chuhe.verticle;
 
 import com.shenmao.chuhe.commons.PropertyParser;
 import com.shenmao.chuhe.database.chuhe.ChuheDbService;
-import com.shenmao.chuhe.database.chuhe.ChuheSqlQuery;
-import com.shenmao.chuhe.database.wikipage.WikiPageDbService;
-import com.shenmao.chuhe.database.wikipage.WikiSqlQuery;
+import com.shenmao.chuhe.database.chuhe.sqlqueries.ChuheSqlQuery;
 import io.vertx.core.Future;
 import io.vertx.core.json.JsonObject;
 import org.slf4j.Logger;
@@ -15,10 +13,7 @@ import io.vertx.rxjava.ext.sql.SQLClient;
 import io.vertx.rxjava.core.AbstractVerticle;
 import io.vertx.serviceproxy.ServiceBinder;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Properties;
 
@@ -113,19 +108,22 @@ public class ChuheDbVerticle extends AbstractVerticle {
 
     private HashMap<ChuheSqlQuery, String> loadSqlQueries() throws IOException {
 
-        String queriesFile = config().getString(CONFIG_CHUHEDB_SQL_QUERIES_RESOURCE_FILE);
         HashMap<ChuheSqlQuery, String> sqlQueries = new HashMap<>();
 
-        InputStream queriesInputStream;
-        if (queriesFile != null) {
-            queriesInputStream = new FileInputStream(queriesFile);
-        } else {
-            queriesInputStream = getClass().getResourceAsStream("/properties/chuhe-db-queries.properties");
-        }
+        putProductSqlQueries(sqlQueries);
+        putOrderSqlQueries(sqlQueries);
+
+        return  sqlQueries;
+    }
+
+    private void putProductSqlQueries(HashMap<ChuheSqlQuery, String> sqlQueries) throws IOException {
+
+        InputStream queriesInputStream = getClass().getResourceAsStream("/properties/database-sql-queries/chuhe-db-products-queries.properties");
 
         Properties queriesProps = new PropertyParser();
         queriesProps.load(new InputStreamReader(queriesInputStream, "utf-8"));
         queriesInputStream.close();
+
         sqlQueries.put(ChuheSqlQuery.CREATE_PRODUCTS_TABLE, queriesProps.getProperty("create-products-table"));
         sqlQueries.put(ChuheSqlQuery.ALL_PRODUCTS, queriesProps.getProperty("all-products"));
         sqlQueries.put(ChuheSqlQuery.GET_PRODUCT, queriesProps.getProperty("get-product"));
@@ -135,8 +133,25 @@ public class ChuheDbVerticle extends AbstractVerticle {
         sqlQueries.put(ChuheSqlQuery.DELETE_PRODUCT_BATCH, queriesProps.getProperty("delete-product-batch"));
         sqlQueries.put(ChuheSqlQuery.LAST_INSERT_ID, queriesProps.getProperty("last_insert_id"));
 
-        return  sqlQueries;
     }
 
+
+    private void putOrderSqlQueries(HashMap<ChuheSqlQuery, String> sqlQueries) throws IOException {
+
+        InputStream queriesInputStream = getClass().getResourceAsStream("/properties/database-sql-queries/chuhe-db-orders-queries.properties");
+
+        Properties queriesProps = new PropertyParser();
+        queriesProps.load(new InputStreamReader(queriesInputStream, "utf-8"));
+        queriesInputStream.close();
+
+        sqlQueries.put(ChuheSqlQuery.CREATE_ORDERS_TABLE, queriesProps.getProperty("create-orders-table"));
+        sqlQueries.put(ChuheSqlQuery.ALL_ORDERS, queriesProps.getProperty("all-orders"));
+        sqlQueries.put(ChuheSqlQuery.GET_ORDER, queriesProps.getProperty("get-order"));
+        sqlQueries.put(ChuheSqlQuery.CREATE_ORDER, queriesProps.getProperty("create-order"));
+        sqlQueries.put(ChuheSqlQuery.SAVE_ORDER, queriesProps.getProperty("save-order"));
+        sqlQueries.put(ChuheSqlQuery.DELETE_ORDER, queriesProps.getProperty("delete-order"));
+        sqlQueries.put(ChuheSqlQuery.DELETE_ORDER_BATCH, queriesProps.getProperty("delete-order-batch"));
+
+    }
 
 }

@@ -1,11 +1,11 @@
 {{#partial "blocks/title"}}
-<title>进销存管理</title>
+<title>进销存管理 -- 销售管理</title>
 {{/partial}}
 
 
 
 {{#partial "content" }}
-<h1>进销存管理</h1>
+<h1>进销存管理 -- 销售管理</h1>
 
 {{#if errorTrace }}
 <pre>{{errorTrace}}</pre>
@@ -17,14 +17,10 @@
 </div>
 {{/if}}
 
-<a href='/mans/stores/replenish'>进货管理</a> <br />
-<a href='/mans/stores/sales'>销售管理</a> <br />
 
-<div style="text-align: right;display: none">
+<div style="text-align: right;">
     <div style="display: inline-block;">
-        <input type="button" id="btn-store-new-replenish-order" value="新增进货单"  style="float:left;" />
         <input type="button" id="btn-product-new-sales-order" value="新增销售单"  style="float:left;" />
-
         <div class="clearFixed"></div>
     </div>
 </div>

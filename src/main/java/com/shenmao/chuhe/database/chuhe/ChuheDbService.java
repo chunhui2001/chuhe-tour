@@ -1,11 +1,11 @@
 package com.shenmao.chuhe.database.chuhe;
 
+import com.shenmao.chuhe.database.chuhe.sqlqueries.ChuheSqlQuery;
 import io.vertx.codegen.annotations.Fluent;
 import io.vertx.codegen.annotations.ProxyGen;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
-import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 import io.vertx.rxjava.ext.sql.SQLClient;
 
@@ -24,6 +24,7 @@ public interface ChuheDbService {
         return new ChuheDbServiceVertxEBProxy(vertx, address);
     }
 
+    // products
     @Fluent
     ChuheDbService fetchAllProducts(Handler<AsyncResult<List<JsonObject>>> resultHandler);
 
@@ -42,4 +43,8 @@ public interface ChuheDbService {
     @Fluent
     ChuheDbService deleteProductBatch(List<Long> productIdList, Handler<AsyncResult<Integer>> resultHandler);
 
+
+    // orders
+    @Fluent
+    ChuheDbService createOrder(JsonObject order, Handler<AsyncResult<Long>> resultHandler);
 }

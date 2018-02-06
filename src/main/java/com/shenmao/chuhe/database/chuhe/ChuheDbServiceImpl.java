@@ -1,11 +1,11 @@
 package com.shenmao.chuhe.database.chuhe;
 
 import com.google.common.base.Strings;
+import com.shenmao.chuhe.database.chuhe.sqlqueries.ChuheSqlQuery;
 import io.vertx.codegen.annotations.Fluent;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
-import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.rxjava.ext.sql.SQLClient;
@@ -15,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rx.Observable;
 import rx.Single;
-import rx.functions.Action1;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -34,14 +33,18 @@ public class ChuheDbServiceImpl implements ChuheDbService {
         this.dbClient = dbClient;
         this.sqlQueries = sqlQueries;
 
-        this.createProductsTable(voidAsyncResult -> {
+        this.createTable(sqlQueries.get(ChuheSqlQuery.CREATE_PRODUCTS_TABLE), voidAsyncResult -> {
+            readyHandler.handle(Future.succeededFuture(this));
+        });
+
+        this.createTable(sqlQueries.get(ChuheSqlQuery.CREATE_ORDERS_TABLE), voidAsyncResult -> {
             readyHandler.handle(Future.succeededFuture(this));
         });
 
     }
 
 
-    public void createProductsTable(Handler<AsyncResult<Void>> resultHandler) {
+    public void createTable(String create_sql, Handler<AsyncResult<Void>> resultHandler) {
 
         dbClient.getConnection(ar -> {
             if (ar.failed()) {
@@ -49,7 +52,10 @@ public class ChuheDbServiceImpl implements ChuheDbService {
                 resultHandler.handle(Future.failedFuture(ar.cause()));
             } else {
                 SQLConnection connection = ar.result().getDelegate();
-                connection.execute(sqlQueries.get(ChuheSqlQuery.CREATE_PRODUCTS_TABLE), create -> {
+
+                LOGGER.error(create_sql);
+
+                connection.execute(create_sql, create -> {
                     connection.close();
                     if (create.succeeded())
                         resultHandler.handle(Future.succeededFuture());
@@ -299,6 +305,57 @@ public class ChuheDbServiceImpl implements ChuheDbService {
                 resultHandler.handle(Future.failedFuture(reply.cause()));
             }
         });
+
+        return this;
+    }
+
+    private String getDateTimeString() {
+        SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        return sf.format(new Date());
+    }
+
+    @Override
+    public ChuheDbService createOrder(JsonObject order, Handler<AsyncResult<Long>> resultHandler) {
+
+        String createOrderSql = sqlQueries.get(ChuheSqlQuery.CREATE_ORDER);
+        LOGGER.info( createOrderSql);
+
+        JsonArray data = new JsonArray()
+                .add(order.getValue("order_flow_no"));
+
+        data.add(order.getValue("order_type"));
+        data.add(order.getValue("order_money"));
+
+        if (order.containsKey("order_date")) {
+            data.add(order.getValue("order_date") + " 00:00:00.000");
+        } else {
+            data.add(getDateTimeString());
+        }
+
+        if (Strings.emptyToNull(order.getString("order_person")) != null) {
+            data.add(order.getString("order_person"));
+        } else {
+            data.addNull();
+        }
+
+        data.add(order.getString("user_identity"));
+
+        if (Strings.emptyToNull(order.getString("order_desc")) != null) {
+            data.add(order.getString("order_desc"));
+        } else {
+            data.addNull();
+        }
+
+
+        this.dbClient.updateWithParams(createOrderSql, data, reply -> {
+
+            if (reply.succeeded()) {
+                resultHandler.handle(Future.succeededFuture(reply.result().getKeys().getLong(0)));
+            } else {
+                resultHandler.handle(Future.failedFuture(reply.cause()));
+            }
+        });
+
 
         return this;
     }
