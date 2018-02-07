@@ -18,15 +18,15 @@
 {{/if}}
 
 <div style="display: none;" class="store-new-replenish-order-form">
-    <form action="/mans/stores/replenish" method="POST">
-        <fieldset>
+    <form id="stores-order-detail-form" action="/mans/stores/replenish" method="POST">
+        <fieldset style="margin-bottom: 1em;">
             <legend>新增进货单</legend>
         订单流水号：<input type="text" name="order_flow_no" required placeholder="订单流水号"/>&ensp;&ensp;&ensp;&ensp;
         经办人：<input type="text" name="order_person" required placeholder="请输入产品单位" />&ensp;&ensp;&ensp;&ensp;
         备注：<input type="text" name="order_desc" placeholder="请输入订单备注" />
         </fieldset>
 
-        <fieldset style="margin-top: 1em;">
+        <fieldset style="margin-bottom: 1em;">
             <legend>进货单详情</legend>
 
             <div style="margin-top: .625em;">
@@ -56,17 +56,17 @@
                     <tbody class="order-detail-replenish-items">
                         <tr>
                             <td style="width: 40px;text-align: center;font-weight: bold;">
-                                <input type="text" disabled="disabled" style="width: 40px;text-align: center;" value="1" /></td>
-                            <td><input type="text" style="width: 95px;" id="product_id" /></td>
-                            <td><input type="text" style="width: 125px;" id="product_name" /></td>
-                            <td><input type="text" disabled="disabled" style="width: 70px;" id="product_brand" /></td>
-                            <td><input type="text" disabled="disabled" style="width: 75px;" id="product_spec" /></td>
-                            <td><input type="text" style="width: 75px;" id="product_price" /></td>
-                            <td><input type="text" disabled="disabled" style="width: 75px;" id="product_unit" /></td>
-                            <td><input type="text" style="width: 75px;" id="product_buy_count" /></td>
-                            <td><input type="text" disabled="disabled" style="width: 75px;" id="product_total_money" /></td>
-                            <td><input type="text" disabled="disabled" style="width: 75px;" id="product_vender" /></td>
-                            <td><input type="text" style="width: 125px;" id="order_item_desc" /></td>
+                                <input type="text" autocomplete="off" disabled="disabled" style="width: 40px;text-align: center;" value="1" /></td>
+                            <td><input type="text" autocomplete="off" style="width: 95px;" id="product_id" /></td>
+                            <td><input type="text" autocomplete="off" style="width: 385px;" id="product_name" /></td>
+                            <td><input type="text" autocomplete="off" disabled="disabled" style="width: 70px;text-align: center;" id="product_brand" /></td>
+                            <td><input type="text" autocomplete="off" disabled="disabled" style="width: 75px;" id="product_spec" /></td>
+                            <td><input type="text" autocomplete="off" style="width: 75px; text-align: right;" id="product_price" /></td>
+                            <td><input type="text" autocomplete="off" disabled="disabled" style="width: 75px;text-align: center;" id="product_unit" /></td>
+                            <td><input type="text" autocomplete="off" style="width: 75px;text-align: center;" id="product_buy_count" /></td>
+                            <td><input type="text" autocomplete="off" disabled="disabled" style="width: 75px;text-align: right;" id="product_total_money" /></td>
+                            <td><input type="text" autocomplete="off" disabled="disabled" style="width: 75px;" id="product_vender" /></td>
+                            <td><input type="text" autocomplete="off" style="width: 125px;" id="order_item_desc" /></td>
                             <td><a title="删除该行" class="remove-order-row" href="javascript:void(this);">X</a></td>
                         </tr>
                     </tbody>
@@ -74,7 +74,8 @@
             </div>
 
             <div style="margin-top: .625em;">
-                <input type="submit" value="保存" />
+                <!--<input type="submit" value="保存" />-->
+                <input type="button" id="btn-order-save" value="保存" />
                 <input type="reset" id="reset-order-detail-form" value="清除所有数据" />
             </div>
 
@@ -82,7 +83,7 @@
     </form>
 </div>
 
-<div style="text-align: right;">
+<div style="text-align: left;">
     <div style="display: inline-block;">
         <input type="button" id="btn-store-new-replenish-order" value="新增进货单"  style="float:left;" />
         <div class="clearFixed"></div>
@@ -91,34 +92,44 @@
 
 
 
-<div>
+<div style="width: 1220px;">
 
     <table style="width: 100%;">
         <thead>
         <tr>
             <th>单据编号(自动生成)</th>
             <th>单据流水号(手工填写)</th>
-            <th>金额</th>
+            <th>单据类型</th>
+            <th style="text-align: right;">金额</th>
             <th>进货日期</th>
             <th>经办人</th>
             <th>备注</th>
+            <th>创建时间</th>
             <th>&nbsp;</th>
         </tr>
         </thead>
         <tbody class="replenish-order-list">
 
+        {{#compare viewData.length 'gt' 0 }}
+        {{#each viewData}}
         <tr>
-            <td style="text-align: center;">JH201700001</td>
-            <td style="text-align: center;">JH201700001</td>
-            <td style="text-align: center;">JH201700001</td>
-            <td style="text-align: center;">10,000.00</td>
-            <td style="text-align: center;">2017-06-07</td>
-            <td style="text-align: center;">张某某</td>
-            <td style="text-align: center;">2017第一次补货</td>
+            <td style="text-align: center;">{{order_id}}</td>
+            <td style="text-align: center;">{{order_flow_no}}</td>
+            <td style="text-align: center;">{{order_type_name}}单</td>
+            <td style="text-align: right;">{{order_money}}</td>
+            <td style="text-align: center;">{{order_date}}</td>
+            <td style="text-align: center;">{{order_person}}</td>
+            <td style="text-align: center;">{{order_desc}}</td>
+            <td style="text-align: center;">{{created_at}}</td>
+            <td><a href="/mans/stores/replenish/{{product_id}}">单据详情</a></td>
         </tr>
-        <tr>
-            <td colspan="7">当前还没有任何进货单据 ~</td>
-        </tr>
+        {{/each}}
+        {{/compare}}
+
+
+        {{#compare viewData.length 'eq' 0 }}
+        <td colspan="7">当前还没有任何进货单据 ~</td>
+        {{/compare}}
 
         </tbody>
     </table>
@@ -133,29 +144,77 @@
 {{#partial "blocks/script"}}
 <script type="text/javascript" id="r_1">
 
-    function clearOrderRow(row, rownumber) {
-        $(row).find("input:text").val("");
+    function getOrderDetailItems() {
 
-        if (rownumber)
-         $(row).find("input:text:first").val(rownumber);
+        var productList = [];
+        var productModelFields = [ 'product_id', 'product_price', 'product_buy_count', 'order_item_desc' ];
+
+        $(".order-detail-replenish-items").find(">tr").each(function () {
+
+            var $tr = this;
+            var p = {};
+
+            if (!$($tr).attr('product_id') || $($tr).attr('product_id').trim().length == 0) {
+                return;
+            }
+
+            for (var i=0; i<productModelFields.length; i++) {
+                p[productModelFields[i]] = $($tr).find("input:text[id='" + productModelFields[i] + "']").val();
+
+                if ('product_buy_count' == productModelFields[i] || 'product_price' == productModelFields[i]) {
+                    p[productModelFields[i]] = parseFloat(p[productModelFields[i]]);
+                    if (isNaN(p[productModelFields[i]])) p[productModelFields[i]] = 0.00;
+                    p[productModelFields[i]] = new Number(p[productModelFields[i]]).toFixed(2);
+                }
+
+
+            }
+
+            productList.push(p);
+
+        });
+
+        return productList;
+
+    }
+
+    function appendOrderItemsToForm(productList) {
+
+        for (var i=0; i<productList.length; i++) {
+            $("<input type='hidden' name='order_item_" + i + "' value='" + JSON.stringify(productList[i]) + "' />")
+                .appendTo($("#stores-order-detail-form"));
+        }
+
+        $("<input type='hidden' name='order_item_count' value='" + productList.length + "' />")
+           .appendTo($("#stores-order-detail-form"));
+
     }
 
     $(function () {
 
-       $("#btn-store-new-replenish-order").on("click", function () {
-            $(".store-new-replenish-order-form").slideDown();
-       });
+        $("#btn-order-save").on("click", function () {
+            appendOrderItemsToForm(getOrderDetailItems());
+            $("#stores-order-detail-form").submit();
+        });
 
-       $("#btn-append-new-order-row").on("click", function () {
+        $("#btn-store-new-replenish-order").on("click", function () {
+            $(".store-new-replenish-order-form").slideDown();
+        });
+
+        $("#btn-append-new-order-row").on("click", function () {
             var rowCount = $(".order-detail-replenish-items").find(">tr").length;
             var lastRow = $(".order-detail-replenish-items").find(">tr:last");
             var newRow = lastRow.clone();
             clearOrderRow(newRow);
             setRowNumber(newRow, rowCount + 1);
             lastRow.after(newRow);
-       });
+        });
 
-       $("#btn-clean-order-row").on("click", function () {
+        for (var i=0; i<4; i++) {
+           $("#btn-append-new-order-row").click();
+        }
+
+        $("#btn-clean-order-row").on("click", function () {
            $(".order-detail-replenish-items").find(">tr").each(function (index) {
 
                if (isOnlyOneRow()) return ;
@@ -175,17 +234,84 @@
               }
 
            });
-       });
+        });
 
-       $("#reset-order-detail-form").on("click", function () {
+        $("#reset-order-detail-form").on("click", function () {
            $(".order-detail-replenish-items").find(">tr:not(:first)").remove();
-       });
+        });
 
-       $(document).on("click", ".remove-order-row", function () {
+        $(document).on("click", ".remove-order-row", function () {
            removeOrderRow(this);
-       });
+        });
+
+        $(document).on("keydown", "#product_id", function (e) {
+
+           var code = e.keyCode || e.which;
+
+           if (!(code == '9' || code == '13')) {
+               return;
+           }
+
+           var product_id = $(this).val();
+           var currentRow = $(this).parents('tr')[0];
+
+           if ($(currentRow).attr("product_id") == product_id.trim()) {
+               return;
+           }
+
+           getProductById(product_id, function (error, result) {
+
+               if (error || result.code == 404) {
+                   return;
+               }
+
+               fillOutOrderDetailItem(currentRow, result.data);
+
+           });
+
+        });
+
+        // 上下箭头单元格移动
+        $(document).on("keydown", ".order-detail-replenish-items input:text", function (e) {
+
+            var code = e.keyCode || e.which;
+            if (!(code == '40' || code == '38')) {
+                return;
+            }
+
+            var isdown = code == '40';
+
+            var currentRow = $(this).parents('tr')[0];
+            var currentColumn = $(this).parents('td')[0];
+
+            var rowIndex = $(currentRow).prevAll('tr').length;
+            var colIndex = $(currentColumn).prevAll('td').length;
+
+            var targtRowIndex = isdown ? rowIndex + 1 : rowIndex - 1;
+
+            if (targtRowIndex < 0) return;
+            if (targtRowIndex > getOrderDetailItemCount() - 1) return;
+
+
+            $(".order-detail-replenish-items").find(">tr:eq(" + targtRowIndex + ")").find("input:text:eq(" + colIndex + ")").focus();
+
+        });
 
     });
+
+    function getOrderDetailItemCount() {
+        return $(".order-detail-replenish-items").find(">tr").length;
+    }
+
+    function fillOutOrderDetailItem(row, product) {
+
+        Object.keys(product).forEach(function (key) {
+            $(row).find("input:text[id='" + key + "']").val(product[key]);
+        });
+
+        $(row).attr("product_id", product['product_id']);
+
+    }
 
     function resortOrderRowNumber() {
         $(".order-detail-replenish-items").find(">tr").each(function (index) {
@@ -209,6 +335,26 @@
         } else {
             clearOrderRow(currentOrderRow, 1);
         }
+    }
+
+    function clearOrderRow(row, rownumber) {
+
+        $(row).find("input:text").val("");
+        $(row).removeAttr("product_id");
+
+        if (rownumber)
+            $(row).find("input:text:first").val(rownumber);
+    }
+
+    function getProductById(pid, done) {
+
+        var url = "/mans/products/" + pid + ".json";
+
+        $.get(url, function(result){
+            return done(result.error, result);
+        });
+
+
     }
 
 </script>

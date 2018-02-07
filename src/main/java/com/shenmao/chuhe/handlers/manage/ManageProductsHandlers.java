@@ -64,7 +64,11 @@ public class ManageProductsHandlers extends BaseHandler {
 
             if (reply.result().fieldNames().size() == 0) {
                 routingContext.reroute("/not-found");
-                //chainSerialization.putContextData(reply.result()).redirect("/not-found");
+                chainSerialization
+                        .setStatusRealCode(404)
+                        .putFlashMessage("你访问的产品不存在")
+                        .putContextData(null)
+                        .redirect("/not-found");
                 return;
             }
 
@@ -260,6 +264,7 @@ public class ManageProductsHandlers extends BaseHandler {
                 String message = reply.result() > 0 ? "成功更新一个产品 [" + productId + "]" : "内容无更新或产品不存在 [" + productId + "]";
 
                 ChainSerialization.create(routingContext.getDelegate())
+                        .setStatusRealCode(reply.result() > 0 ? 200 : 202)
                         .putMessage(message)
                         .putFlashMessage(message)
                         .redirect(routingContext.normalisedPath());

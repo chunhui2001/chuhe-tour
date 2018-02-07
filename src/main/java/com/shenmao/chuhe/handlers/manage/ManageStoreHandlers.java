@@ -8,7 +8,10 @@ import io.vertx.rxjava.ext.web.RoutingContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class ManageStoreHandlers extends BaseHandler {
 
@@ -49,11 +52,28 @@ public class ManageStoreHandlers extends BaseHandler {
      */
     public void storeReplenishIndex(RoutingContext routingContext) {
 
-        ChainSerialization chainSerialization = ChainSerialization.create(routingContext.getDelegate())
-                .putViewName("/man/stores/replenish/replenish_index.html")
-                .putMessage("进货管理");
 
-        chainSerialization.serialize();
+        this.chuheDbService.fetchAllOrders(reply -> {
+
+            if (reply.succeeded()) {
+                ChainSerialization chainSerialization = ChainSerialization.create(routingContext.getDelegate())
+                        .putViewName("/man/stores/replenish/replenish_index.html")
+                        .putContextData(reply.result())
+                        .putMessage("进货管理");
+                chainSerialization.serialize();
+                return;
+            }
+
+
+            ChainSerialization.create(routingContext.getDelegate())
+                    .putFlashMessage(reply.cause().getMessage())
+                    .putException(reply.cause())
+                    .putFlashException(reply.cause())
+                    .redirect("/mans/stores/replenish");
+
+        });
+
+
 
     }
 
@@ -80,8 +100,10 @@ public class ManageStoreHandlers extends BaseHandler {
 
         if (paramExists(routingContext, "order_date")) {
             result.put("order_date", getString(routingContext,"order_date"));
-        } else {
-            result.put("order_date", "2014-05-06");
+        }
+
+        if (paramExists(routingContext, "order_item_count")) {
+            result.put("order_item_count", getInteger(routingContext,"order_item_count"));
         }
 
         result.put("user_identity", routingContext.user().principal().getString("username"));
@@ -97,7 +119,37 @@ public class ManageStoreHandlers extends BaseHandler {
 
         JsonObject order = getOrderReplenishObject(routingContext);
 
-        this.chuheDbService.createOrder(order, reply -> {
+        if (!order.containsKey("order_flow_no") || order.getString("order_flow_no").trim().isEmpty()) {
+            ChainSerialization.create(routingContext.getDelegate())
+                    .putFlashMessage("请提供订单流~水号")
+                    .redirect("/mans/stores/replenish");
+            return;
+        }
+
+        if (!order.containsKey("order_item_count")) {
+            ChainSerialization.create(routingContext.getDelegate())
+                    .putFlashMessage("请提供订单条目详情数量")
+                    .redirect("/mans/stores/replenish");
+            return;
+        }
+
+        List<JsonObject> orderDetailItemList = new ArrayList<>();
+
+        for (int i=0; i<order.getInteger("order_item_count"); i++) {
+            JsonObject order_item = getJson(routingContext,"order_item_" + i);
+            order_item.put("product_price", Double.parseDouble(order_item.getString("product_price")));
+            order_item.put("product_buy_count", Double.parseDouble(order_item.getString("product_buy_count")));
+            orderDetailItemList.add(order_item);
+        }
+
+        if (orderDetailItemList.size() == 0) {
+            ChainSerialization.create(routingContext.getDelegate())
+                    .putFlashMessage("不允许提交空订单, 你提交的订单必须至少包含一条商品信息!")
+                    .redirect("/mans/stores/replenish");
+            return;
+        }
+
+        this.chuheDbService.createOrder(order, orderDetailItemList, reply -> {
 
             if (reply.succeeded()) {
                 // Long newProductId = reply.result();
@@ -108,7 +160,7 @@ public class ManageStoreHandlers extends BaseHandler {
                         .redirect("/mans/stores/replenish");
             } else {
                 ChainSerialization.create(routingContext.getDelegate())
-                        // .putFlashMessage(reply.cause().getMessage())
+                        .putFlashMessage(reply.cause().getMessage())
                         .putMessage(reply.cause().getMessage())
                         .putException(reply.cause())
                         .putFlashException(reply.cause())

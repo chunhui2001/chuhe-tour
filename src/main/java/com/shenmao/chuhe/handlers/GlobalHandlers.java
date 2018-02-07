@@ -111,7 +111,7 @@ public class GlobalHandlers {
       .setStatusCode(201)
       .setStatusRealCode(errorCode)
       .putViewName("/500.html")
-      .putMessage(errorMessage)
+      .putFlashMessage(errorMessage)
       .putContextData(new JsonObject())
       .putErrorTrace(errorsTrace.toString())
       .putExceptionClass(exceptionClassName)

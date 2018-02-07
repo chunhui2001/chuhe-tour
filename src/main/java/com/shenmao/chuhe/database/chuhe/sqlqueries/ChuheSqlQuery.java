@@ -22,4 +22,8 @@ public enum ChuheSqlQuery {
     SAVE_ORDER,
     DELETE_ORDER,
     DELETE_ORDER_BATCH,
+
+    // order items
+    CREATE_ORDER_ITEMS_REPLENISH_TABLE,
+    SAVE_ORDER_ITEMS_REPLENISH
 }

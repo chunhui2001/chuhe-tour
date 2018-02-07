@@ -152,6 +152,9 @@ public class ChuheDbVerticle extends AbstractVerticle {
         sqlQueries.put(ChuheSqlQuery.DELETE_ORDER, queriesProps.getProperty("delete-order"));
         sqlQueries.put(ChuheSqlQuery.DELETE_ORDER_BATCH, queriesProps.getProperty("delete-order-batch"));
 
+        sqlQueries.put(ChuheSqlQuery.CREATE_ORDER_ITEMS_REPLENISH_TABLE, queriesProps.getProperty("create-order-items-replenish-table"));
+        sqlQueries.put(ChuheSqlQuery.SAVE_ORDER_ITEMS_REPLENISH, queriesProps.getProperty("save-order-items-replenish"));
+
     }
 
 }

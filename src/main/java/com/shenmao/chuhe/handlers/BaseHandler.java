@@ -78,4 +78,43 @@ public class BaseHandler {
         return null;
     }
 
+    public Integer getInteger(RoutingContext routingContext, String key) {
+
+        JsonObject jsonData = getJsonData(routingContext);
+
+        if (jsonData != null && jsonData.containsKey(key)) {
+            return jsonData.getInteger(key);
+        }
+
+        MultiMap requestBody = getFormData(routingContext);
+
+        if (requestBody != null && requestBody.contains(key)
+                && !routingContext.request().getParam(key).trim().isEmpty()) {
+            return Integer.parseInt(routingContext.request().getParam(key).trim());
+
+        }
+
+        return null;
+    }
+
+    public JsonObject getJson(RoutingContext routingContext, String key) {
+
+        JsonObject jsonData = getJsonData(routingContext);
+        String jsonString = null;
+
+        if (jsonData != null && jsonData.containsKey(key)) {
+            jsonString = jsonData.getString(key);
+        }
+
+        MultiMap requestBody = getFormData(routingContext);
+
+        if (requestBody != null && requestBody.contains(key)
+                && !routingContext.request().getParam(key).trim().isEmpty()) {
+            jsonString = routingContext.request().getParam(key).trim();
+
+        }
+
+        return new JsonObject(jsonString);
+    }
+
 }

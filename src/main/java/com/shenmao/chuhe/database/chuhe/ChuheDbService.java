@@ -46,5 +46,14 @@ public interface ChuheDbService {
 
     // orders
     @Fluent
-    ChuheDbService createOrder(JsonObject order, Handler<AsyncResult<Long>> resultHandler);
+    ChuheDbService createOrder(JsonObject order, List<JsonObject> orderDetailItemList, Handler<AsyncResult<Long>> resultHandler);
+
+    @Fluent
+    ChuheDbService fetchAllOrders(Handler<AsyncResult<List<JsonObject>>> resultHandler);
+
+    @Fluent
+    ChuheDbService saveOrderItemsReplenish(JsonObject order, List<JsonObject> orderDetailItemList,
+                                           Handler<AsyncResult<Integer>> resultHandler);
+
+
 }
