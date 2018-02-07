@@ -271,6 +271,44 @@
 
         });
 
+
+        $(document).on("keydown", "#product_price,#product_buy_count", function (e) {
+
+            var code = e.keyCode || e.which;
+
+            // back . , left, right, up, down, enter, 0-9, copy, paste
+            if ((code < 48 || code > 57) && [8, 9,13,16,17,37,39, 67, 86,188,190].indexOf(code) == -1) {
+
+                return false;
+            }
+
+        });
+
+
+        // $(document).on("blur", "#product_price,#product_buy_count", function (e) {
+        //     calculateOrderItemTotalMoney($(this).parents('tr')[0],
+        //         parseFloat($("#product_buy_count").val()), parseFloat($("#product_price").val()));
+        // });
+
+        $(document).on("input", "#product_price,#product_buy_count", function (e) {
+
+            var code = e.keyCode || e.which;
+
+            var currentFloat = parseFloat($(this).val());
+
+            if ($(this).val().trim() != '' && isNaN(currentFloat)) {
+                $(this).val("0.00");
+                return;
+            }
+
+            if (code == 86)
+                $(this).val(currentFloat);
+
+            calculateOrderItemTotalMoney($(this).parents('tr')[0], parseFloat($("#product_buy_count").val()),
+                parseFloat($("#product_price").val()));
+
+        });
+
         // 上下箭头单元格移动
         $(document).on("keydown", ".order-detail-replenish-items input:text", function (e) {
 
@@ -310,6 +348,13 @@
         });
 
         $(row).attr("product_id", product['product_id']);
+        calculateOrderItemTotalMoney(row, parseFloat(product['product_buy_count']), parseFloat(product['product_price']));
+
+    }
+
+    function calculateOrderItemTotalMoney(row, count, price) {
+        var money = (isNaN(count) ? 0 : count) * (isNaN(price) ? 0 : price);
+        $(row).find("input:text[id='product_total_money']").val(money.toFixed(2));
 
     }
 

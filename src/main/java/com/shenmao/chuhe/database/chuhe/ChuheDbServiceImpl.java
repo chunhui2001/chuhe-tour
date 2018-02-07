@@ -21,6 +21,7 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Pattern;
 
 public class ChuheDbServiceImpl implements ChuheDbService {
 
@@ -493,9 +494,11 @@ public class ChuheDbServiceImpl implements ChuheDbService {
 
         String allOrdersReplenishSql = sqlQueries.get(ChuheSqlQuery.SAVE_ORDER_ITEMS_REPLENISH);
 
+        String s = allOrdersReplenishSql.substring(allOrdersReplenishSql.indexOf("("));     // (?, ?, ?, ?, ?, ?, ?)
+
         StringJoiner joiner = new StringJoiner(",");
-        for (int i=0; i<orderDetailItemList.size() - 1; i++) joiner.add("(?, ?, ?, ?, ?, ?, ?)");
-        allOrdersReplenishSql = allOrdersReplenishSql + "," + joiner.toString();
+        for (int i=0; i<orderDetailItemList.size() - 1; i++) joiner.add(s);
+        if (orderDetailItemList.size() > 1) allOrdersReplenishSql = allOrdersReplenishSql + "," + joiner.toString();
 
         LOGGER.info( allOrdersReplenishSql);
 
