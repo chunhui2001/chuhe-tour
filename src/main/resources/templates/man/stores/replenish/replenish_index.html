@@ -29,7 +29,7 @@
         <fieldset style="margin-bottom: 1em;">
             <legend>进货单详情</legend>
 
-            <div style="margin: .425em 0;">
+            <div style="margin: .4n 25em 0;">
                 <input type="button" id="btn-append-new-order-row" value="增加新行" />
             </div>
 
@@ -141,58 +141,19 @@
 
 
 {{#partial "blocks/script"}}
+<script type="text/javascript" src="/scripts/table/table-calculate.js"></script>
 <script type="text/javascript" id="r_1">
 
-    function getOrderDetailItems() {
 
-        var productList = [];
-        var productModelFields = [ 'product_id', 'product_price', 'product_buy_count', 'order_item_desc' ];
-
-        $(".order-detail-replenish-items").find(">tr").each(function () {
-
-            var $tr = this;
-            var p = {};
-
-            if (!$($tr).attr('product_id') || $($tr).attr('product_id').trim().length == 0) {
-                return;
-            }
-
-            for (var i=0; i<productModelFields.length; i++) {
-                p[productModelFields[i]] = $($tr).find("input:text[id='" + productModelFields[i] + "']").val();
-
-                if ('product_buy_count' == productModelFields[i] || 'product_price' == productModelFields[i]) {
-                    p[productModelFields[i]] = parseFloat(p[productModelFields[i]]);
-                    if (isNaN(p[productModelFields[i]])) p[productModelFields[i]] = 0.00;
-                    p[productModelFields[i]] = new Number(p[productModelFields[i]]).toFixed(2);
-                }
-
-
-            }
-
-            productList.push(p);
-
-        });
-
-        return productList;
-
-    }
-
-    function appendOrderItemsToForm(productList) {
-
-        for (var i=0; i<productList.length; i++) {
-            $("<input type='hidden' name='order_item_" + i + "' value='" + JSON.stringify(productList[i]) + "' />")
-                .appendTo($("#stores-order-detail-form"));
-        }
-
-        $("<input type='hidden' name='order_item_count' value='" + productList.length + "' />")
-           .appendTo($("#stores-order-detail-form"));
-
-    }
+    var productModelFields = [ 'product_id', 'product_price', 'product_buy_count', 'order_item_desc' ];
+    var calculateTable = new CalculateTable(".order-detail-replenish-items", "product_id", 'product_price', 'product_buy_count', 'product_total_money');
 
     $(function () {
 
+        calculateTable.init();
+
         $("#btn-order-save").on("click", function () {
-            appendOrderItemsToForm(getOrderDetailItems());
+            calculateTable.appendOrderItemsToForm(productModelFields, "#stores-order-detail-form", "order_item_", "order_item_count");
             $("#stores-order-detail-form").submit();
         });
 
@@ -200,206 +161,19 @@
             $(".store-new-replenish-order-form").slideDown();
         });
 
-        $("#btn-append-new-order-row").on("click", function () {
-            var rowCount = $(".order-detail-replenish-items").find(">tr").length;
-            var lastRow = $(".order-detail-replenish-items").find(">tr:last");
-            var newRow = lastRow.clone();
-            clearOrderRow(newRow);
-            setRowNumber(newRow, rowCount + 1);
-            lastRow.after(newRow);
-        });
+        calculateTable.newOrderRow("#btn-append-new-order-row");
+        calculateTable.removeEmptyOrderDetailItemRow("btn-clean-order-row");
+        calculateTable.removeOrderItemRow(".remove-order-row");
+        calculateTable.enterOrTabToSearch("/mans/products");
 
         for (var i=0; i<4; i++) {
-           $("#btn-append-new-order-row").click();
+            $("#btn-append-new-order-row").click();
         }
 
-        $("#btn-clean-order-row").on("click", function () {
-           $(".order-detail-replenish-items").find(">tr").each(function (index) {
 
-               if (isOnlyOneRow()) return ;
-
-               var isempty = true;
-
-               $(this).find("input:text:not(:first)").each(function () {
-                  if ($(this).val().length > 0) {
-                      isempty = false;
-                      return false;
-                  }
-               });
-
-              if (isempty) {
-                  $(this).remove();
-                  resortOrderRowNumber();
-              }
-
-           });
-        });
-
-        $("#reset-order-detail-form").on("click", function () {
-           $(".order-detail-replenish-items").find(">tr:not(:first)").remove();
-        });
-
-        $(document).on("click", ".remove-order-row", function () {
-           removeOrderRow(this);
-        });
-
-        $(document).on("keydown", "#product_id", function (e) {
-
-           var code = e.keyCode || e.which;
-
-           if (!(code == '9' || code == '13')) {
-               return;
-           }
-
-           var product_id = $(this).val();
-           var currentRow = $(this).parents('tr')[0];
-
-           if ($(currentRow).attr("product_id") == product_id.trim()) {
-               return;
-           }
-
-           getProductById(product_id, function (error, result) {
-
-               if (error || result.code == 404) {
-                   return;
-               }
-
-               fillOutOrderDetailItem(currentRow, result.data);
-
-           });
-
-        });
-
-
-        $(document).on("keydown", "#product_price,#product_buy_count", function (e) {
-
-            var code = e.keyCode || e.which;
-
-            // back . , left, right, up, down, enter, 0-9, copy, paste
-            if ((code < 48 || code > 57) && [8, 9,13,16,17,37,39, 67, 86,188,190].indexOf(code) == -1) {
-
-                return false;
-            }
-
-        });
-
-
-        // $(document).on("blur", "#product_price,#product_buy_count", function (e) {
-        //     calculateOrderItemTotalMoney($(this).parents('tr')[0],
-        //         parseFloat($("#product_buy_count").val()), parseFloat($("#product_price").val()));
-        // });
-
-        $(document).on("input", "#product_price,#product_buy_count", function (e) {
-
-            var code = e.keyCode || e.which;
-
-            var currentFloat = parseFloat($(this).val());
-
-            if ($(this).val().trim() != '' && isNaN(currentFloat)) {
-                $(this).val("0.00");
-                return;
-            }
-
-            if (code == 86)
-                $(this).val(currentFloat);
-
-            calculateOrderItemTotalMoney($(this).parents('tr')[0], parseFloat($("#product_buy_count").val()),
-                parseFloat($("#product_price").val()));
-
-        });
-
-        // 上下箭头单元格移动
-        $(document).on("keydown", ".order-detail-replenish-items input:text", function (e) {
-
-            var code = e.keyCode || e.which;
-            if (!(code == '40' || code == '38')) {
-                return;
-            }
-
-            var isdown = code == '40';
-
-            var currentRow = $(this).parents('tr')[0];
-            var currentColumn = $(this).parents('td')[0];
-
-            var rowIndex = $(currentRow).prevAll('tr').length;
-            var colIndex = $(currentColumn).prevAll('td').length;
-
-            var targtRowIndex = isdown ? rowIndex + 1 : rowIndex - 1;
-
-            if (targtRowIndex < 0) return;
-            if (targtRowIndex > getOrderDetailItemCount() - 1) return;
-
-
-            $(".order-detail-replenish-items").find(">tr:eq(" + targtRowIndex + ")").find("input:text:eq(" + colIndex + ")").focus();
-
-        });
 
     });
 
-    function getOrderDetailItemCount() {
-        return $(".order-detail-replenish-items").find(">tr").length;
-    }
-
-    function fillOutOrderDetailItem(row, product) {
-
-        Object.keys(product).forEach(function (key) {
-            $(row).find("input:text[id='" + key + "']").val(product[key]);
-        });
-
-        $(row).attr("product_id", product['product_id']);
-        calculateOrderItemTotalMoney(row, parseFloat(product['product_buy_count']), parseFloat(product['product_price']));
-
-    }
-
-    function calculateOrderItemTotalMoney(row, count, price) {
-        var money = (isNaN(count) ? 0 : count) * (isNaN(price) ? 0 : price);
-        $(row).find("input:text[id='product_total_money']").val(money.toFixed(2));
-
-    }
-
-    function resortOrderRowNumber() {
-        $(".order-detail-replenish-items").find(">tr").each(function (index) {
-            setRowNumber(this, index + 1);
-        });
-    }
-
-    function isOnlyOneRow() {
-        return $(".order-detail-replenish-items").find(">tr").length == 1;
-    }
-
-    function setRowNumber(row, number) {
-        $(row).find("input:text:first").val(number);
-    }
-
-    function removeOrderRow(sender) {
-        var currentOrderRow = $(sender).parents("tr")[0];
-        if (!isOnlyOneRow()) {
-            $(currentOrderRow).remove();
-            resortOrderRowNumber();
-        } else {
-            clearOrderRow(currentOrderRow, 1);
-        }
-    }
-
-    function clearOrderRow(row, rownumber) {
-
-        $(row).find("input:text").val("");
-        $(row).removeAttr("product_id");
-
-        if (rownumber)
-            $(row).find("input:text:first").val(rownumber);
-    }
-
-    function getProductById(pid, done) {
-
-        var url = "/mans/products/" + pid + ".json";
-
-        $.get(url, function(result){
-            return done(result.error, result);
-        });
-
-
-    }
 
 </script>
 {{/partial}}
