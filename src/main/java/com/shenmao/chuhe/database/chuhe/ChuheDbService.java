@@ -38,6 +38,9 @@ public interface ChuheDbService {
     ChuheDbService fetchProductById(Long productId, Handler<AsyncResult<JsonObject>> resultHandler);
 
     @Fluent
+    ChuheDbService fetchProductsByIdList(List<Long> productIdList, Handler<AsyncResult<List<JsonObject>>> resultHandler);
+
+    @Fluent
     ChuheDbService deleteProductById(Long productId, Handler<AsyncResult<Integer>> resultHandler);
 
     @Fluent
@@ -51,9 +54,9 @@ public interface ChuheDbService {
     @Fluent
     ChuheDbService fetchAllOrders(Handler<AsyncResult<List<JsonObject>>> resultHandler);
 
-    @Fluent
-    ChuheDbService saveOrderItemsReplenish(JsonObject order, List<JsonObject> orderDetailItemList,
-                                           Handler<AsyncResult<Integer>> resultHandler);
+    //@Fluent
+    //ChuheDbService saveOrderItemsReplenish(JsonObject order, List<JsonObject> orderDetailItemList,
+    //                                       Handler<AsyncResult<Integer>> resultHandler);
 
 
 }

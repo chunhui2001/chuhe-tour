@@ -63,12 +63,11 @@ public class ManageProductsHandlers extends BaseHandler {
             }
 
             if (reply.result().fieldNames().size() == 0) {
-                routingContext.reroute("/not-found");
                 chainSerialization
                         .setStatusRealCode(404)
                         .putFlashMessage("你访问的产品不存在")
                         .putContextData(null)
-                        .redirect("/not-found");
+                        .redirect("/not-found", true);
                 return;
             }
 

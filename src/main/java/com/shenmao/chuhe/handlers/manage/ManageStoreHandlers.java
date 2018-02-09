@@ -137,6 +137,7 @@ public class ManageStoreHandlers extends BaseHandler {
 
         for (int i=0; i<order.getInteger("order_item_count"); i++) {
             JsonObject order_item = getJson(routingContext,"order_item_" + i);
+            order_item.put("product_id", Long.parseLong(order_item.getString("product_id")));
             order_item.put("product_price", Double.parseDouble(order_item.getString("product_price")));
             order_item.put("product_buy_count", Double.parseDouble(order_item.getString("product_buy_count")));
             orderDetailItemList.add(order_item);

@@ -9,6 +9,8 @@ import io.vertx.core.Handler;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.sql.ResultSet;
+import io.vertx.ext.sql.UpdateResult;
 import io.vertx.rxjava.ext.sql.SQLClient;
 import io.vertx.rx.java.RxHelper;
 import io.vertx.ext.sql.SQLConnection;
@@ -16,12 +18,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rx.Observable;
 import rx.Single;
+import rx.exceptions.CompositeException;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Pattern;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 public class ChuheDbServiceImpl implements ChuheDbService {
 
@@ -94,6 +99,32 @@ public class ChuheDbServiceImpl implements ChuheDbService {
 
         return this;
     }
+
+
+    @Fluent
+    public ChuheDbService fetchProductsByIdList(List<Long> productIdList, Handler<AsyncResult<List<JsonObject>>> resultHandler) {
+
+        Single<ResultSet> productListSingle = this.dbClient.rxQuery("");
+
+        return this;
+    }
+
+
+    public Single<ResultSet> fetchProductsByIdList(List<Long> productIdList) {
+
+        StringBuilder sql = new StringBuilder(sqlQueries.get(ChuheSqlQuery.GET_PRODUCTS_BY_IDLIST));
+
+        JsonArray params = replaceAndGetSqlParams(sql, "_product_id_list_", productIdList);
+
+        LOGGER.info(sql.toString());
+
+        Single<ResultSet> productListSingle = this.dbClient.rxQueryWithParams(sql.toString(), params);
+
+        return productListSingle;
+
+    }
+
+
 
     final SimpleDateFormat _DATE_FM_T = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
     final SimpleDateFormat _DATE_FM_HOUR = new SimpleDateFormat("yyyy年MM月dd日 HH时mm分");
@@ -282,6 +313,24 @@ public class ChuheDbServiceImpl implements ChuheDbService {
         return this;
     }
 
+    private JsonArray replaceAndGetSqlParams(StringBuilder sql, String s, List<Long> productIdList) {
+
+        JsonArray sqlParam = new JsonArray();
+        StringJoiner joiner = new StringJoiner(",");
+
+        productIdList.forEach(pid -> {
+            sqlParam.add(pid);
+            joiner.add( "?");
+        });
+
+        String temp = sql.toString().replaceAll(s, joiner.toString());
+
+        sql.delete(0, sql.toString().length()).append(temp);
+
+        return sqlParam;
+
+    }
+
     @Override
     public ChuheDbService deleteProductBatch(List<Long> productIdList, Handler<AsyncResult<Integer>> resultHandler) {
 
@@ -336,6 +385,15 @@ public class ChuheDbServiceImpl implements ChuheDbService {
         return this;
     }
 
+    private List<Long> getProductIdInOrderItems(List<JsonObject> orderDetailItemList) {
+
+        return orderDetailItemList
+                .stream()
+                .map(item -> item.getLong("product_id"))
+                .collect(Collectors.toList());
+
+    }
+
     @Override
     public ChuheDbService createOrder(JsonObject order, List<JsonObject> orderDetailItemList, Handler<AsyncResult<Long>> resultHandler) {
 
@@ -369,26 +427,37 @@ public class ChuheDbServiceImpl implements ChuheDbService {
             data.addNull();
         }
 
-
-        this.dbClient.updateWithParams(createOrderSql, data, reply -> {
-
-            if (reply.succeeded()) {
-                Long newOrderId = reply.result().getKeys().getLong(0);
-                order.put("order_id", newOrderId);
-                saveOrderItemsReplenish(order, orderDetailItemList, ar -> {
-                    if (ar.succeeded()) {
-                        System.out.println(ar.result() + ", save order detail item list successful");
-                    }    else {
-                        System.out.println("save order detail item list failes");
-                    }
+        // https://github.com/vert-x3/vertx-examples/blob/master/rxjava-1-examples/src/main/java/io/vertx/example/rxjava/database/jdbc/Transaction.java
+        this.dbClient.rxGetConnection()
+                .flatMap(conn ->
+                    conn
+                        .rxSetAutoCommit(false)
+                        // insert order
+                        .flatMap(autoCommit -> conn.rxUpdateWithParams(createOrderSql, data))
+                        // get products
+                        .flatMap(updateResult -> {
+                            Long newOrderId = updateResult.getKeys().getLong(0);
+                            order.put("order_id", newOrderId);
+                            return this.fetchProductsByIdList(getProductIdInOrderItems(orderDetailItemList));
+                        })
+                        .map(ResultSet::getRows)
+                        // inert order items
+                        .flatMap(productList -> {
+                            return saveOrderItemsReplenish(order, productList, orderDetailItemList);
+                        })
+                        .flatMap(updateResult -> conn.rxCommit().map(commit -> updateResult))
+                        .onErrorResumeNext(ex ->
+                                conn.rxRollback()
+                                    .onErrorResumeNext(ex2 ->
+                                            Single.error(new CompositeException(ex, ex2))
+                                    )
+                            .flatMap(ignore -> Single.error(ex))
+                        ).doAfterTerminate(conn::close)
+                ).subscribe(updateResult -> {
+                    resultHandler.handle(Future.succeededFuture(order.getLong("order_id")));
+                }, error -> {
+                    resultHandler.handle(Future.failedFuture(error.getMessage()));
                 });
-
-                resultHandler.handle(Future.succeededFuture(newOrderId));
-            } else {
-                resultHandler.handle(Future.failedFuture(reply.cause()));
-            }
-        });
-
 
         return this;
     }
@@ -488,9 +557,16 @@ public class ChuheDbServiceImpl implements ChuheDbService {
         return this;
     }
 
-    @Override
-    public ChuheDbService saveOrderItemsReplenish(JsonObject order, List<JsonObject> orderDetailItemList,
-                                                  Handler<AsyncResult<Integer>> resultHandler) {
+    private String getProductNameById(Long productId,  List<JsonObject> productList) {
+
+        JsonObject result = productList.stream().filter(p -> {
+            return p.getLong("product_id").compareTo(productId) == 0;
+        }).findFirst().get();
+
+        return result != null ? result.getString("product_name") : null;
+    }
+
+    public Single<UpdateResult> saveOrderItemsReplenish(JsonObject order, List<JsonObject> productList, List<JsonObject> orderDetailItemList) {
 
         String allOrdersReplenishSql = sqlQueries.get(ChuheSqlQuery.SAVE_ORDER_ITEMS_REPLENISH);
 
@@ -508,11 +584,15 @@ public class ChuheDbServiceImpl implements ChuheDbService {
 
             JsonObject item = orderDetailItemList.get(i);
 
+            String productName = getProductNameById(item.getLong("product_id"), productList);
+
             params.add(order.getValue("order_type"));
             params.add(order.getValue("order_id"));
             params.add(item.getValue("product_id"));
-            //params.add(item.getValue("product_name"));
-            params.addNull();
+
+            if (productName != null) params.add(productName);
+            else params.addNull();
+
             params.add(item.getValue("product_price"));
             params.add(item.getValue("product_buy_count"));
 
@@ -523,19 +603,9 @@ public class ChuheDbServiceImpl implements ChuheDbService {
             }
         }
 
+        Single<UpdateResult> saveOrderItemsSingle = this.dbClient.rxUpdateWithParams(allOrdersReplenishSql, params);
 
-        this.dbClient.updateWithParams(allOrdersReplenishSql, params, resultAsyncResult -> {
-
-            if (resultAsyncResult.succeeded()) {
-                resultHandler.handle(Future.succeededFuture(resultAsyncResult.result().getUpdated()));
-            } else {
-                resultHandler.handle(Future.failedFuture(resultAsyncResult.cause()));
-            }
-        });
-
-
-
-        return this;
+        return saveOrderItemsSingle;
 
     }
 

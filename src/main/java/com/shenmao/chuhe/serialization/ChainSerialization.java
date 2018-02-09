@@ -128,17 +128,27 @@ public class ChainSerialization {
     return this;
   }
 
-  public void redirect(String url) {
+  public void redirect(String url, boolean reroute) {
 
     SerializeOptions serializeOptions = (SerializeOptions)this._context.data().get("serializeOptions");
 
+    System.out.println(serializeOptions.getType() + ", serializeOptions.getType() 2");
     if (serializeOptions.getType() == SerializeType.HTML) {
-      this._context.response().setStatusCode(302).putHeader("Location", url).end();
+      if (reroute) {
+        this._context.reroute(url);
+      } else {
+        this._context.response().setStatusCode(302).putHeader("Location", url).end();
+      }
       return;
     }
 
     this.serialize();
 
+  }
+
+
+  public void redirect(String url) {
+    redirect(url, false);
   }
 
 }

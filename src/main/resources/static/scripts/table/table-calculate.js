@@ -37,6 +37,8 @@ CalculateTable.prototype = {
         clearOrderRow(this, row, rownumber);
     },
     fillOutOrderDetailItem: function (row, object) {
+
+        debugger;
         var $this = this;
         Object.keys(object).forEach(function (key) {
             $(row).find("input:text[id='" + key + "']").val(object[key]);
@@ -256,16 +258,19 @@ function enterOrTabToSearchfunction (calculateTable, url, done) {
         var _pk = $(this).val();
         var currentRow = $(this).parents('tr')[0];
 
+        debugger;
         if ($(currentRow).attr($this.pk) == _pk.trim()) {
             return;
         }
 
+        debugger;
         $this.getData(url, _pk, function (error, result) {
 
             if (error || result.code == 404) {
                 return;
             }
 
+            debugger;
             $this.fillOutOrderDetailItem(currentRow, result.data);
 
         });

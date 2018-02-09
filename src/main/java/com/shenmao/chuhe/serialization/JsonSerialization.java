@@ -28,7 +28,7 @@ public class JsonSerialization {
       if (realcode == -1) realcode = 501;
     }
 
-//    realcode = realcode == -1 ? 200 : realcode;
+    realcode = realcode == -1 ? 200 : realcode;
 
     context.response().setStatusCode(200);
 

@@ -132,6 +132,7 @@ public class ChuheDbVerticle extends AbstractVerticle {
         sqlQueries.put(ChuheSqlQuery.DELETE_PRODUCT, queriesProps.getProperty("delete-product"));
         sqlQueries.put(ChuheSqlQuery.DELETE_PRODUCT_BATCH, queriesProps.getProperty("delete-product-batch"));
         sqlQueries.put(ChuheSqlQuery.LAST_INSERT_ID, queriesProps.getProperty("last_insert_id"));
+        sqlQueries.put(ChuheSqlQuery.GET_PRODUCTS_BY_IDLIST, queriesProps.getProperty("get-products-by-id-list"));
 
     }
 

@@ -12,6 +12,7 @@ public enum ChuheSqlQuery {
     SAVE_PRODUCT,
     DELETE_PRODUCT,
     DELETE_PRODUCT_BATCH,
+    GET_PRODUCTS_BY_IDLIST,
 
 
     // orders_replenish
