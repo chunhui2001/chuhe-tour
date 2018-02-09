@@ -15,7 +15,7 @@ public enum ChuheSqlQuery {
     GET_PRODUCTS_BY_IDLIST,
 
 
-    // orders_replenish
+    // orders
     CREATE_ORDERS_TABLE,
     ALL_ORDERS,
     GET_ORDER,
@@ -24,7 +24,8 @@ public enum ChuheSqlQuery {
     DELETE_ORDER,
     DELETE_ORDER_BATCH,
 
-    // order items
+    // order replenish items
     CREATE_ORDER_ITEMS_REPLENISH_TABLE,
-    SAVE_ORDER_ITEMS_REPLENISH
+    SAVE_ORDER_ITEMS_REPLENISH,
+    GET_ORDER_ITEMS_REPLENISH
 }

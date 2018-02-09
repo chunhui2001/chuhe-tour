@@ -609,4 +609,41 @@ public class ChuheDbServiceImpl implements ChuheDbService {
 
     }
 
+    @Override
+    public ChuheDbService getOrderDetail(Long orderId, Handler<AsyncResult<JsonObject>> resultHandler) {
+
+        String getOrderSql = sqlQueries.get(ChuheSqlQuery.GET_ORDER);
+        String getOrderItemsReplenishSql = sqlQueries.get(ChuheSqlQuery.GET_ORDER_ITEMS_REPLENISH);
+
+        JsonArray parsms = new JsonArray().add(orderId);
+
+        JsonArray returnOrder = new JsonArray();
+
+        this.dbClient.rxQueryWithParams(getOrderSql, parsms)
+                .flatMap(resultSet -> {
+
+                    JsonObject targetOrder = resultSet.getRows().get(0);
+                    returnOrder.add(targetOrder);
+
+                    String getOrderItemsSql = null;
+
+                    if (targetOrder.getString("order_type").equals("replenish")) {
+                        getOrderItemsSql = getOrderItemsReplenishSql;
+                    }
+
+                    return this.dbClient.rxQueryWithParams(getOrderItemsSql, parsms);
+                })
+                .subscribe(orderIems -> {
+                    returnOrder.getJsonObject(0).put("order_items", orderIems.getRows());
+                    resultHandler.handle(Future.succeededFuture(returnOrder.getJsonObject(0)));
+                }, error -> {
+                    resultHandler.handle(Future.failedFuture(error.getMessage()));
+                });
+
+        return this;
+
+    }
+
+
+
 }

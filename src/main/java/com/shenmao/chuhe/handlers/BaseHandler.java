@@ -97,6 +97,12 @@ public class BaseHandler {
         return null;
     }
 
+    public Long getLong(RoutingContext routingContext, String key) {
+        Integer value = getInteger(routingContext, key);
+        if (value == null) return null;
+        return Long.parseLong(value + "");
+    }
+
     public JsonObject getJson(RoutingContext routingContext, String key) {
 
         JsonObject jsonData = getJsonData(routingContext);

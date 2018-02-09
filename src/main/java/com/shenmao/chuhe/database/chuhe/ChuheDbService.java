@@ -6,6 +6,7 @@ import io.vertx.codegen.annotations.ProxyGen;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.rxjava.ext.sql.SQLClient;
 
@@ -54,9 +55,11 @@ public interface ChuheDbService {
     @Fluent
     ChuheDbService fetchAllOrders(Handler<AsyncResult<List<JsonObject>>> resultHandler);
 
-    //@Fluent
-    //ChuheDbService saveOrderItemsReplenish(JsonObject order, List<JsonObject> orderDetailItemList,
-    //                                       Handler<AsyncResult<Integer>> resultHandler);
+    @Fluent
+    ChuheDbService getOrderDetail(Long orderId, Handler<AsyncResult<JsonObject>> resultHandler);
+
+
+
 
 
 }

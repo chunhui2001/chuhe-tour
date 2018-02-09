@@ -170,19 +170,44 @@ public class ManageOrderHandlers extends BaseHandler {
 
     }
 
-
     /**
      * 进货管理首页
      * @param routingContext
      */
     public void ordersSaleIndex(RoutingContext routingContext) {
-
-
         ChainSerialization chainSerialization = ChainSerialization.create(routingContext.getDelegate())
                 .putViewName("/man/orders/sales/sales_index.html")
                 .putMessage("销售管理");
-
         chainSerialization.serialize();
+    }
+
+    /**
+     * 订单详情，
+     * @param routingContext
+     */
+    public void orderDetail(RoutingContext routingContext) {
+
+        Long orderId = getLong(routingContext,"param0");
+
+        ChainSerialization chainSerialization = ChainSerialization.create(routingContext.getDelegate())
+                .putViewName("/man/orders/order_deatils.html")
+                .putMessage("订单详情");
+
+        this.chuheDbService.getOrderDetail(orderId, reply -> {
+
+            if (reply.succeeded()) {
+                chainSerialization.putContextData(reply.result());
+            } else {
+                chainSerialization
+                        .putFlashMessage(reply.cause().getMessage())
+                        .putMessage(reply.cause().getMessage())
+                        .putException(reply.cause())
+                        .putFlashException(reply.cause());
+            }
+
+            chainSerialization.serialize();
+
+        });
 
     }
 

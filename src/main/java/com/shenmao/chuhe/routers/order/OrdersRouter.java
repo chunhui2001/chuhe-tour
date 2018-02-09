@@ -49,6 +49,11 @@ public class OrdersRouter {
 
         this.router.routeWithRegex(GET, getOrdersSalesRouter())
                 .handler(manageHandlers::ordersSaleIndex);
+
+        //order details
+        this.router.routeWithRegex(GET, getOrdersReplenishRouter("(?<orderId>[^\\/.]+)"))
+                .handler(manageHandlers::orderDetail);
+
     }
 
 }
