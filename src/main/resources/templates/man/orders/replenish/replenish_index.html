@@ -18,7 +18,7 @@
 {{/if}}
 
 <div style="display: none;" class="store-new-replenish-order-form">
-    <form id="stores-order-detail-form" action="/mans/stores/replenish" method="POST">
+    <form id="orders-order-detail-form" action="/mans/orders/replenish" method="POST">
         <fieldset style="margin-bottom: 1em;">
             <legend>新增进货单</legend>
         订单流水号：<input type="text" name="order_flow_no" required placeholder="订单流水号"/>&ensp;&ensp;&ensp;&ensp;
@@ -120,7 +120,7 @@
             <td style="text-align: center;">{{order_person}}</td>
             <td style="text-align: center;">{{order_desc}}</td>
             <td style="text-align: center;">{{created_at}}</td>
-            <td><a href="/mans/stores/replenish/{{product_id}}">单据详情</a></td>
+            <td><a href="/mans/orders/replenish/{{product_id}}">单据详情</a></td>
         </tr>
         {{/each}}
         {{/compare}}
@@ -153,8 +153,8 @@
         calculateTable.init();
 
         $("#btn-order-save").on("click", function () {
-            calculateTable.appendOrderItemsToForm(productModelFields, "#stores-order-detail-form", "order_item_", "order_item_count");
-            $("#stores-order-detail-form").submit();
+            calculateTable.appendOrderItemsToForm(productModelFields, "#orders-order-detail-form", "order_item_", "order_item_count");
+            $("#orders-order-detail-form").submit();
         });
 
         $("#btn-store-new-replenish-order").on("click", function () {

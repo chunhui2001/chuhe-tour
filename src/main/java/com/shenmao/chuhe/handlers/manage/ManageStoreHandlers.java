@@ -38,7 +38,7 @@ public class ManageStoreHandlers extends BaseHandler {
 
 
         ChainSerialization chainSerialization = ChainSerialization.create(routingContext.getDelegate())
-                .putViewName("/man/stores/stores_index.html")
+                .putViewName("/man/orders/orders_index.html")
                 .putMessage("进销存管理");
 
         chainSerialization.serialize();
@@ -57,7 +57,7 @@ public class ManageStoreHandlers extends BaseHandler {
 
             if (reply.succeeded()) {
                 ChainSerialization chainSerialization = ChainSerialization.create(routingContext.getDelegate())
-                        .putViewName("/man/stores/replenish/replenish_index.html")
+                        .putViewName("/man/orders/replenish/replenish_index.html")
                         .putContextData(reply.result())
                         .putMessage("进货管理");
                 chainSerialization.serialize();
@@ -69,7 +69,7 @@ public class ManageStoreHandlers extends BaseHandler {
                     .putFlashMessage(reply.cause().getMessage())
                     .putException(reply.cause())
                     .putFlashException(reply.cause())
-                    .redirect("/mans/stores/replenish");
+                    .redirect("/mans/orders/replenish");
 
         });
 
@@ -122,14 +122,14 @@ public class ManageStoreHandlers extends BaseHandler {
         if (!order.containsKey("order_flow_no") || order.getString("order_flow_no").trim().isEmpty()) {
             ChainSerialization.create(routingContext.getDelegate())
                     .putFlashMessage("请提供订单流~水号")
-                    .redirect("/mans/stores/replenish");
+                    .redirect("/mans/orders/replenish");
             return;
         }
 
         if (!order.containsKey("order_item_count")) {
             ChainSerialization.create(routingContext.getDelegate())
                     .putFlashMessage("请提供订单条目详情数量")
-                    .redirect("/mans/stores/replenish");
+                    .redirect("/mans/orders/replenish");
             return;
         }
 
@@ -146,7 +146,7 @@ public class ManageStoreHandlers extends BaseHandler {
         if (orderDetailItemList.size() == 0) {
             ChainSerialization.create(routingContext.getDelegate())
                     .putFlashMessage("不允许提交空订单, 你提交的订单必须至少包含一条商品信息!")
-                    .redirect("/mans/stores/replenish");
+                    .redirect("/mans/orders/replenish");
             return;
         }
 
@@ -158,14 +158,14 @@ public class ManageStoreHandlers extends BaseHandler {
                         .putContextData(reply.result())
                         .putFlashMessage("成功添加一个进货单")
                         .putMessage("成功添加一个进货单")
-                        .redirect("/mans/stores/replenish");
+                        .redirect("/mans/orders/replenish");
             } else {
                 ChainSerialization.create(routingContext.getDelegate())
                         .putFlashMessage(reply.cause().getMessage())
                         .putMessage(reply.cause().getMessage())
                         .putException(reply.cause())
                         .putFlashException(reply.cause())
-                        .redirect("/mans/stores/replenish");
+                        .redirect("/mans/orders/replenish");
             }
 
         });
@@ -177,11 +177,11 @@ public class ManageStoreHandlers extends BaseHandler {
      * 进货管理首页
      * @param routingContext
      */
-    public void storeSaleIndex(RoutingContext routingContext) {
+    public void ordersSaleIndex(RoutingContext routingContext) {
 
 
         ChainSerialization chainSerialization = ChainSerialization.create(routingContext.getDelegate())
-                .putViewName("/man/stores/sales/sales_index.html")
+                .putViewName("/man/orders/sales/sales_index.html")
                 .putMessage("销售管理");
 
         chainSerialization.serialize();

@@ -4,7 +4,7 @@ import com.shenmao.chuhe.database.chuhe.ChuheDbService;
 import com.shenmao.chuhe.handlers.manage.ManageProductsHandlers;
 import com.shenmao.chuhe.handlers.manage.ManageStoreHandlers;
 import com.shenmao.chuhe.routers.product.ProductRouter;
-import com.shenmao.chuhe.routers.store.StoreRouter;
+import com.shenmao.chuhe.routers.order.OrdersRouter;
 import io.vertx.rxjava.core.Vertx;
 import io.vertx.rxjava.ext.web.Router;
 import io.vertx.rxjava.ext.web.handler.AuthHandler;
@@ -34,7 +34,7 @@ public class ManageRouter implements ChuheRouter {
         this.router.route("/*").handler(authHandler);
 
         ProductRouter.create(this.router, this.manageProductsHandlers).init();
-        StoreRouter.create(this.router, this.manageStoreHandlers).init();
+        OrdersRouter.create(this.router, this.manageStoreHandlers).init();
     }
 
 
