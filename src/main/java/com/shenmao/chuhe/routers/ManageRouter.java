@@ -2,7 +2,7 @@ package com.shenmao.chuhe.routers;
 
 import com.shenmao.chuhe.database.chuhe.ChuheDbService;
 import com.shenmao.chuhe.handlers.manage.ManageProductsHandlers;
-import com.shenmao.chuhe.handlers.manage.ManageStoreHandlers;
+import com.shenmao.chuhe.handlers.manage.ManageOrderHandlers;
 import com.shenmao.chuhe.routers.product.ProductRouter;
 import com.shenmao.chuhe.routers.order.OrdersRouter;
 import io.vertx.rxjava.core.Vertx;
@@ -18,7 +18,7 @@ public class ManageRouter implements ChuheRouter {
     Router router;
     AuthHandler authHandler = null;
     ManageProductsHandlers manageProductsHandlers = null;
-    ManageStoreHandlers manageStoreHandlers = null;
+    ManageOrderHandlers manageStoreHandlers = null;
     ChuheDbService chuheDbService;
 
     public ManageRouter (Vertx vertx, AuthHandler authHandler) {
@@ -29,7 +29,7 @@ public class ManageRouter implements ChuheRouter {
         this.chuheDbService = ChuheDbService.createProxy(vertx.getDelegate(), CONFIG_CHUHEDB_QUEUE);
 
         this.manageProductsHandlers = ManageProductsHandlers.create(chuheDbService);
-        this.manageStoreHandlers = ManageStoreHandlers.create(chuheDbService);
+        this.manageStoreHandlers = ManageOrderHandlers.create(chuheDbService);
 
         this.router.route("/*").handler(authHandler);
 

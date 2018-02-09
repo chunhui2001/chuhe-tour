@@ -8,23 +8,21 @@ import io.vertx.rxjava.ext.web.RoutingContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-public class ManageStoreHandlers extends BaseHandler {
+public class ManageOrderHandlers extends BaseHandler {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ManageStoreHandlers.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ManageOrderHandlers.class);
 
 
-    public static ManageStoreHandlers create(ChuheDbService chuheDbService) {
-        return new ManageStoreHandlers(chuheDbService);
+    public static ManageOrderHandlers create(ChuheDbService chuheDbService) {
+        return new ManageOrderHandlers(chuheDbService);
     }
 
     ChuheDbService chuheDbService;
 
-    public ManageStoreHandlers(ChuheDbService chuheDbService) {
+    public ManageOrderHandlers(ChuheDbService chuheDbService) {
         this.chuheDbService = chuheDbService;
     }
 
@@ -34,7 +32,7 @@ public class ManageStoreHandlers extends BaseHandler {
      * 进销存管理首页
      * @param routingContext
      */
-    public void storeIndex(RoutingContext routingContext) {
+    public void ordersIndex(RoutingContext routingContext) {
 
 
         ChainSerialization chainSerialization = ChainSerialization.create(routingContext.getDelegate())
@@ -50,7 +48,7 @@ public class ManageStoreHandlers extends BaseHandler {
      * 进货管理首页
      * @param routingContext
      */
-    public void storeReplenishIndex(RoutingContext routingContext) {
+    public void ordersReplenishIndex(RoutingContext routingContext) {
 
 
         this.chuheDbService.fetchAllOrders(reply -> {
@@ -115,7 +113,7 @@ public class ManageStoreHandlers extends BaseHandler {
      * 新增进货单
      * @param routingContext
      */
-    public void storeReplenishSave(RoutingContext routingContext) {
+    public void orderReplenishSave(RoutingContext routingContext) {
 
         JsonObject order = getOrderReplenishObject(routingContext);
 

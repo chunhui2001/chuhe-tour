@@ -17,7 +17,7 @@
 </div>
 {{/if}}
 
-<div style="display: none;" class="store-new-replenish-order-form">
+<div style="display: none;" class="orders-new-replenish-order-form">
     <form id="orders-order-detail-form" action="/mans/orders/replenish" method="POST">
         <fieldset style="margin-bottom: 1em;">
             <legend>新增进货单</legend>
@@ -84,7 +84,7 @@
 
 <div style="text-align: left;">
     <div style="display: inline-block;">
-        <input type="button" id="btn-store-new-replenish-order" value="新增进货单"  style="float:left;" />
+        <input type="button" id="btn-orders-new-replenish-order" value="新增进货单"  style="float:left;" />
         <div class="clearFixed"></div>
     </div>
 </div>
@@ -120,7 +120,7 @@
             <td style="text-align: center;">{{order_person}}</td>
             <td style="text-align: center;">{{order_desc}}</td>
             <td style="text-align: center;">{{created_at}}</td>
-            <td><a href="/mans/orders/replenish/{{product_id}}">单据详情</a></td>
+            <td><a href="/mans/orders/replenish/{{order_id}}">单据详情</a></td>
         </tr>
         {{/each}}
         {{/compare}}
@@ -157,8 +157,8 @@
             $("#orders-order-detail-form").submit();
         });
 
-        $("#btn-store-new-replenish-order").on("click", function () {
-            $(".store-new-replenish-order-form").slideDown();
+        $("#btn-orders-new-replenish-order").on("click", function () {
+            $(".orders-new-replenish-order-form").slideDown();
         });
 
         calculateTable.newOrderRow("#btn-append-new-order-row");
