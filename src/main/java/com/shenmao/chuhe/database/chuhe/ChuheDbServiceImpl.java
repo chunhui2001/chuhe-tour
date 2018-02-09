@@ -494,7 +494,7 @@ public class ChuheDbServiceImpl implements ChuheDbService {
 
         String allOrdersReplenishSql = sqlQueries.get(ChuheSqlQuery.SAVE_ORDER_ITEMS_REPLENISH);
 
-        String s = allOrdersReplenishSql.substring(allOrdersReplenishSql.indexOf("("));     // (?, ?, ?, ?, ?, ?, ?)
+        String s = allOrdersReplenishSql.substring(allOrdersReplenishSql.lastIndexOf("("));     // (?, ?, ?, ?, ?, ?, ?)
 
         StringJoiner joiner = new StringJoiner(",");
         for (int i=0; i<orderDetailItemList.size() - 1; i++) joiner.add(s);

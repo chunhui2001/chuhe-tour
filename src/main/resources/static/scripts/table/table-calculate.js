@@ -16,8 +16,8 @@ CalculateTable.prototype = {
         inputFormatAndCheck(this);
     },
 
-    calculateOrderItemTotalMoney: function (row, count, price) {
-        calculateOrderItemTotalMoney(this, row, count, price);
+    calculateOrderItemTotalMoney: function (row) {
+        calculateOrderItemTotalMoney(this, row);
     },
 
     removeOrderRow: function (sender) {
@@ -43,7 +43,7 @@ CalculateTable.prototype = {
         });
 
         $(row).attr($this.pk, object[$this.pk]);
-        calculateTable.calculateOrderItemTotalMoney(row, parseFloat($this.countFieldId), parseFloat($this.priceFieldId));
+        calculateTable.calculateOrderItemTotalMoney(row);
     },
 
     enterOrTabToSearch: function (url, done) {
@@ -160,7 +160,9 @@ function resortOrderRowNumber(calculateTable) {
 }
 
 
-function calculateOrderItemTotalMoney(calculateTable, row, count, price) {
+function calculateOrderItemTotalMoney(calculateTable, row) {
+    var count = $(row).find("#" + calculateTable.countFieldId).val();
+    var price = $(row).find("#" + calculateTable.priceFieldId).val();
     var money = (isNaN(count) ? 0 : count) * (isNaN(price) ? 0 : price);
     $(row).find("input:text[id='" + calculateTable.totalMoneyFieldId + "']").val(money.toFixed(2));
 
@@ -233,8 +235,7 @@ function inputFormatAndCheck(calculateTable) {
         if (code == 86)
             $(this).val(currentFloat);
 
-        $this.calculateOrderItemTotalMoney($(this).parents('tr')[0], parseFloat($("#product_buy_count").val()),
-            parseFloat($("#product_price").val()));
+        $this.calculateOrderItemTotalMoney($(this).parents('tr')[0]);
 
     });
 
