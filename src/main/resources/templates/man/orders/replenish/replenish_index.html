@@ -1,5 +1,5 @@
 {{#partial "blocks/title"}}
-<title>进销存管理 -- 进货管理</title>
+<title>进货管理</title>
 {{/partial}}
 
 
@@ -19,15 +19,15 @@
 
 <div style="display: none;" class="orders-new-replenish-order-form">
     <form id="orders-order-detail-form" action="/mans/orders/replenish" method="POST">
-        <fieldset style="margin-bottom: 1em;">
-            <legend>新增进货单</legend>
+        <fieldset  style="margin-bottom: 1em;">
+            <legend style="font-weight: bold;color:gray;">新增进货单</legend>
         订单流水号：<input type="text" name="order_flow_no" required placeholder="订单流水号"/>&ensp;&ensp;&ensp;&ensp;
-        经办人：<input type="text" name="order_person" required placeholder="请输入产品单位" />&ensp;&ensp;&ensp;&ensp;
+        经办人：<input type="text" name="order_person" required placeholder="请输入经办人" />&ensp;&ensp;&ensp;&ensp;
         备注：<input type="text" name="order_desc" placeholder="请输入订单备注" />
         </fieldset>
 
         <fieldset style="margin-bottom: 1em;">
-            <legend>进货单详情</legend>
+            <legend style="font-weight: bold;color:gray;">进货单详情</legend>
 
             <div style="margin: .4n 25em 0;">
                 <input type="button" id="btn-append-new-order-row" value="增加新行" />
@@ -43,7 +43,7 @@
                             <th>商品名称</th>
                             <th>品牌</th>
                             <th>规格</th>
-                            <th>单价</th>
+                            <th>进货单价</th>
                             <th>单位</th>
                             <th>数量</th>
                             <th>合计金额</th>
@@ -91,13 +91,15 @@
 
 
 
-<div style="width: 1220px;">
+<fieldset style="margin-top: 1em;">
+    <legend style="font-weight: bold;color:gray;">历史进货单</legend>
+    <div style="width: 1220px;">
 
     <table style="width: 100%;">
         <thead>
         <tr>
-            <th>单据编号(自动生成)</th>
-            <th>单据流水号(手工填写)</th>
+            <th>单据编号（自动生成）</th>
+            <th>单据流水号</th>
             <th>单据类型</th>
             <th style="text-align: right;">金额</th>
             <th>进货日期</th>
@@ -135,7 +137,7 @@
 
 
 </div>
-
+</fieldset>
 {{/partial}}
 
 

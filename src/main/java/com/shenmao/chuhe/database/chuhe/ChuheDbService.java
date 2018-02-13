@@ -53,12 +53,15 @@ public interface ChuheDbService {
     ChuheDbService createOrder(JsonObject order, List<JsonObject> orderDetailItemList, Handler<AsyncResult<Long>> resultHandler);
 
     @Fluent
-    ChuheDbService fetchAllOrders(Handler<AsyncResult<List<JsonObject>>> resultHandler);
+    ChuheDbService fetchAllOrders(String orderType, Handler<AsyncResult<List<JsonObject>>> resultHandler);
 
     @Fluent
-    ChuheDbService getOrderDetail(Long orderId, Handler<AsyncResult<JsonObject>> resultHandler);
+    ChuheDbService getOrderDetail(Long orderId, String orderType, Handler<AsyncResult<JsonObject>> resultHandler);
 
 
+    // stock
+    @Fluent
+    ChuheDbService fetchAllStocks(Handler<AsyncResult<List<JsonObject>>> resultHandler);
 
 
 

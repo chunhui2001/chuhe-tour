@@ -45,14 +45,28 @@ public class OrdersRouter {
                 .handler(manageHandlers::ordersReplenishIndex);
 
         this.router.routeWithRegex(POST, getOrdersReplenishRouter())
-                .handler(manageHandlers::orderReplenishSave);
+                .handler(routingContext -> {
+                    manageHandlers.orderSave(routingContext, "replenish");
+                });
+
+        this.router.routeWithRegex(POST, getOrdersSalesRouter())
+                .handler(routingContext -> {
+                    manageHandlers.orderSave(routingContext, "sales");
+                });
 
         this.router.routeWithRegex(GET, getOrdersSalesRouter())
                 .handler(manageHandlers::ordersSaleIndex);
 
         //order details
         this.router.routeWithRegex(GET, getOrdersReplenishRouter("(?<orderId>[^\\/.]+)"))
-                .handler(manageHandlers::orderDetail);
+                .handler(routingContext -> {
+                    manageHandlers.orderDetail(routingContext, "replenish");
+                });
+
+        this.router.routeWithRegex(GET, getOrdersSalesRouter("(?<orderId>[^\\/.]+)"))
+                .handler(routingContext -> {
+                    manageHandlers.orderDetail(routingContext, "sales");
+                });
 
     }
 

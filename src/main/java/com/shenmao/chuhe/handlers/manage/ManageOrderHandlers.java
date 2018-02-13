@@ -51,7 +51,7 @@ public class ManageOrderHandlers extends BaseHandler {
     public void ordersReplenishIndex(RoutingContext routingContext) {
 
 
-        this.chuheDbService.fetchAllOrders(reply -> {
+        this.chuheDbService.fetchAllOrders("replenish", reply -> {
 
             if (reply.succeeded()) {
                 ChainSerialization chainSerialization = ChainSerialization.create(routingContext.getDelegate())
@@ -77,7 +77,7 @@ public class ManageOrderHandlers extends BaseHandler {
 
 
 
-    private JsonObject getOrderReplenishObject(RoutingContext routingContext) {
+    private JsonObject getOrderObject(RoutingContext routingContext, String orderType) {
 
         JsonObject result = new JsonObject();
 
@@ -93,7 +93,7 @@ public class ManageOrderHandlers extends BaseHandler {
             result.put("order_desc", getString(routingContext,"order_desc"));
         }
 
-        result.put("order_type", "replenish");
+        result.put("order_type", orderType);
         result.put("order_money", 0.0);
 
         if (paramExists(routingContext, "order_date")) {
@@ -113,38 +113,57 @@ public class ManageOrderHandlers extends BaseHandler {
      * 新增进货单
      * @param routingContext
      */
-    public void orderReplenishSave(RoutingContext routingContext) {
+    public void orderSave(RoutingContext routingContext, String orderType) {
 
-        JsonObject order = getOrderReplenishObject(routingContext);
+        final StringBuilder orderTypeName = new StringBuilder();
+
+        switch (orderType) {
+            case "replenish":
+                orderTypeName.append("进货单");
+                break;
+            case "sales":
+                orderTypeName.append("销售单");
+                break;
+            default:
+        }
+
+        JsonObject order = getOrderObject(routingContext, orderType);
 
         if (!order.containsKey("order_flow_no") || order.getString("order_flow_no").trim().isEmpty()) {
             ChainSerialization.create(routingContext.getDelegate())
-                    .putFlashMessage("请提供订单流~水号")
-                    .redirect("/mans/orders/replenish");
+                    .putFlashMessage("请提供" + orderTypeName + "流水号")
+                    .redirect("/mans/orders/" + orderType);
             return;
         }
 
         if (!order.containsKey("order_item_count")) {
             ChainSerialization.create(routingContext.getDelegate())
-                    .putFlashMessage("请提供订单条目详情数量")
-                    .redirect("/mans/orders/replenish");
+                    .putFlashMessage("请提供" + orderTypeName + "条目详情数量")
+                    .redirect("/mans/orders/" + orderType);
             return;
         }
 
         List<JsonObject> orderDetailItemList = new ArrayList<>();
 
         for (int i=0; i<order.getInteger("order_item_count"); i++) {
+
             JsonObject order_item = getJson(routingContext,"order_item_" + i);
             order_item.put("product_id", Long.parseLong(order_item.getString("product_id")));
             order_item.put("product_price", Double.parseDouble(order_item.getString("product_price")));
-            order_item.put("product_buy_count", Double.parseDouble(order_item.getString("product_buy_count")));
+
+            if (orderType.equals("replenish")) {
+                order_item.put("product_buy_count", Double.parseDouble(order_item.getString("product_buy_count")));
+            } else {
+                order_item.put("product_sale_count", Double.parseDouble(order_item.getString("product_sale_count")));
+            }
+
             orderDetailItemList.add(order_item);
         }
 
         if (orderDetailItemList.size() == 0) {
             ChainSerialization.create(routingContext.getDelegate())
-                    .putFlashMessage("不允许提交空订单, 你提交的订单必须至少包含一条商品信息!")
-                    .redirect("/mans/orders/replenish");
+                    .putFlashMessage("不允许提交空" + orderTypeName + ", 你提交的" + orderTypeName + "必须至少包含一条商品信息!")
+                    .redirect("/mans/orders/" + orderType);
             return;
         }
 
@@ -154,16 +173,16 @@ public class ManageOrderHandlers extends BaseHandler {
                 // Long newProductId = reply.result();
                 ChainSerialization.create(routingContext.getDelegate())
                         .putContextData(reply.result())
-                        .putFlashMessage("成功添加一个进货单")
-                        .putMessage("成功添加一个进货单")
-                        .redirect("/mans/orders/replenish");
+                        .putFlashMessage("成功添加一个" + orderTypeName.toString())
+                        .putMessage("成功添加一个" + orderTypeName.toString())
+                        .redirect("/mans/orders/" + orderType);
             } else {
                 ChainSerialization.create(routingContext.getDelegate())
                         .putFlashMessage(reply.cause().getMessage())
                         .putMessage(reply.cause().getMessage())
                         .putException(reply.cause())
                         .putFlashException(reply.cause())
-                        .redirect("/mans/orders/replenish");
+                        .redirect("/mans/orders/" + orderType);
             }
 
         });
@@ -175,17 +194,34 @@ public class ManageOrderHandlers extends BaseHandler {
      * @param routingContext
      */
     public void ordersSaleIndex(RoutingContext routingContext) {
-        ChainSerialization chainSerialization = ChainSerialization.create(routingContext.getDelegate())
-                .putViewName("/man/orders/sales/sales_index.html")
-                .putMessage("销售管理");
-        chainSerialization.serialize();
+
+
+        this.chuheDbService.fetchAllOrders("sales", reply -> {
+
+            if (reply.succeeded()) {
+                ChainSerialization chainSerialization = ChainSerialization.create(routingContext.getDelegate())
+                        .putViewName("/man/orders/sales/sales_index.html")
+                        .putContextData(reply.result())
+                        .putMessage("销售管理");
+                chainSerialization.serialize();
+                return;
+            }
+
+            ChainSerialization.create(routingContext.getDelegate())
+                    .putFlashMessage(reply.cause().getMessage())
+                    .putException(reply.cause())
+                    .putFlashException(reply.cause())
+                    .redirect("/mans/orders/sales");
+
+        });
+
     }
 
     /**
      * 订单详情，
      * @param routingContext
      */
-    public void orderDetail(RoutingContext routingContext) {
+    public void orderDetail(RoutingContext routingContext, String orderType) {
 
         Long orderId = getLong(routingContext,"param0");
 
@@ -193,9 +229,20 @@ public class ManageOrderHandlers extends BaseHandler {
                 .putViewName("/man/orders/order_deatils.html")
                 .putMessage("订单详情");
 
-        this.chuheDbService.getOrderDetail(orderId, reply -> {
+        this.chuheDbService.getOrderDetail(orderId, orderType, reply -> {
 
             if (reply.succeeded()) {
+
+                if (reply.result().fieldNames().size() == 0) {
+
+                    chainSerialization
+                            .setStatusRealCode(404)
+                            .putFlashMessage("你访问的订单不存在")
+                            .putContextData(null)
+                            .redirect("/not-found", true);
+                    return;
+                }
+
                 chainSerialization.putContextData(reply.result());
             } else {
                 chainSerialization

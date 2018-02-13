@@ -112,6 +112,7 @@ public class ChuheDbVerticle extends AbstractVerticle {
 
         putProductSqlQueries(sqlQueries);
         putOrderSqlQueries(sqlQueries);
+        putStockSqlQueries(sqlQueries);
 
         return  sqlQueries;
     }
@@ -156,6 +157,24 @@ public class ChuheDbVerticle extends AbstractVerticle {
         sqlQueries.put(ChuheSqlQuery.CREATE_ORDER_ITEMS_REPLENISH_TABLE, queriesProps.getProperty("create-order-items-replenish-table"));
         sqlQueries.put(ChuheSqlQuery.SAVE_ORDER_ITEMS_REPLENISH, queriesProps.getProperty("save-order-items-replenish"));
         sqlQueries.put(ChuheSqlQuery.GET_ORDER_ITEMS_REPLENISH, queriesProps.getProperty("get-order-items-replenish"));
+
+        sqlQueries.put(ChuheSqlQuery.CREATE_ORDER_ITEMS_SALES_TABLE, queriesProps.getProperty("create-order-items-sales-table"));
+        sqlQueries.put(ChuheSqlQuery.SAVE_ORDER_ITEMS_SALES, queriesProps.getProperty("save-order-items-sales"));
+        sqlQueries.put(ChuheSqlQuery.GET_ORDER_ITEMS_SALES, queriesProps.getProperty("get-order-items-sales"));
+
+    }
+
+    private void putStockSqlQueries(HashMap<ChuheSqlQuery, String> sqlQueries) throws IOException {
+
+        InputStream queriesInputStream = getClass().getResourceAsStream("/properties/database-sql-queries/chuhe-db-stock-queries.properties");
+
+        Properties queriesProps = new PropertyParser();
+        queriesProps.load(new InputStreamReader(queriesInputStream, "utf-8"));
+        queriesInputStream.close();
+
+        sqlQueries.put(ChuheSqlQuery.CREATE_STOCK_TABLE, queriesProps.getProperty("create-stock-table"));
+        sqlQueries.put(ChuheSqlQuery.SAVE_STOCK, queriesProps.getProperty("save-stock"));
+        sqlQueries.put(ChuheSqlQuery.GET_ALL_STOCK, queriesProps.getProperty("all-stocks"));
 
     }
 

@@ -132,7 +132,6 @@ public class ChainSerialization {
 
     SerializeOptions serializeOptions = (SerializeOptions)this._context.data().get("serializeOptions");
 
-    System.out.println(serializeOptions.getType() + ", serializeOptions.getType() 2");
     if (serializeOptions.getType() == SerializeType.HTML) {
       if (reroute) {
         this._context.reroute(url);

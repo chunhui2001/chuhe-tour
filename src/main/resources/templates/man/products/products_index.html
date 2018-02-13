@@ -45,6 +45,15 @@
 <div>
 
     <table style="width: 100%;">
+        <colgroup>
+            <col width="35">
+            <col width="85">
+            <col width="385">
+            <col width="45">
+            <col width="65">
+            <col width="165">
+            <col width="205">
+        </colgroup>
         <thead>
             <tr>
                 <th><input type="checkbox" id="select-all-product" /></th>
@@ -63,15 +72,15 @@
             {{#compare viewData.length 'gt' 0 }}
                 {{#each viewData}}
                 <tr>
-                    <td><input type="checkbox" id="{{product_id}}" name="{{product_id}}" value="{{product_id}}" /></td>
-                    <td>{{product_id}}</td>
-                    <td>{{product_name}}</td>
-                    <td>{{product_unit}}</td>
-                    <td>{{product_price}}</td>
-                    <td>{{product_spec}}</td>
+                    <td style="text-align: center;"><input type="checkbox" id="{{product_id}}" name="{{product_id}}" value="{{product_id}}" /></td>
+                    <td style="text-align: center;">{{product_id}}</td>
+                    <td style="text-align: left;">{{product_name}}</td>
+                    <td style="text-align: center;">{{product_unit}}</td>
+                    <td style="text-align: right;">{{product_price}}</td>
+                    <td style="text-align: center;">{{product_spec}}</td>
                     <!--td>{{product_desc}}</td-->
-                    <td>{{last_updated}}</td>
-                    <td><a href="/mans/products/{{product_id}}">产品详情</a></td>
+                    <td style="text-align: center;">{{last_updated}}</td>
+                    <td style="text-align: left;"><a href="/mans/products/{{product_id}}">产品详情</a></td>
                 </tr>
                 {{/each}}
             {{/compare}}

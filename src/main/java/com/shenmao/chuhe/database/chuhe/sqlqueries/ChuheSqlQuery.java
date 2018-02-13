@@ -27,5 +27,15 @@ public enum ChuheSqlQuery {
     // order replenish items
     CREATE_ORDER_ITEMS_REPLENISH_TABLE,
     SAVE_ORDER_ITEMS_REPLENISH,
-    GET_ORDER_ITEMS_REPLENISH
+    GET_ORDER_ITEMS_REPLENISH,
+
+    // order sales items
+    CREATE_ORDER_ITEMS_SALES_TABLE,
+    SAVE_ORDER_ITEMS_SALES,
+    GET_ORDER_ITEMS_SALES,
+
+    // stock
+    CREATE_STOCK_TABLE,
+    SAVE_STOCK,
+    GET_ALL_STOCK
 }

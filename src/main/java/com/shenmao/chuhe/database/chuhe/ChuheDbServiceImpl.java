@@ -21,6 +21,7 @@ import rx.Single;
 import rx.exceptions.CompositeException;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -53,6 +54,14 @@ public class ChuheDbServiceImpl implements ChuheDbService {
             readyHandler.handle(Future.succeededFuture(this));
         });
 
+        this.createTable(sqlQueries.get(ChuheSqlQuery.CREATE_ORDER_ITEMS_SALES_TABLE), voidAsyncResult -> {
+            readyHandler.handle(Future.succeededFuture(this));
+        });
+
+        this.createTable(sqlQueries.get(ChuheSqlQuery.CREATE_STOCK_TABLE), voidAsyncResult -> {
+            readyHandler.handle(Future.succeededFuture(this));
+        });
+
     }
 
 
@@ -63,6 +72,7 @@ public class ChuheDbServiceImpl implements ChuheDbService {
                 LOGGER.error("Could not open Chuhe database connection", ar.cause());
                 resultHandler.handle(Future.failedFuture(ar.cause()));
             } else {
+
                 SQLConnection connection = ar.result().getDelegate();
 
                 LOGGER.error(create_sql);
@@ -76,6 +86,7 @@ public class ChuheDbServiceImpl implements ChuheDbService {
                         resultHandler.handle(Future.failedFuture(create.cause()));
                     }
                 });
+
             }
         });
     }
@@ -127,7 +138,8 @@ public class ChuheDbServiceImpl implements ChuheDbService {
 
 
     final SimpleDateFormat _DATE_FM_T = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
-    final SimpleDateFormat _DATE_FM_HOUR = new SimpleDateFormat("yyyy年MM月dd日 HH时mm分");
+    final SimpleDateFormat _DATE_FM_MINUTE = new SimpleDateFormat("yyyy年MM月dd日 HH时mm分");
+    final SimpleDateFormat _DATE_FM_HOUR = new SimpleDateFormat("yyyy年MM月dd日 HH时");
 
     private JsonObject processProduct(JsonObject product) {
 
@@ -147,11 +159,11 @@ public class ChuheDbServiceImpl implements ChuheDbService {
         }
 
         if (create_at != null) {
-            product.put("created_at", _DATE_FM_HOUR.format(create_at));
+            product.put("created_at", _DATE_FM_MINUTE.format(create_at));
         }
 
         if (last_updated != null) {
-            product.put("last_updated", _DATE_FM_HOUR.format(last_updated));
+            product.put("last_updated", _DATE_FM_MINUTE.format(last_updated));
         }
 
         byte[] productDesc = product.getBinary("product_desc");
@@ -241,8 +253,6 @@ public class ChuheDbServiceImpl implements ChuheDbService {
                 resultHandler.handle(Future.succeededFuture(0));
                 return;
             }
-
-            System.out.println(oldProduct.encode() + ", oldProduct");
 
             newProduct.fieldNames().forEach(f -> {
                 oldProduct.put(f, newProduct.getValue(f));
@@ -365,13 +375,21 @@ public class ChuheDbServiceImpl implements ChuheDbService {
         return sf.format(new Date());
     }
 
-    private Double getOrderMoney(List<JsonObject> orderDetailItemList) {
+    private Double getOrderMoney(List<JsonObject> orderDetailItemList, String orderType) {
 
         Double orderMonty = 0.0;
 
         for (int i=0; i<orderDetailItemList.size(); i++) {
+
             Double price = orderDetailItemList.get(i).getDouble("product_price");
-            Double count = orderDetailItemList.get(i).getDouble("product_buy_count");
+            Double count = 0.0;
+
+            if ("sales".equals(orderType))
+                count = orderDetailItemList.get(i).getDouble("product_sale_count");
+
+            if ("replenish".equals(orderType))
+                count = orderDetailItemList.get(i).getDouble("product_buy_count");
+
             orderMonty += price * count;
         }
 
@@ -400,18 +418,17 @@ public class ChuheDbServiceImpl implements ChuheDbService {
         String createOrderSql = sqlQueries.get(ChuheSqlQuery.CREATE_ORDER);
         LOGGER.info( createOrderSql);
 
-
         JsonArray data = new JsonArray()
                 .add(order.getValue("order_flow_no"));
 
         data.add(order.getValue("order_type"));
-        data.add(getOrderMoney(orderDetailItemList));
+        data.add(getOrderMoney(orderDetailItemList, order.getString("order_type")));
 
-        if (order.containsKey("order_date")) {
-            data.add(order.getValue("order_date") + " 00:00:00.000");
-        } else {
-            data.add(getDateTimeString());
+        if (!order.containsKey("order_date")) {
+            order.put("order_date", getDateTimeString());
         }
+
+        data.add(order.getValue("order_date"));
 
         if (Strings.emptyToNull(order.getString("order_person")) != null) {
             data.add(order.getString("order_person"));
@@ -419,7 +436,11 @@ public class ChuheDbServiceImpl implements ChuheDbService {
             data.addNull();
         }
 
-        data.add(order.getString("user_identity"));
+        if (Strings.emptyToNull(order.getString("user_identity")) != null) {
+            data.add(order.getString("user_identity"));
+        } else {
+            data.addNull();
+        }
 
         if (Strings.emptyToNull(order.getString("order_desc")) != null) {
             data.add(order.getString("order_desc"));
@@ -443,26 +464,79 @@ public class ChuheDbServiceImpl implements ChuheDbService {
                         .map(ResultSet::getRows)
                         // inert order items
                         .flatMap(productList -> {
+
+                            order.put("productList", productList);
+
+
+                            if ("sales".equals(order.getString("order_type"))) {
+                                return saveOrderItemsSales(order, productList, orderDetailItemList);
+                            }
+
                             return saveOrderItemsReplenish(order, productList, orderDetailItemList);
+
+                        })
+                        // save stocks
+                        .flatMap(updateResult -> {
+
+                            JsonArray productArray = (JsonArray)order.getValue("productList");
+                            List<JsonObject> productList = new ArrayList<>();
+                            // List<JsonObject> productList = (List<JsonObject>)order.getValue("productList");
+
+                            for (int i=0; i<productArray.size(); i++) {
+                                productList.add(productArray.getJsonObject(i));
+                            }
+
+                            return saveStocks(order, productList, orderDetailItemList);
                         })
                         .flatMap(updateResult -> conn.rxCommit().map(commit -> updateResult))
                         .onErrorResumeNext(ex ->
                                 conn.rxRollback()
                                     .onErrorResumeNext(ex2 ->
                                             Single.error(new CompositeException(ex, ex2))
-                                    )
-                            .flatMap(ignore -> Single.error(ex))
+                                    ).flatMap(ignore -> Single.error(ex))
                         ).doAfterTerminate(conn::close)
                 ).subscribe(updateResult -> {
                     resultHandler.handle(Future.succeededFuture(order.getLong("order_id")));
                 }, error -> {
+
                     resultHandler.handle(Future.failedFuture(error.getMessage()));
                 });
 
         return this;
     }
 
+    private List<JsonObject> processOrderItems(List<JsonObject> orderItems, String orderType) {
 
+        for (int i=0; i<orderItems.size(); i++) {
+
+            orderItems.get(i).put("order_item_no", i + 1);
+
+            Double product_price = orderItems.get(i).getDouble("product_price");
+            Double product_buy_count = 0.0;
+
+            if ("replenish".equals(orderType))
+                product_buy_count = orderItems.get(i).getDouble("product_buy_count");
+
+            if ("sales".equals(orderType))
+                product_buy_count = orderItems.get(i).getDouble("product_sale_count");
+
+            BigDecimal bg = new BigDecimal(product_price * product_buy_count).setScale(2, RoundingMode.UP);
+            orderItems.get(i).put("item_total", bg.doubleValue());
+
+            if (orderItems.get(i).getString("order_item_desc") == null
+                    || orderItems.get(i).getString("order_item_desc").trim().isEmpty()) {
+                orderItems.get(i).put("order_item_desc", "无");
+            }
+
+            if (orderItems.get(i).getString("product_spec") == null
+                    || orderItems.get(i).getString("product_spec").trim().isEmpty()) {
+                orderItems.get(i).put("product_spec", "无");
+            }
+
+        }
+
+        return orderItems;
+    }
 
     private JsonObject processOrder(JsonObject order) {
 
@@ -524,15 +598,15 @@ public class ChuheDbServiceImpl implements ChuheDbService {
         }
 
         if (order_date != null) {
-            order.put("order_date", _DATE_FM_HOUR.format(order_date));
+            order.put("order_date", _DATE_FM_MINUTE.format(order_date));
         }
 
         if (create_at != null) {
-            order.put("created_at", _DATE_FM_HOUR.format(create_at));
+            order.put("created_at", _DATE_FM_MINUTE.format(create_at));
         }
 
         if (last_updated != null) {
-            order.put("last_updated", _DATE_FM_HOUR.format(last_updated));
+            order.put("last_updated", _DATE_FM_MINUTE.format(last_updated));
         }
 
 
@@ -541,13 +615,16 @@ public class ChuheDbServiceImpl implements ChuheDbService {
     }
 
     @Override
-    public ChuheDbService fetchAllOrders(Handler<AsyncResult<List<JsonObject>>> resultHandler) {
+    public ChuheDbService fetchAllOrders(String orderType, Handler<AsyncResult<List<JsonObject>>> resultHandler) {
 
         String allOrdersSql = sqlQueries.get(ChuheSqlQuery.ALL_ORDERS);
         LOGGER.info( allOrdersSql);
 
+        JsonArray params = new JsonArray();
 
-        this.dbClient.rxQuery(allOrdersSql)
+        params.add(orderType);
+
+        this.dbClient.rxQueryWithParams(allOrdersSql, params)
                 .flatMapObservable(res -> Observable.from(res.getRows()))
                 .map(order -> this.processOrder(order))
                 // .sorted()
@@ -609,35 +686,161 @@ public class ChuheDbServiceImpl implements ChuheDbService {
 
     }
 
+
+    public Single<UpdateResult> saveStocks(JsonObject order, List<JsonObject> productList, List<JsonObject> orderDetailItemList) {
+
+        String saveStocksSql = sqlQueries.get(ChuheSqlQuery.SAVE_STOCK);
+        String s = saveStocksSql.substring(saveStocksSql.lastIndexOf("("));     // (?, ?, ?, ?, ?, ?, ?)
+
+        StringJoiner joiner = new StringJoiner(",");
+        for (int i=0; i<orderDetailItemList.size() - 1; i++) joiner.add(s);
+        if (orderDetailItemList.size() > 1) saveStocksSql = saveStocksSql + "," + joiner.toString();
+
+        LOGGER.info(saveStocksSql);
+
+        JsonArray params = new JsonArray();
+
+        for (int i=0; i<orderDetailItemList.size(); i++) {
+
+            JsonObject item = orderDetailItemList.get(i);
+
+            String productName = getProductNameById(item.getLong("product_id"), productList);
+
+            params.add(order.getValue("order_id"));
+            params.add(order.getValue("order_type"));
+            params.add(item.getValue("product_id"));
+
+            if (productName != null) params.add(productName);
+            else params.addNull();
+
+            params.add(order.getValue("order_date"));
+
+            Double count = 0.0;
+
+            if (order.getString("order_type").equals("replenish"))
+                count = item.getDouble("product_buy_count");
+            else if (order.getString("order_type").equals("sales"))
+                count = item.getDouble("product_sale_count");
+
+            params.add(count);
+            params.add(count * item.getDouble("product_price"));
+
+            params.add(0.0);
+            params.add(0);
+
+        }
+
+        Single<UpdateResult> saveStockSingle = this.dbClient.rxUpdateWithParams(saveStocksSql, params);
+
+        return saveStockSingle;
+
+    }
+
+
+    public Single<UpdateResult> saveOrderItemsSales(JsonObject order, List<JsonObject> productList, List<JsonObject> orderDetailItemList) {
+
+        String allOrdersSalesSql = sqlQueries.get(ChuheSqlQuery.SAVE_ORDER_ITEMS_SALES);
+
+        String s = allOrdersSalesSql.substring(allOrdersSalesSql.lastIndexOf("("));     // (?, ?, ?, ?, ?, ?, ?)
+
+        StringJoiner joiner = new StringJoiner(",");
+        for (int i=0; i<orderDetailItemList.size() - 1; i++) joiner.add(s);
+        if (orderDetailItemList.size() > 1) allOrdersSalesSql = allOrdersSalesSql + "," + joiner.toString();
+
+        LOGGER.info( allOrdersSalesSql);
+
+        JsonArray params = new JsonArray();
+
+        for (int i=0; i<orderDetailItemList.size(); i++) {
+
+            JsonObject item = orderDetailItemList.get(i);
+
+            String productName = getProductNameById(item.getLong("product_id"), productList);
+
+            params.add(order.getValue("order_type"));
+            params.add(order.getValue("order_id"));
+            params.add(item.getValue("product_id"));
+
+            if (productName != null) params.add(productName);
+            else params.addNull();
+
+            params.add(item.getValue("product_price"));
+            params.add(item.getValue("product_sale_count"));
+
+            if (!item.containsKey("order_item_desc") || item.getString("order_item_desc").trim().length() == 0) {
+                params.addNull();
+            } else {
+                params.add(item.getValue("order_item_desc"));
+            }
+        }
+
+        Single<UpdateResult> saveOrderItemsSingle = this.dbClient.rxUpdateWithParams(allOrdersSalesSql, params);
+
+        return saveOrderItemsSingle;
+
+    }
+
     @Override
-    public ChuheDbService getOrderDetail(Long orderId, Handler<AsyncResult<JsonObject>> resultHandler) {
+    public ChuheDbService getOrderDetail(Long orderId, String orderType, Handler<AsyncResult<JsonObject>> resultHandler) {
 
         String getOrderSql = sqlQueries.get(ChuheSqlQuery.GET_ORDER);
         String getOrderItemsReplenishSql = sqlQueries.get(ChuheSqlQuery.GET_ORDER_ITEMS_REPLENISH);
+        String getOrderItemsSalesSql = sqlQueries.get(ChuheSqlQuery.GET_ORDER_ITEMS_SALES);
+
+        LOGGER.info(getOrderSql);
 
         JsonArray parsms = new JsonArray().add(orderId);
 
         JsonArray returnOrder = new JsonArray();
 
         this.dbClient.rxQueryWithParams(getOrderSql, parsms)
-                .flatMap(resultSet -> {
-
+                .map(resultSet -> {
+                    if (resultSet.getRows().size() == 0) return new JsonObject();
                     JsonObject targetOrder = resultSet.getRows().get(0);
+                    return processOrder(targetOrder);
+                })
+                .flatMap(targetOrder -> {
+
                     returnOrder.add(targetOrder);
 
                     String getOrderItemsSql = null;
 
-                    if (targetOrder.getString("order_type").equals("replenish")) {
+                    if (targetOrder.fieldNames().size() == 0) {
                         getOrderItemsSql = getOrderItemsReplenishSql;
                     }
 
+                    if ("replenish".equals(targetOrder.getString("order_type"))) {
+                        getOrderItemsSql = getOrderItemsReplenishSql;
+                    }
+
+                    if ("sales".equals(targetOrder.getString("order_type"))) {
+                        getOrderItemsSql = getOrderItemsSalesSql;
+                    }
+
+
+                    LOGGER.info(getOrderItemsSql);
+
                     return this.dbClient.rxQueryWithParams(getOrderItemsSql, parsms);
                 })
+                .map(orderItems -> {
+                    System.out.println(1);
+                    if (orderItems.getRows().size() == 0) return new ArrayList<JsonObject>();
+                    System.out.println(2);
+                    return processOrderItems(orderItems.getRows(), orderType);
+                })
                 .subscribe(orderIems -> {
-                    returnOrder.getJsonObject(0).put("order_items", orderIems.getRows());
-                    resultHandler.handle(Future.succeededFuture(returnOrder.getJsonObject(0)));
+                    System.out.println(3);
+                    if (orderIems.size() == 0) {
+                        System.out.println(4);
+                        resultHandler.handle(Future.succeededFuture(new JsonObject()));
+                    } else {
+                        System.out.println(5);
+                        returnOrder.getJsonObject(0).put("order_items", orderIems);
+                        resultHandler.handle(Future.succeededFuture(returnOrder.getJsonObject(0)));
+                    }
                 }, error -> {
-                    resultHandler.handle(Future.failedFuture(error.getMessage()));
+                    System.out.println(6);
+                        resultHandler.handle(Future.failedFuture(error.getMessage()));
                 });
 
         return this;
@@ -645,5 +848,51 @@ public class ChuheDbServiceImpl implements ChuheDbService {
     }
 
 
+    @Override
+    public ChuheDbService fetchAllStocks(Handler<AsyncResult<List<JsonObject>>> resultHandler) {
+
+        String fetchAllStocksSql = this.sqlQueries.get(ChuheSqlQuery.GET_ALL_STOCK);
+
+        LOGGER.info(fetchAllStocksSql);
+
+        this.dbClient.rxQuery(fetchAllStocksSql)
+                .flatMapObservable(resultSet -> Observable.from(resultSet.getRows()))
+                .map(stock -> {
+
+                    Date orderDate = null;
+
+                    if (stock.containsKey("order_date")) {
+                        try {
+                            orderDate = _DATE_FM_T.parse(stock.getString("order_date"));
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    if (orderDate != null) {
+                        stock.put("order_date", _DATE_FM_HOUR.format(orderDate));
+                    } else {
+                        stock.put("order_date", "无");
+                    }
+
+                    switch (stock.getString("order_type")) {
+                        case "replenish":
+                            stock.put("order_type_name", "进货");
+                            break;
+                        case "sales":
+                            stock.put("order_type_name", "销售");
+                            break;
+                        default:
+                            stock.put("order_type_name", stock.getString("order_type"));
+                    }
+
+
+                    return stock;
+                })
+                .collect(ArrayList<JsonObject>::new, List::add)
+                .subscribe(RxHelper.toSubscriber(resultHandler));
+
+        return this;
+    }
 
 }
