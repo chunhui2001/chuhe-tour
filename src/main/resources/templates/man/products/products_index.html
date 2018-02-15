@@ -36,7 +36,7 @@
     <form action="/mans/products" method="POST" style="float:left;">
         <input type="hidden" name="_method" value="delete" />
         <input type="hidden" id="product_ids" name="product_ids" value="" />
-        <input type="submit" id="btn-product-del" value="删除所有选中" />
+        <input type="submit" id="btn-product-del" value="删除所有选中产品" />
     </form>
     <div class="clearFixed"></div>
     </div>
@@ -100,81 +100,18 @@
 
 
 {{#partial "blocks/script"}}
+<script type="text/javascript" src="/scripts/table/table-selectable.js"></script>
 <script type="text/javascript" id="r_1">
 
 
     $(function() {
 
-        setBtnDelEnabled();
+        var selectTable = new SelectTable(
+            ".product-list", "#select-all-product", "#product_ids", "#btn-product-del");
 
-        $("#btn-product-new").on("click", function () {
-            $(".product-new-form").slideDown();
-        });
-
-        $(".product-list :checkbox").on("click", function () {
-
-            setBtnDelEnabled();
-            setProductIds($(this).is(":checked"), $(this).val());
-
-        });
-
-        $("table #select-all-product").on("click", function () {
-            if ($(this).is(":checked")) {
-                $(".product-list :checkbox:not(:checked)").each(function () {
-                   $(this).click();
-                });
-            } else {
-                $(".product-list :checkbox:checked").each(function () {
-                    $(this).click();
-                });
-            }
-        });
+        selectTable.init();
 
     });
-
-    function setBtnDelEnabled() {
-        if ($(".product-list :checkbox:checked").length > 0) {
-            $("#btn-product-del").attr("disabled", false);
-        } else {
-            $("#btn-product-del").attr("disabled", true);
-        }
-    }
-
-    function setProductIds(ischeck, productid) {
-
-        if (ischeck) {
-
-            if ($("#product_ids").val().length == 0) {
-                $("#product_ids").val(productid);
-            }
-
-
-            if ($("#product_ids").val().length > 0 && !isSelected(productid)) {
-                $("#product_ids").val($("#product_ids").val() + "," + productid);
-            }
-
-            return;
-        }
-
-        removeProductId(productid);
-
-    }
-
-    function isSelected(productid) {
-        return ("," + $("#product_ids").val() + ",").indexOf(',' + productid + ',') != -1;
-    }
-
-    function removeProductId(productid) {
-
-        if (!isSelected (productid) || $("#product_ids").val().length == 0) {
-            return;
-        }
-
-        var newValue = ("," + $("#product_ids").val() + ",").replace("," + productid + ",", "," );
-
-        $("#product_ids").val(newValue.substr(1, newValue.length - 2));
-
-    }
 
 </script>
 {{/partial}}

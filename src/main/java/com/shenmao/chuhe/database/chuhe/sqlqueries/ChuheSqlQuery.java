@@ -4,6 +4,12 @@ public enum ChuheSqlQuery {
 
     LAST_INSERT_ID,
 
+    // users
+    CREATE_USERS_TABLE,
+    SAVE_USER,
+    DELETE_USER_BATCH,
+    UPDATE_USER,
+
     // products
     CREATE_PRODUCTS_TABLE,
     ALL_PRODUCTS,
@@ -13,7 +19,6 @@ public enum ChuheSqlQuery {
     DELETE_PRODUCT,
     DELETE_PRODUCT_BATCH,
     GET_PRODUCTS_BY_IDLIST,
-
 
     // orders
     CREATE_ORDERS_TABLE,
@@ -37,5 +42,13 @@ public enum ChuheSqlQuery {
     // stock
     CREATE_STOCK_TABLE,
     SAVE_STOCK,
-    GET_ALL_STOCK
+    GET_ALL_STOCK,
+
+    // dealer
+    CREATE_DEALER_TABLE,
+    SAVE_DEALER,
+    ALL_DEALERS,
+    DELETE_DEALER_BATCH,
+    GET_DEALER,
+    UPDATE_DEALER
 }

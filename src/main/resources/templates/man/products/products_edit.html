@@ -24,6 +24,7 @@
 
     <form action="/mans/products/{{viewData.product_id}}" method="POST">
 
+        <input type="hidden" name="_method" value="put" />
         <table>
             <tbody>
             <tr>
@@ -58,7 +59,6 @@
             </tr>
             </tbody>
         </table>
-        <input type="hidden" name="_method" value="put" />
         <input type="submit" value="保存产品信息" />
         <a href="/mans/products/{{viewData.product_id}}">返回产品详情页</a>
     </form>

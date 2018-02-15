@@ -30,17 +30,22 @@ public class BaseHandler {
     public String getString(RoutingContext routingContext, String key) {
 
         JsonObject jsonData = getJsonData(routingContext);
+        String value = "";
 
         if (jsonData != null && jsonData.containsKey(key)) {
-            return jsonData.getString(key);
+            value = jsonData.getString(key);
         }
 
         MultiMap requestBody = getFormData(routingContext);
         if (requestBody != null && requestBody.contains(key)) {
-            return routingContext.request().getParam(key);
+            value = routingContext.request().getParam(key);
         }
 
-        return "";
+        if (value.equals("无")) {
+            value = "";
+        }
+
+        return value;
     }
 
     public boolean paramExists(RoutingContext routingContext, String key) {

@@ -110,12 +110,39 @@ public class ChuheDbVerticle extends AbstractVerticle {
 
         HashMap<ChuheSqlQuery, String> sqlQueries = new HashMap<>();
 
+        putUsersSqlQueries(sqlQueries);
         putProductSqlQueries(sqlQueries);
         putOrderSqlQueries(sqlQueries);
         putStockSqlQueries(sqlQueries);
 
         return  sqlQueries;
     }
+
+
+
+    private void putUsersSqlQueries(HashMap<ChuheSqlQuery, String> sqlQueries) throws IOException {
+
+        InputStream queriesInputStream = getClass().getResourceAsStream("/properties/database-sql-queries/chuhe-db-users-queries.properties");
+
+        Properties queriesProps = new PropertyParser();
+        queriesProps.load(new InputStreamReader(queriesInputStream, "utf-8"));
+        queriesInputStream.close();
+
+        sqlQueries.put(ChuheSqlQuery.CREATE_USERS_TABLE, queriesProps.getProperty("create-users-table"));
+        sqlQueries.put(ChuheSqlQuery.SAVE_USER, queriesProps.getProperty("save-user"));
+        sqlQueries.put(ChuheSqlQuery.DELETE_USER_BATCH, queriesProps.getProperty("delete-user-batch"));
+
+        sqlQueries.put(ChuheSqlQuery.CREATE_DEALER_TABLE, queriesProps.getProperty("create-dealer-table"));
+        sqlQueries.put(ChuheSqlQuery.SAVE_DEALER, queriesProps.getProperty("save-dealer"));
+        sqlQueries.put(ChuheSqlQuery.ALL_DEALERS, queriesProps.getProperty("all-dealer"));
+        sqlQueries.put(ChuheSqlQuery.DELETE_DEALER_BATCH, queriesProps.getProperty("delete-dealer-batch"));
+        sqlQueries.put(ChuheSqlQuery.GET_DEALER, queriesProps.getProperty("get-dealer"));
+
+        sqlQueries.put(ChuheSqlQuery.UPDATE_USER, queriesProps.getProperty("update-user"));
+        sqlQueries.put(ChuheSqlQuery.UPDATE_DEALER, queriesProps.getProperty("update-dealer"));
+
+    }
+
 
     private void putProductSqlQueries(HashMap<ChuheSqlQuery, String> sqlQueries) throws IOException {
 

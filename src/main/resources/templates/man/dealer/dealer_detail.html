@@ -1,0 +1,138 @@
+{{#partial "blocks/title"}}
+<title>经销商详情</title>
+{{/partial}}
+
+
+
+{{#partial "content" }}
+<h1>经销商详情</h1>
+
+{{#if errorTrace }}
+<pre>{{errorTrace}}</pre>
+{{/if}}
+
+{{#if flashMessage}}
+<div style="color: brown">
+    {{flashMessage}}
+</div>
+{{/if}}
+
+
+<div class="dealer-new-form">
+    <form id="dealer-delete-from" action="/mans/dealer/{{viewData.dealer_id}}" method="POST">
+        <input type="hidden" name="_method" value="delete" />
+        <table>
+            <tbody>
+            <tr>
+                <td class="form-table-label">经销商编号：</td>
+                <td>
+                    {{viewData.dealer_id}}
+                </td>
+            </tr>
+            <tr>
+                <td class="form-table-label">经销商名称：</td>
+                <td>
+                    {{viewData.dealer_name}}
+                </td>
+            </tr>
+            <tr>
+                <td class="form-table-label">性别：</td>
+                <td>
+                    {{viewData.dealer_gender}}
+                </td>
+            </tr>
+            <tr>
+                <td class="form-table-label">身份证：</td>
+                <td>
+                    {{viewData.dealer_identity}}
+                </td>
+            </tr>
+            <tr>
+                <td class="form-table-label">来源：</td>
+                <td>
+                    {{viewData.dealer_source_from}}
+                </td>
+            </tr>
+            <tr>
+                <td class="form-table-label">联系电话：</td>
+                <td>
+                    {{viewData.dealer_phone}}
+                </td>
+            </tr>
+            <tr>
+                <td class="form-table-label">家庭电话：</td>
+                <td>
+                    {{viewData.dealer_home_tel}}
+                </td>
+            </tr>
+            <tr>
+                <td class="form-table-label">家庭住址：</td>
+                <td>
+                    {{viewData.dealer_home_address}}
+                </td>
+            </tr>
+            <tr>
+                <td class="form-table-label">微信号：</td>
+                <td>
+                    {{viewData.dealer_wchat_id}}
+                </td>
+            </tr>
+            <tr>
+                <td class="form-table-label">经销商级别：</td>
+                <td>
+                    {{viewData.dealer_level}}
+                </td>
+            </tr>
+            <tr>
+                <td class="form-table-label">经销区域：</td>
+                <td>
+                    {{viewData.dealer_scope}}
+                </td>
+            </tr>
+            <tr>
+                <td class="form-table-label">区域内作物特点：</td>
+                <td>
+                    {{viewData.dealer_desc}}
+                </td>
+            </tr>
+            <tr>
+                <td class="form-table-label">
+                    &ensp;
+                </td>
+                <td>
+                    <input onclick="confirmDel('确认删除么?');" type="button" value="删除" />
+                    <a href="/mans/dealer/{{viewData.dealer_id}}/edit">编辑</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </form>
+</div>
+
+{{/partial}}
+
+
+
+{{#partial "blocks/script"}}
+<script type="text/javascript" id="r_1">
+
+    function confirmDel(msg) {
+        if (!confirm(msg)) {
+            return;
+        }
+
+        $("#dealer-delete-from").submit();
+    }
+
+    $(function () {
+
+
+    });
+
+
+</script>
+{{/partial}}
+
+
+{{> layouts/layout_default}}

@@ -64,5 +64,26 @@ public interface ChuheDbService {
     ChuheDbService fetchAllStocks(Handler<AsyncResult<List<JsonObject>>> resultHandler);
 
 
+    // users
+    @Fluent
+    ChuheDbService createUser(JsonObject user, Handler<AsyncResult<Long>> resultHandler) ;
+
+    // dealers
+    @Fluent
+    ChuheDbService createDealer(JsonObject dealer, Handler<AsyncResult<Long>> resultHandler) ;
+
+    @Fluent
+    ChuheDbService dealerDetail(Long dealerId, Handler<AsyncResult<JsonObject>> resultHandler) ;
+
+
+    @Fluent
+    ChuheDbService fetchAllDealers(Handler<AsyncResult<List<JsonObject>>> resultHandler) ;
+
+    @Fluent
+    ChuheDbService deleteDealerBatch(List<Long> dealerIdList, Handler<AsyncResult<Integer>> resultHandler);
+
+
+    @Fluent
+    ChuheDbService updateDealer(Long dealerId, JsonObject dealer, Handler<AsyncResult<Integer>> resultHandler);
 
 }

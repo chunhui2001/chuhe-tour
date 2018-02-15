@@ -1,0 +1,35 @@
+{{#partial "blocks/title"}}
+<title>客户管理 </title>
+{{/partial}}
+
+
+
+{{#partial "content" }}
+<h1>客户管理 </h1>
+
+{{#if errorTrace }}
+<pre>{{errorTrace}}</pre>
+{{/if}}
+
+{{#if flashMessage}}
+<div style="color: brown">
+    {{flashMessage}}
+</div>
+{{/if}}
+
+
+
+{{/partial}}
+
+
+
+{{#partial "blocks/script"}}
+<script type="text/javascript" src="/scripts/table/table-selectable.js"></script>
+<script type="text/javascript" id="r_1">
+
+
+</script>
+{{/partial}}
+
+
+{{> layouts/layout_default}}
