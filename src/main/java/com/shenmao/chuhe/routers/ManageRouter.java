@@ -4,9 +4,11 @@ import com.shenmao.chuhe.database.chuhe.ChuheDbService;
 import com.shenmao.chuhe.handlers.manage.*;
 import com.shenmao.chuhe.routers.customer.CustomerRouter;
 import com.shenmao.chuhe.routers.dealer.DealerRouter;
+import com.shenmao.chuhe.routers.priv.PrivRouter;
 import com.shenmao.chuhe.routers.product.ProductRouter;
 import com.shenmao.chuhe.routers.order.OrdersRouter;
 import com.shenmao.chuhe.routers.stock.StockRouter;
+import com.shenmao.chuhe.routers.user.UserRouter;
 import io.vertx.rxjava.core.Vertx;
 import io.vertx.rxjava.ext.web.Router;
 import io.vertx.rxjava.ext.web.handler.AuthHandler;
@@ -24,6 +26,8 @@ public class ManageRouter implements ChuheRouter {
     ManageStockHandlers manageStockHandlers = null;
     ManageDealerHandlers manageDealerHandlers = null;
     ManageCustomerHandlers manageCustomerHandlers = null;
+    ManagePrivHandlers managePrivHandlers = null;
+    ManageUserHandlers manageUserHandlers = null;
 
     ChuheDbService chuheDbService;
 
@@ -39,6 +43,8 @@ public class ManageRouter implements ChuheRouter {
         this.manageStockHandlers = ManageStockHandlers.create(chuheDbService);
         this.manageDealerHandlers = ManageDealerHandlers.create(chuheDbService);
         this.manageCustomerHandlers = ManageCustomerHandlers.create(chuheDbService);
+        this.managePrivHandlers = ManagePrivHandlers.create(chuheDbService);
+        this.manageUserHandlers = ManageUserHandlers.create(chuheDbService);
 
         this.router.route("/*").handler(authHandler);
 
@@ -47,6 +53,9 @@ public class ManageRouter implements ChuheRouter {
         StockRouter.create(this.router, this.manageStockHandlers).init();
         DealerRouter.create(this.router, this.manageDealerHandlers).init();
         CustomerRouter.create(this.router, this.manageCustomerHandlers).init();
+        PrivRouter.create(this.router, this.managePrivHandlers).init();
+        UserRouter.create(this.router, this.manageUserHandlers).init();
+
     }
 
 

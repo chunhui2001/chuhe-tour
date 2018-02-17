@@ -1,0 +1,219 @@
+{{#partial "blocks/title"}}
+<title>应用权限管理</title>
+{{/partial}}
+
+
+
+{{#partial "content" }}
+<h1>应用权限管理</h1>
+
+{{#if errorTrace }}
+<pre>{{errorTrace}}</pre>
+{{/if}}
+
+{{#if flashMessage}}
+<div style="color: brown">
+    {{flashMessage}}
+</div>
+{{/if}}
+
+
+<div>
+
+    <input type="hidden" id="_hid_user_roles" value="{{all_user_roles}}" />
+
+    <table>
+        <colgroup>
+            <col width="135">
+            <col width="95">
+            <col width="135">
+            <col width="35">
+            <col width="165">
+            <col width="85">
+            <col width="85">
+            <col width="135">
+        </colgroup>
+        <thead>
+        <tr>
+            <th style="text-align: left;">用户名</th>
+            <th style="text-align: left;">密码</th>
+            <th style="text-align: left;">真实姓名</th>
+            <th>性别</th>
+            <th>身份证</th>
+            <th>联系电话</th>
+            <th>微信号</th>
+            <th>&nbsp;</th>
+        </tr>
+        </thead>
+        <tbody class="user-list">
+
+        {{#compare viewData.length 'gt' 0 }}
+        {{#each viewData}}
+        <tr data-user-id="{{user_id}}" data-user-roles="{{user_roles}}" >
+            <td style="text-align: left;">{{user_name}}</td>
+            <td style="text-align: left;">********</td>
+            <td style="text-align: left;">{{user_real_name}}</td>
+            <td style="text-align: center;">{{user_gender}}</td>
+            <td style="text-align: center;">{{user_identity}}</td>
+            <td style="text-align: center;">{{user_phone}}</td>
+            <td style="text-align: center;">{{wchat_id}}</td>
+            <td style="text-align: left;">
+                <a href="/mans/user/{{user_id}}">用户详情</a>
+                <a class="user-role-grant" href="javascript:void(this);">授予权限</a></td>
+        </tr>
+        {{/each}}
+        {{/compare}}
+
+        {{#compare viewData.length 'eq' 0 }}
+        <td colspan="7">当前还没有任何用户 ~</td>
+        {{/compare}}
+
+        </tbody>
+    </table>
+
+
+</div>
+
+
+{{/partial}}
+
+
+
+{{#partial "blocks/script"}}
+<script type="text/javascript" id="r_1">
+
+    var allUserRoles = JSON.parse(('{{all_user_roles}}').replace(/&quot;/g, "\""));
+
+    $(function () {
+
+        $(document).on("click", ".user-role-grant", function () {
+            var user = makeUser($(this).parents('tr')[0]);
+            appendTr(user);
+        });
+
+        $(document).on("click", ".btn-grant-user-roles", function () {
+            var user = makeUser($($(this).parents('tr')[0]).prev());
+            var roles = getSelectedRoles($(this).parents('tr')[0]);
+            if (user.userRoles == roles) {
+                return;
+            }
+            grantRoleToUser(user, roles, function () {
+                $(user.tr).attr(user.trKeyNameForRoles, roles);
+                alert('修改成功');
+            });
+        });
+
+    });
+
+    function grantRoleToUser(user, roles, done) {
+        $.post({
+            url: "/mans/priv",
+            type: "POST",
+            data: {user_id:user.userId, user_roles: roles},
+            success: function (result) {
+                return done(false, result);
+            },
+            error: function (result) {
+                return done(true, result);
+            }
+        });
+
+    }
+
+    function getSelectedRoles(trEle) {
+
+        var cbxRoles = $(trEle).find("input:checked");
+        var result = "";
+
+        $(cbxRoles).each(function () {
+           result = result + $(this).val() + ",";
+        });
+
+        if (result.length > 0) {
+            result = result.substr(0, result.length - 1);
+        }
+
+        return result;
+    }
+
+    function makeUser(trEle) {
+
+        var user = {
+          tr: null,
+          trKeyNameForId: "data-user-id",
+          trKeyNameForRoles: "data-user-roles",
+          userId: null,
+          userRoles: null
+        };
+
+        user.tr = trEle;
+        user.userId = $(trEle).attr(user.trKeyNameForId);
+        user.userRoles = $(trEle).attr(user.trKeyNameForRoles);
+        return user;
+    }
+
+    function isTrAppended(user) {
+        var pk = user.userId;
+        var nextTr = $(user.tr).next("tr[" + user.trKeyNameForId + "='" + pk + "']");
+
+        if (nextTr.length > 0) {
+            return nextTr;
+        }
+
+        return null;
+    }
+
+    function appendTr(user) {
+
+        var nextTr = isTrAppended(user);
+
+        if (nextTr) {
+
+            if ($(nextTr).is(":visible")) {
+                $(nextTr).hide();
+            } else {
+                $(nextTr).show();
+            }
+            return;
+        }
+
+        var pk = user.userId;
+        var count = $(user.tr).find("td").length;
+        var trHtml = "<tr style='background-color: burlywood;' "+ user.trKeyNameForId +"='" + pk + "'>";
+
+        var allUserRolesHtml = getAllUserRolesHtml(allUserRoles, user);
+
+        trHtml = trHtml + "<td colspan='" + (count) + "'>" + allUserRolesHtml + "</td>";
+        trHtml = trHtml + "</tr>";
+
+        $(user.tr).after(trHtml);
+
+    }
+
+    function getAllUserRolesHtml(allUserRolesObject, user) {
+
+        var roleHtml = '';
+
+        Object.keys(allUserRolesObject).forEach(function (key, i) {
+            var type = i === 0 ? "radio" : "checkbox";
+            var checked = user.userRoles.indexOf(key) != -1 ? 'checked="checked" ' : "";
+            roleHtml = roleHtml + '<div style="display: inline-block;margin-right: 10px;">';
+            roleHtml = roleHtml + '<input ' + checked + 'type="' + type + '" ' + 'id="cbx-role-' + key + '" value="' + key + '" />';
+            roleHtml = roleHtml + '<label for="cbx-role-' + key + '">' + allUserRolesObject[key] + '</label>';
+            roleHtml = roleHtml + '</div>' ;
+        });
+
+        var saveButtonHtml = '<input class="btn-grant-user-roles" style="float:right;font-size: .725em;' +
+                                'padding: 0 .3em;margin: .2em;" type="button" value="保存" />';
+
+        return  '<div style="text-align: center;margin-top: .2em;">'
+                + roleHtml + '<div class="clearFixed"></div></div>'
+                + saveButtonHtml + '<div class="clearFixed"></div>';
+    }
+
+
+</script>
+{{/partial}}
+
+
+{{> layouts/layout_default}}

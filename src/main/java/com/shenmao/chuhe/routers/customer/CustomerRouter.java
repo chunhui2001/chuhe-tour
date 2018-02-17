@@ -4,9 +4,12 @@ import com.shenmao.chuhe.handlers.manage.ManageCustomerHandlers;
 import com.shenmao.chuhe.handlers.manage.ManageDealerHandlers;
 import com.shenmao.chuhe.routers.GlobalRouter;
 import com.shenmao.chuhe.routers.dealer.DealerRouter;
+import io.vertx.core.http.HttpMethod;
 import io.vertx.rxjava.ext.web.Router;
 
+import static io.vertx.core.http.HttpMethod.DELETE;
 import static io.vertx.core.http.HttpMethod.GET;
+import static io.vertx.core.http.HttpMethod.POST;
 
 public class CustomerRouter {
 
@@ -35,6 +38,29 @@ public class CustomerRouter {
 
         this.router.routeWithRegex(GET, getCustomerRouter())
                 .handler(manageHandlers::customerIndex);
+
+        this.router.routeWithRegex(GET, getCustomerRouter("new"))
+                .handler(manageHandlers::newCustomer);
+
+        this.router.routeWithRegex(POST, getCustomerRouter())
+                .handler(manageHandlers::createCustomer);
+
+        this.router.routeWithRegex(DELETE, getCustomerRouter(_CUSTOMER_ID_ROUTE))
+                .handler(manageHandlers::deleteCustomerBatch);
+
+        this.router.routeWithRegex(DELETE, getCustomerRouter())
+                .handler(manageHandlers::deleteCustomerBatch);
+
+        this.router.routeWithRegex(GET, getCustomerRouter(_CUSTOMER_ID_ROUTE))
+                .handler(manageHandlers::customerDetail);
+
+        this.router.routeWithRegex(HttpMethod.PUT, getCustomerRouter(_CUSTOMER_ID_ROUTE))
+                .handler(manageHandlers::customerUpdate);
+
+        this.router.routeWithRegex(GET, getCustomerRouter(_CUSTOMER_ID_ROUTE, "edit"))
+                .handler(manageHandlers::customerDetail);
+
+
     }
 
 }

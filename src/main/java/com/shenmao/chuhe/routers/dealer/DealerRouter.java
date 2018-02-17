@@ -55,7 +55,6 @@ public class DealerRouter {
         this.router.routeWithRegex(GET, getDealerRouter(_DEALER_ID_ROUTE, "edit"))
                 .handler(manageHandlers::dealerDetail);
 
-
         this.router.routeWithRegex(HttpMethod.PUT, getDealerRouter(_DEALER_ID_ROUTE))
                 .handler(manageHandlers::dealerUpdate);
 

@@ -1,0 +1,139 @@
+{{#partial "blocks/title"}}
+<title>编辑客户信息</title>
+{{/partial}}
+
+
+
+{{#partial "content" }}
+<h1>编辑客户信息</h1>
+
+{{#if errorTrace }}
+<pre>{{errorTrace}}</pre>
+{{/if}}
+
+{{#if flashMessage}}
+<div style="color: brown">
+    {{flashMessage}}
+</div>
+{{/if}}
+
+
+<div class="customer-new-form">
+    <form action="/mans/customer/{{viewData.user_id}}" method="POST">
+
+        <input type="hidden" name="_method" value="put" />
+
+        <table>
+            <tbody>
+            <tr>
+                <td class="form-table-label">客户编号：</td>
+                <td>
+                    <input type="text" disabled="disabled"
+                           value="{{viewData.user_id}}"
+                           id="user_id" name="user_id" />
+                </td>
+            </tr>
+            <tr>
+                <td class="form-table-label">客户姓名：</td>
+                <td>
+                    <input type="text" required placeholder="请输入客户姓名"
+                           value="{{viewData.user_name}}"
+                           id="user_name" name="user_name" />
+                </td>
+                <td><strong style="color: brown;">*</strong></td>
+            </tr>
+            <tr>
+                <td class="form-table-label">性别：</td>
+
+                <td>
+                    <label for="user_gender_man">男</label>
+
+                    <input {{#compare viewData.user_gender 'eq' '男' }}
+                    checked="checked"
+                    {{/compare}}
+                    type="radio" value="MAN" id="user_gender_man" name="user_gender" />
+
+                    <label for="user_gender_women">女</label>
+                    <input  {{#compare viewData.user_gender 'eq' '女' }}
+                    checked="checked"
+                    {{/compare}}
+                    type="radio" value="WOMEN" id="user_gender_women" name="user_gender" />
+                </td>
+
+            </tr>
+            <tr>
+                <td class="form-table-label">身份证：</td>
+                <td>
+                    <input type="text" placeholder="请输入客户身份证"
+                           value="{{viewData.user_identity}}"
+                           id="user_identity" name="user_identity" />
+                </td>
+            </tr>
+            <tr>
+                <td class="form-table-label">来源：</td>
+                <td>
+                    <input type="text" placeholder="请输入客户来源"
+                           value="{{viewData.user_source_from}}"
+                           id="user_source_from" name="user_source_from" />
+                </td>
+            </tr>
+            <tr>
+                <td class="form-table-label">联系电话：</td>
+                <td>
+                    <input type="text" placeholder="请输入客户联系电话"
+                           value="{{viewData.user_phone}}"
+                           id="user_phone" name="user_phone" />
+                </td>
+            </tr>
+            <tr>
+                <td class="form-table-label">家庭电话：</td>
+                <td>
+                    <input type="text" placeholder="请输入客户家庭电话"
+                           value="{{viewData.user_home_tel}}"
+                           id="user_home_tel" name="user_home_tel" />
+                </td>
+            </tr>
+            <tr>
+                <td class="form-table-label">家庭住址：</td>
+                <td>
+                    <input type="text" placeholder="请输入客户家庭住址"
+                           value="{{viewData.home_address}}"
+                           id="home_address" name="home_address" />
+                </td>
+            </tr>
+            <tr>
+                <td class="form-table-label">微信号：</td>
+                <td>
+                    <input type="text" placeholder="请输入客户微信号"
+                           value="{{viewData.wchat_id}}"
+                           id="wchat_id" name="wchat_id" />
+                </td>
+            </tr>
+            <tr>
+                <td class="form-table-label">
+                    &ensp;
+                </td>
+                <td>
+                    <input type="submit" value="保存" />
+                    <input type="reset" value="清除" />
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </form>
+</div>
+
+{{/partial}}
+
+
+
+{{#partial "blocks/script"}}
+<script type="text/javascript" id="r_1">
+
+
+</script>
+{{/partial}}
+
+
+{{> layouts/layout_default}}

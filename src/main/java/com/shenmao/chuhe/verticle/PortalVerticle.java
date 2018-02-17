@@ -57,6 +57,7 @@ public class PortalVerticle extends AbstractVerticle {
     //router.route().handler(CSRFHandler.create("not a good secret"));
 
     // Serving static resources
+    router.route("/angular/*").handler(StaticHandler.create("static/angular").setCachingEnabled(false).setIncludeHidden(true).setDirectoryListing(true));
     router.route("/scripts/*").handler(StaticHandler.create("static/scripts").setCachingEnabled(false).setIncludeHidden(true).setDirectoryListing(true));
     router.route("/assets/*").handler(StaticHandler.create("static/assets").setCachingEnabled(false).setIncludeHidden(true).setDirectoryListing(true));
     router.route("/images/*").handler(StaticHandler.create("static/images").setCachingEnabled(false).setIncludeHidden(true).setDirectoryListing(true));

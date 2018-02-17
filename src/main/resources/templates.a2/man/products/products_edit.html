@@ -1,0 +1,80 @@
+{{#partial "blocks/title"}}
+<title>产品管理 - 编辑产品信息</title>
+{{/partial}}
+
+
+
+{{#partial "content" }}
+<h1>产品管理 - 编辑产品信息</h1>
+
+{{#if errorTrace }}
+<pre>{{errorTrace}}</pre>
+{{/if}}
+
+{{#if flashMessage}}
+<div style="color: brown">
+    {{flashMessage}}
+</div>
+{{/if}}
+
+
+
+
+<div>
+
+    <form action="/mans/products/{{viewData.product_id}}" method="POST">
+
+        <input type="hidden" name="_method" value="put" />
+        <table>
+            <tbody>
+            <tr>
+                <td>产品编号：</td>
+                <td><input type="text" name="product_id" disabled="disabled"
+                           value="{{viewData.product_id}}" readonly/></td>
+            </tr>
+            <tr>
+                <td>产品名称：</td>
+                <td><input type="text" name="product_name" required placeholder="请输入产品名称"
+                           value="{{viewData.product_name}}"/></td>
+            </tr>
+            <tr>
+                <td>产品单位：</td>
+                <td><input type="text" name="product_unit" required placeholder="请输入产品单位"
+                           value="{{viewData.product_unit}}"/></td>
+            </tr>
+            <tr>
+                <td>产品单价：</td>
+                <td><input type="float" name="product_price" required placeholder="请输入产品单价"
+                           value="{{viewData.product_price}}"/></td>
+            </tr>
+            <tr>
+                <td>产品规格：</td>
+                <td><input type="text" name="product_spec" placeholder="请输入产品规格"
+                           value="{{viewData.product_spec}}"/></td>
+            </tr>
+            <tr>
+                <td style="text-align: right;vertical-align: top;">产品描述：</td>
+                <td><textarea rows="10" cols="60" type="text" name="product_desc"
+                              placeholder="请输入产品描述">{{viewData.product_desc}}</textarea></td>
+            </tr>
+            </tbody>
+        </table>
+        <input type="submit" value="保存产品信息" />
+        <a href="/mans/products/{{viewData.product_id}}">返回产品详情页</a>
+    </form>
+
+
+</div>
+
+{{/partial}}
+
+
+
+{{#partial "blocks/script"}}
+<script type="text/javascript" id="r_1">
+
+</script>
+{{/partial}}
+
+
+{{> layouts/layout_default}}

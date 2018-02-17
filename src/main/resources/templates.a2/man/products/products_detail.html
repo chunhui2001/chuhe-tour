@@ -1,0 +1,82 @@
+{{#partial "blocks/title"}}
+<title>产品管理 - 产品详情</title>
+{{/partial}}
+
+
+
+{{#partial "content" }}
+<h1>产品管理 - 产品详情</h1>
+
+{{#if errorTrace }}
+<pre>{{errorTrace}}</pre>
+{{/if}}
+
+{{#if flashMessage}}
+<div style="color: brown">
+    {{flashMessage}}
+</div>
+{{/if}}
+
+<div>
+
+    <form action="/mans/products/{{viewData.product_id}}"
+          onsubmit="if(!confirm('确认删除么?')){return false;}"
+          method="post">
+        <input type="hidden" name="_method" value="delete" />
+
+        <table>
+            <tbody>
+            <tr>
+                <td>产品编号：</td>
+                <td>{{viewData.product_id}}</td>
+            </tr>
+            <tr>
+                <td>产品名称：</td>
+                <td>{{viewData.product_name}}</td>
+            </tr>
+            <tr>
+                <td>产品单位：</td>
+                <td>{{viewData.product_unit}}</td>
+            </tr>
+            <tr>
+                <td>产品单价：</td>
+                <td>{{viewData.product_price}}</td>
+            </tr>
+            <tr>
+                <td>产品规格：</td>
+                <td>{{viewData.product_spec}}</td>
+            </tr>
+            <tr>
+                <td>创建时间：</td>
+                <td>{{viewData.created_at}}</td>
+            </tr>
+            <tr>
+                <td>更新时间：</td>
+                <td>{{viewData.last_updated}}</td>
+            </tr>
+            <tr>
+                <td style="text-align: right;vertical-align: top;">产品描述：</td>
+                <td>{{viewData.product_desc}}</td>
+            </tr>
+            </tbody>
+        </table>
+
+        <input type="submit" value="删除该产品" />
+        <a href="/mans/products/{{viewData.product_id}}/edit">编辑产品信息</a>
+        <a href="/mans/products">返回产品列表</a>
+    </form>
+
+</div>
+
+{{/partial}}
+
+
+
+{{#partial "blocks/script"}}
+<script type="text/javascript" id="r_1">
+
+</script>
+{{/partial}}
+
+
+{{> layouts/layout_default}}

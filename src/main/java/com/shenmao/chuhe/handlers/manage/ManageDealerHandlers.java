@@ -3,6 +3,7 @@ package com.shenmao.chuhe.handlers.manage;
 import com.shenmao.chuhe.database.chuhe.ChuheDbService;
 import com.shenmao.chuhe.handlers.BaseHandler;
 import com.shenmao.chuhe.serialization.ChainSerialization;
+import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.rxjava.ext.web.RoutingContext;
 import org.slf4j.Logger;
@@ -134,7 +135,13 @@ public class ManageDealerHandlers extends BaseHandler {
         ChainSerialization chainSerialization =
                 ChainSerialization.create(routingContext.getDelegate());
 
-        this.chuheDbService.createDealer(dealer, reply -> {
+        JsonArray roles = new JsonArray();
+
+        roles.add("role_user");
+        roles.add("role_dealer");
+
+
+        this.chuheDbService.createDealer(dealer, roles, reply -> {
 
             if (reply.succeeded()) {
                 chainSerialization

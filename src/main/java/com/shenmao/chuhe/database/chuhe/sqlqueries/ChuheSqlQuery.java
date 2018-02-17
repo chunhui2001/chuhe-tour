@@ -9,6 +9,9 @@ public enum ChuheSqlQuery {
     SAVE_USER,
     DELETE_USER_BATCH,
     UPDATE_USER,
+    ALL_USERS,
+    GET_USER,
+    UPDATE_USER_ROLES,
 
     // products
     CREATE_PRODUCTS_TABLE,

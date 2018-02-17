@@ -26,7 +26,7 @@ public class HtmlSerialization {
   public static final TemplateEngine templateEngine = getHandlebarsTemplateEngine();
 
   // public static final TemplateHandler htmlTemplateHandler = TemplateHandler.create(templateEngine);
-  public static final String templateFolderName = "templates";
+  public static final String templateFolderName = "templates.a2";
 
 
   public static void serialize(RoutingContext context, SerializeOptions options) {

@@ -1,0 +1,119 @@
+{{#partial "blocks/title"}}
+<title>客户详细信息</title>
+{{/partial}}
+
+
+
+{{#partial "content" }}
+<h1>客户详细信息</h1>
+
+{{#if errorTrace }}
+<pre>{{errorTrace}}</pre>
+{{/if}}
+
+{{#if flashMessage}}
+<div style="color: brown">
+    {{flashMessage}}
+</div>
+{{/if}}
+
+
+<div class="customer-new-form">
+    <form id="customer-delete-from" action="/mans/customer/{{viewData.user_id}}" method="POST">
+
+        <input type="hidden" name="_method" value="delete" />
+
+        <table>
+            <tbody>
+            <tr>
+                <td class="form-table-label">客户编号：</td>
+                <td>
+                    {{viewData.user_id}}
+                </td>
+            </tr>
+            <tr>
+                <td class="form-table-label">客户姓名：</td>
+                <td>
+                    {{viewData.user_name}}
+                </td>
+            </tr>
+            <tr>
+                <td class="form-table-label">性别：</td>
+
+                <td>
+                    {{viewData.user_gender}}
+                </td>
+
+            </tr>
+            <tr>
+                <td class="form-table-label">身份证：</td>
+                <td>
+                    {{viewData.user_identity}}
+                </td>
+            </tr>
+            <tr>
+                <td class="form-table-label">来源：</td>
+                <td>
+                    {{viewData.user_source_from}}
+                </td>
+            </tr>
+            <tr>
+                <td class="form-table-label">联系电话：</td>
+                <td>
+                    {{viewData.user_phone}}
+                </td>
+            </tr>
+            <tr>
+                <td class="form-table-label">家庭电话：</td>
+                <td>
+                    {{viewData.user_home_tel}}
+                </td>
+            </tr>
+            <tr>
+                <td class="form-table-label">家庭住址：</td>
+                <td>
+                    {{viewData.home_address}}
+                </td>
+            </tr>
+            <tr>
+                <td class="form-table-label">微信号：</td>
+                <td>
+                    {{viewData.wchat_id}}
+                </td>
+            </tr>
+            <tr>
+                <td class="form-table-label">
+                    &ensp;
+                </td>
+                <td>
+                    <input onclick="confirmDel('确认删除该客户么?');" type="button" value="删除客户" />
+                    <a href="/mans/customer/{{viewData.user_id}}/edit">编辑</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </form>
+</div>
+
+{{/partial}}
+
+
+
+{{#partial "blocks/script"}}
+<script type="text/javascript" id="r_1">
+
+
+    function confirmDel(msg) {
+        if (!confirm(msg)) {
+            return;
+        }
+
+        $("#customer-delete-from").submit();
+    }
+
+</script>
+{{/partial}}
+
+
+{{> layouts/layout_default}}

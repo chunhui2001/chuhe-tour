@@ -903,8 +903,20 @@ public class ChuheDbServiceImpl implements ChuheDbService {
         return this;
     }
 
+    public String getRolesString(JsonArray userRoles) {
+
+        StringJoiner userRolesJoiner = new StringJoiner(",");
+
+        for (int i=0; i<userRoles.size(); i++) {
+            userRolesJoiner.add(userRoles.getString(i));
+        }
+
+        return userRolesJoiner.toString();
+
+    }
+
     @Override
-    public ChuheDbService createUser(JsonObject user, Handler<AsyncResult<Long>> resultHandler) {
+    public ChuheDbService createUser(JsonObject user, JsonArray userRoles, Handler<AsyncResult<Long>> resultHandler) {
 
 
         String createUserSql = this.sqlQueries.get(ChuheSqlQuery.SAVE_USER);
@@ -913,12 +925,105 @@ public class ChuheDbServiceImpl implements ChuheDbService {
 
         JsonArray params = new JsonArray();
 
-        Single<UpdateResult> createUserSingle = this.dbClient.rxUpdateWithParams(createUserSql, params);
+        addParams(user, params, "user_name", true);
+        addParams(user, params, "user_passwd", true);
+        addParams(user, params, "user_name", true);
+        addParams(user, params, "user_gender", true);
+        addParams(user, params, "user_identity", true);
+        addParams(user, params, "user_phone", true);
+        addParams(user, params, "user_home_tel", true);
+        addParams(user, params, "home_address", true);
+        addParams(user, params, "wchat_id", true);
+        addParams(user, params, "user_source_from", true);
+        params.add(getRolesString(userRoles));
 
+
+        this.dbClient.rxUpdateWithParams(createUserSql, params)
+                .subscribe(updateResult -> {
+                    resultHandler.handle(Future.succeededFuture(updateResult.getKeys().getLong(0)));
+                }, error -> {
+                    resultHandler.handle(Future.failedFuture(error.getMessage()));
+
+                });
 
 
         return this;
     }
+
+
+    @Override
+    public ChuheDbService deleteUserBatch(List<Long> userIdList, Handler<AsyncResult<Integer>> resultHandler) {
+
+        String deleteUserSqlBatch = sqlQueries.get(ChuheSqlQuery.DELETE_USER_BATCH);
+
+        JsonArray sqlParam = new JsonArray();
+        StringJoiner joiner = new StringJoiner(",");
+
+        userIdList.forEach(dealerId -> {
+            sqlParam.add(dealerId);
+            joiner.add( "?");
+        });
+
+        deleteUserSqlBatch = deleteUserSqlBatch.replaceAll(
+                "_user_id_list_", joiner.toString());
+
+        StringBuilder deleteUserSqlBatchBuilder = new StringBuilder(deleteUserSqlBatch);
+
+        LOGGER.info(deleteUserSqlBatch);
+
+        this.dbClient.rxGetConnection()
+                .flatMap(conn ->
+                        conn
+                                .rxSetAutoCommit(false)
+                                // delete user
+                                .flatMap(autoCommit -> {
+                                    return conn.rxUpdateWithParams(deleteUserSqlBatchBuilder.toString(), sqlParam);
+                                })
+                                .flatMap(updateResult -> {
+                                    return conn.rxCommit().map(commit -> updateResult.getUpdated());
+                                })
+                                .onErrorResumeNext(ex ->
+                                        conn.rxRollback()
+                                                .onErrorResumeNext(ex2 ->
+                                                        Single.error(new CompositeException(ex, ex2))
+                                                ).flatMap(ignore -> Single.error(ex))
+                                ).doAfterTerminate(conn::close)
+                ).subscribe(affectRowCount -> {
+            resultHandler.handle(Future.succeededFuture(affectRowCount));
+        }, error -> {
+
+            resultHandler.handle(Future.failedFuture(error.getMessage()));
+        });
+
+
+        return this;
+    }
+
+
+    @Override
+    public ChuheDbService userDetail(Long userId, Handler<AsyncResult<JsonObject>> resultHandler)  {
+
+        String userDetailSql = this.sqlQueries.get(ChuheSqlQuery.GET_USER);
+
+        LOGGER.info(userDetailSql);
+
+        JsonArray params = new JsonArray();
+
+        params.add(userId);
+
+        Single<JsonObject> result = this.dbClient.rxQueryWithParams(userDetailSql, params)
+                .flatMapObservable(res -> Observable.from(res.getRows()))
+                .map(user -> processEmptyFields(user))
+                .map(user -> processGender(user, "user_gender"))
+                .defaultIfEmpty(new JsonObject()).toSingle();
+
+
+        result.subscribe(RxHelper.toSubscriber(resultHandler));
+
+        return this;
+    }
+
+
 
     public JsonArray addParams(JsonObject data, JsonArray params, String key) {
         return addParams(data, params, key, false);
@@ -945,7 +1050,7 @@ public class ChuheDbServiceImpl implements ChuheDbService {
     }
 
     @Override
-    public ChuheDbService createDealer(JsonObject dealer, Handler<AsyncResult<Long>> resultHandler) {
+    public ChuheDbService createDealer(JsonObject dealer, JsonArray userRoles, Handler<AsyncResult<Long>> resultHandler) {
 
         String createUserSql = this.sqlQueries.get(ChuheSqlQuery.SAVE_USER);
         String createDealerSql = this.sqlQueries.get(ChuheSqlQuery.SAVE_DEALER);
@@ -966,9 +1071,8 @@ public class ChuheDbServiceImpl implements ChuheDbService {
         addParams(dealer, userParams, "dealer_home_address", true);
         addParams(dealer, userParams, "dealer_wchat_id", true);
         addParams(dealer, userParams, "dealer_source_from", true);
-        //addParams(dealer, userParams, null);
+        userParams.add(getRolesString(userRoles));
 
-        userParams.add("role_user,role_dealer");
 
         this.dbClient.rxGetConnection()
                 .flatMap(conn ->
@@ -1004,14 +1108,14 @@ public class ChuheDbServiceImpl implements ChuheDbService {
         return this;
     }
 
-    public JsonObject processGender(JsonObject o) {
+    public JsonObject processGender(JsonObject o, String key) {
 
-        switch (o.getString("dealer_gender")) {
+        switch (o.getString(key)) {
             case "MAN":
-                o.put("dealer_gender", "男");
+                o.put(key, "男");
                 break;
             case "WOMEN":
-                o.put("dealer_gender", "女");
+                o.put(key, "女");
                 break;
             default:
                 //dealer.put("dealer_gender", dealer.getString("dealer_gender") + "(未知)");
@@ -1033,19 +1137,8 @@ public class ChuheDbServiceImpl implements ChuheDbService {
 
         Single<JsonObject> result = this.dbClient.rxQueryWithParams(dealerDetailsSql, params)
                 .flatMapObservable(res -> Observable.from(res.getRows()))
-                .map(dealer -> {
-
-                    dealer.fieldNames().forEach(fname -> {
-                        if (dealer.getValue(fname) == null) {
-                            dealer.put(fname, "无");
-                        }
-                    });
-
-
-
-                    return dealer;
-                })
-                .map(dealer -> processGender(dealer))
+                .map(dealer -> processEmptyFields(dealer))
+                .map(dealer -> processGender(dealer, "dealer_gender"))
 
                 //.map(dealer -> this.processProduct(dealer))
                 .defaultIfEmpty(new JsonObject()).toSingle();
@@ -1056,6 +1149,146 @@ public class ChuheDbServiceImpl implements ChuheDbService {
         return this;
     }
 
+    private JsonObject processEmptyFields(JsonObject o) {
+        o.fieldNames().forEach(fname -> {
+            if (o.getValue(fname) == null) {
+                o.put(fname, "无");
+            }
+        });
+        return o;
+    }
+
+    @Override
+    public ChuheDbService fetchAllUsers(Handler<AsyncResult<List<JsonObject>>> resultHandler) {
+
+        String fetchAllUsersSql = this.sqlQueries.get(ChuheSqlQuery.ALL_USERS);
+
+        LOGGER.info(fetchAllUsersSql);
+
+        this.dbClient.rxQuery(fetchAllUsersSql)
+                .flatMapObservable(res -> Observable.from(res.getRows()))
+                .map(user -> processEmptyFields(user))
+                .map(user -> processGender(user, "user_gender"))
+                .collect(ArrayList<JsonObject>::new, List::add)
+                .subscribe(RxHelper.toSubscriber(resultHandler));
+
+        return this;
+    }
+
+
+    @Override
+    public ChuheDbService updateUserRoles(Long userId, String userRoles, Handler<AsyncResult<Integer>> resultHandler) {
+
+        String updateUserRolesSql = sqlQueries.get(ChuheSqlQuery.UPDATE_USER_ROLES);
+
+        LOGGER.info(updateUserRolesSql);
+
+        JsonArray params = new JsonArray();
+
+        params.add(userRoles).add(userId);
+
+        this.dbClient.rxUpdateWithParams(updateUserRolesSql, params)
+                .subscribe(updateResult -> {
+                    resultHandler.handle(Future.succeededFuture(updateResult.getUpdated()));
+                }, error -> {
+                    resultHandler.handle(Future.failedFuture(error.getMessage()));
+
+                });
+
+        return this;
+    }
+
+    @Override
+    public ChuheDbService validateUser(String username, String passwd, Handler<AsyncResult<Boolean>> resultHandler) {
+
+        if (null != username && null != passwd
+                && !username.trim().isEmpty()
+                && !passwd.isEmpty()) {
+
+        }
+
+        return this;
+    }
+
+    @Override
+    public ChuheDbService updateUser(Long userId, JsonObject newUser, Handler<AsyncResult<Integer>> resultHandler) {
+
+
+        this.userDetail(userId, ar -> {
+
+            if (!ar.succeeded()) {
+                resultHandler.handle(Future.failedFuture(ar.cause()));
+                return;
+            }
+
+            JsonObject customer;
+            JsonObject oldCustomer = ar.result();
+
+            if (oldCustomer.fieldNames().size() == 0) {
+                resultHandler.handle(Future.succeededFuture(0));
+                return;
+            }
+
+            newUser.fieldNames().forEach(f -> {
+                oldCustomer.put(f, newUser.getValue(f));
+            });
+
+            customer = oldCustomer;
+
+            String updateUserSql = sqlQueries.get(ChuheSqlQuery.UPDATE_USER);
+
+            LOGGER.info(updateUserSql);
+
+            JsonArray sqlParamsUser = new JsonArray();
+
+
+            addParams(customer, sqlParamsUser, "user_name", true);
+            addParams(customer, sqlParamsUser, "user_gender", true);
+            addParams(customer, sqlParamsUser, "user_identity", true);
+            addParams(customer, sqlParamsUser, "user_source_from", true);
+            addParams(customer, sqlParamsUser, "user_phone", true);
+            addParams(customer, sqlParamsUser, "user_home_tel", true);
+            addParams(customer, sqlParamsUser, "home_address", true);
+            addParams(customer, sqlParamsUser, "wchat_id", true);
+
+
+            sqlParamsUser.add(userId);
+
+
+            this.dbClient.rxGetConnection()
+                    .flatMap(conn ->
+                            conn
+                                    .rxSetAutoCommit(false)
+                                    // update user
+                                    .flatMap(autoCommit -> {
+                                        return conn.rxUpdateWithParams(updateUserSql, sqlParamsUser);
+                                    })
+                                    .flatMap(updateResult -> {
+                                        return conn.rxCommit().map(commit -> updateResult.getUpdated());
+                                    })
+                                    .onErrorResumeNext(ex ->
+                                            conn.rxRollback()
+                                                    .onErrorResumeNext(ex2 ->
+                                                            Single.error(new CompositeException(ex, ex2))
+                                                    ).flatMap(ignore -> Single.error(ex))
+                                    ).doAfterTerminate(conn::close)
+                    ).subscribe(affectRowCount -> {
+                resultHandler.handle(Future.succeededFuture(affectRowCount));
+            }, error -> {
+
+                resultHandler.handle(Future.failedFuture(error.getMessage()));
+            });
+
+
+        });
+
+
+
+        return this;
+
+    }
+
+
     @Override
     public ChuheDbService fetchAllDealers(Handler<AsyncResult<List<JsonObject>>> resultHandler) {
 
@@ -1065,17 +1298,8 @@ public class ChuheDbServiceImpl implements ChuheDbService {
 
         this.dbClient.rxQuery(fetchAllDealersSql)
                     .flatMapObservable(res -> Observable.from(res.getRows()))
-                    .map(dealer -> {
-
-                        dealer.fieldNames().forEach(fname -> {
-                            if (dealer.getValue(fname) == null) {
-                                dealer.put(fname, "无");
-                            }
-                        });
-
-                        return dealer;
-                    })
-                    .map(dealer -> processGender(dealer))
+                    .map(user -> processEmptyFields(user))
+                    .map(dealer -> processGender(dealer, "dealer_gender"))
                     .collect(ArrayList<JsonObject>::new, List::add)
                     .subscribe(RxHelper.toSubscriber(resultHandler));
 

@@ -1,0 +1,138 @@
+{{#partial "blocks/title"}}
+<title>{{viewData.order_type_name}}单详情</title>
+{{/partial}}
+
+
+
+{{#partial "content" }}
+<h1>进销存管理 -- {{viewData.order_type_name}}单详情</h1>
+
+{{#if errorTrace }}
+<pre>{{errorTrace}}</pre>
+{{/if}}
+
+{{#if flashMessage}}
+<div style="color: brown">
+    {{flashMessage}}
+</div>
+{{/if}}
+
+<!--div style="text-align: right;margin-bottom: 1em;">
+    <a href="/mans/orders/{{viewData.order_type}}/1/edit">修改单据信息</a>
+</div-->
+
+<fieldset style="margin-bottom: 1em;">
+    <legend style="font-weight: bold;color: gray;">订单基本信息</legend>
+    <table>
+        <tbody>
+            <tr>
+                <td>订单编号: </td>
+                <td style="font-weight: bold;">{{viewData.order_id}}</td>
+            </tr>
+            <tr>
+                <td>订单流水号: </td>
+                <td style="font-weight: bold;">{{viewData.order_flow_no}}</td>
+            </tr>
+            <tr>
+                <td>订单类型: </td>
+                <td style="font-weight: bold;">{{viewData.order_type_name}}</td>
+            </tr>
+            <tr>
+                <td>订单金额: </td>
+                <td style="font-weight: bold;">{{viewData.order_money}}</td>
+            </tr>
+            <tr>
+                <td>订单日期: </td>
+                <td style="font-weight: bold;">{{viewData.order_date}}</td>
+            </tr>
+            <tr>
+                <td>经手人: </td>
+                <td style="font-weight: bold;">{{viewData.order_person}}</td>
+            </tr>
+            <tr>
+                <td>备注: </td>
+                <td style="font-weight: bold;">{{viewData.order_desc}}</td>
+            </tr>
+        </tbody>
+    </table>
+</fieldset>
+
+
+<fieldset style="margin-bottom: 1em;">
+    <legend style="font-weight: bold;color: gray;">订单详情</legend>
+
+    <table border="0" cellspacing="0">
+        <colgroup>
+            <col width="45">
+            <col width="85">
+            <col width="325">
+            <col width="85">
+            <col width="185">
+            <col width="105">
+            <col width="85">
+            <col width="85">
+            <col width="95">
+            <col width="145">
+        </colgroup>
+        <thead>
+        <tr>
+            <th>序号</th>
+            <th>商品编号</th>
+            <th>商品名称</th>
+            <th>品牌</th>
+            <th>规格</th>
+            <th>单位</th>
+            <th style="text-align: right;">单价</th>
+            <th style="text-align: right;">数量</th>
+            <th style="text-align: right;">合计金额</th>
+            <th>生产厂家</th>
+            <th>备注</th>
+        </tr>
+        </thead>
+        <tbody class="order-detail-replenish-items">
+
+        {{#each viewData.order_items}}
+        <tr>
+            <td style="text-align: center;">{{order_item_no}}</td>
+            <td style="text-align: center;">{{product_id}}</td>
+            <td>{{product_name}}</td>
+            <td style="text-align: center;">{{product_brand}}</td>
+            <td style="text-align: center;">{{product_spec}}</td>
+            <td style="text-align: center;">{{product_unit}}</td>
+            <td style="text-align: right;">{{product_price}}</td>
+
+            {{#compare viewData.order_type 'eq' 'sales'}}
+                <td style="text-align: right;">{{product_sale_count}}</td>
+            {{/compare}}
+
+            {{#compare viewData.order_type 'eq' 'replenish'}}
+                <td style="text-align: right;">{{product_buy_count}}</td>
+            {{/compare}}
+
+            <td style="text-align: right;">{{item_total}}</td>
+            <td style="text-align: center;">{{product_vender}}</td>
+            <td style="text-align: left;">{{order_item_desc}}</td>
+        </tr>
+        {{/each}}
+
+        </tbody>
+    </table>
+
+</fieldset>
+
+
+
+{{/partial}}
+
+
+
+{{#partial "blocks/script"}}
+<script type="text/javascript" id="r_1">
+
+
+
+</script>
+{{/partial}}
+
+
+{{> layouts/layout_default}}

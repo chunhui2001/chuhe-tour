@@ -1,6 +1,7 @@
 package com.shenmao.chuhe.passport;
 
 import io.vertx.ext.auth.shiro.ShiroAuthOptions;
+import io.vertx.ext.auth.shiro.impl.LDAPAuthProvider;
 import io.vertx.rxjava.core.Vertx;
 import io.vertx.rxjava.ext.auth.shiro.ShiroAuth;
 import org.apache.shiro.SecurityUtils;
@@ -18,18 +19,16 @@ public class ShiroAuthProviderImpl {
 
   }
 
-
-
-  public static ShiroAuth newInstance(Vertx vertx, ShiroAuthOptions options) {
+  public static ShiroAuth create(Vertx vertx, ShiroAuthOptions options) {
     RealmImpl realm;
     switch(options.getType()) {
       case PROPERTIES:
         // realm = PropertiesAuthProvider.createRealm(options.getConfig());
         realm = new RealmImpl(vertx);
         break;
-//      case LDAP:
-//        realm = LDAPAuthProvider.createRealm(options.getConfig());
-//        break;
+      case LDAP:
+        realm = (RealmImpl) LDAPAuthProvider.createRealm(options.getConfig());
+        break;
       default:
         throw new IllegalArgumentException("Invalid shiro auth realm type: " + options.getType());
     }
@@ -39,7 +38,7 @@ public class ShiroAuthProviderImpl {
   }
 
 
-  public ShiroAuth newInstance(Vertx vertx, RealmImpl realm, ShiroAuthOptions options) {
+  private ShiroAuth newInstance(Vertx vertx, RealmImpl realm, ShiroAuthOptions options) {
 
     this.vertx = vertx;
     this.securityManager = new DefaultSecurityManager(realm);
@@ -47,9 +46,7 @@ public class ShiroAuthProviderImpl {
 
     DefaultSecurityManager securityManager = new DefaultSecurityManager(realm);
     SecurityUtils.setSecurityManager(securityManager);
-
     realm.setSecurityManager(this.securityManager);
-
 
     return ShiroAuth.create(vertx, options);
 

@@ -1,0 +1,161 @@
+{{#partial "blocks/title"}}
+<title>编辑经销商信息</title>
+{{/partial}}
+
+
+
+{{#partial "content" }}
+<h1>编辑经销商信息</h1>
+
+{{#if errorTrace }}
+<pre>{{errorTrace}}</pre>
+{{/if}}
+
+{{#if flashMessage}}
+<div style="color: brown">
+    {{flashMessage}}
+</div>
+{{/if}}
+
+
+<div class="dealer-new-form">
+    <form action="/mans/dealer/{{viewData.dealer_id}}" method="POST">
+
+        <input type="hidden" name="_method" value="put" />
+
+        <table>
+            <tbody>
+            <tr>
+                <td class="form-table-label">经销商编号：</td>
+                <td>
+                    <input type="text" required disabled="disabled"
+                           id="dealer_id" name="dealer_id"
+                            value="{{viewData.dealer_id}}" />
+                </td>
+            </tr>
+            <tr>
+                <td class="form-table-label">经销商名称：</td>
+                <td>
+                    <input type="text" required placeholder="请输入经销商名称"
+                           id="dealer_name" name="dealer_name"
+                           value="{{viewData.dealer_name}}" />
+                </td>
+                <td><strong style="color: brown;">*</strong></td>
+            </tr>
+            <tr>
+                <td class="form-table-label">性别：</td>
+                <td>
+                    <label for="dealer_gender_man">男</label>
+
+                    <input {{#compare viewData.dealer_gender 'eq' '男' }}
+                               checked="checked"
+                           {{/compare}}
+                           type="radio" value="MAN" id="dealer_gender_man" name="dealer_gender" />
+
+                    <label for="dealer_gender_women">女</label>
+                    <input  {{#compare viewData.dealer_gender 'eq' '女' }}
+                               checked="checked"
+                            {{/compare}}
+                            type="radio" value="WOMEN" id="dealer_gender_women" name="dealer_gender" />
+                </td>
+            </tr>
+            <tr>
+                <td class="form-table-label">身份证：</td>
+                <td>
+                    <input type="text" placeholder="请输入经销商身份证"
+                           id="dealer_identity" name="dealer_identity"
+                           value="{{viewData.dealer_identity}}" />
+                </td>
+            </tr>
+            <tr>
+                <td class="form-table-label">来源：</td>
+                <td>
+                    <input type="text" placeholder="请输入经销商来源"
+                           id="dealer_source_from" name="dealer_source_from"
+                           value="{{viewData.dealer_source_from}}" />
+                </td>
+            </tr>
+            <tr>
+                <td class="form-table-label">联系电话：</td>
+                <td>
+                    <input type="text" placeholder="请输入联系电话"
+                           id="dealer_phone" name="dealer_phone"
+                           value="{{viewData.dealer_phone}}" />
+                </td>
+            </tr>
+            <tr>
+                <td class="form-table-label">家庭电话：</td>
+                <td>
+                    <input type="text" placeholder="请输入家庭电话"
+                           id="dealer_home_tel" name="dealer_home_tel"
+                           value="{{viewData.dealer_home_tel}}" />
+                </td>
+            </tr>
+            <tr>
+                <td class="form-table-label">家庭住址：</td>
+                <td>
+                    <input type="text" placeholder="请输入家庭住址"
+                           id="dealer_home_address" name="dealer_home_address"
+                           value="{{viewData.dealer_home_address}}" />
+                </td>
+            </tr>
+            <tr>
+                <td class="form-table-label">微信号：</td>
+                <td>
+                    <input type="text" placeholder="请输入经销商微信号"
+                           id="dealer_wchat_id" name="dealer_wchat_id"
+                           value="{{viewData.dealer_wchat_id}}" />
+                </td>
+            </tr>
+            <tr>
+                <td class="form-table-label">经销商级别：</td>
+                <td>
+                    <input type="text" placeholder="请输入经销商级别"
+                           id="dealer_level" name="dealer_level"
+                           value="{{viewData.dealer_level}}" />
+                </td>
+            </tr>
+            <tr>
+                <td class="form-table-label">经销区域：</td>
+                <td>
+                    <input type="text" placeholder="请输入经销区域"
+                           id="dealer_scope" name="dealer_scope"
+                           value="{{viewData.dealer_scope}}" />
+                </td>
+            </tr>
+            <tr>
+                <td class="form-table-label">区域内作物特点：</td>
+                <td>
+                    <input type="text" placeholder="请输入区域内作物特点"
+                           id="dealer_desc" name="dealer_desc"
+                           value="{{viewData.dealer_desc}}" />
+                </td>
+            </tr>
+            <tr>
+                <td class="form-table-label">
+                    &ensp;
+                </td>
+                <td>
+                    <input type="submit" value="保存" />
+                    <input type="reset" value="清除" />
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </form>
+</div>
+
+{{/partial}}
+
+
+
+{{#partial "blocks/script"}}
+<script type="text/javascript" id="r_1">
+
+
+</script>
+{{/partial}}
+
+
+{{> layouts/layout_default}}

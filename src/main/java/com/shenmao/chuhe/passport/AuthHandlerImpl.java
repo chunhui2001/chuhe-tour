@@ -24,7 +24,8 @@ public class AuthHandlerImpl {
   public static synchronized AuthHandler create(Vertx vertx) {
 
     ShiroAuthOptions shiroAuthOptions = new ShiroAuthOptions().setType(ShiroAuthRealmType.PROPERTIES).setConfig(new JsonObject().put("properties_path", "classpath:properties/app-users.properties"));
-    AuthProvider shiroAuthProvider = ShiroAuthProviderImpl.newInstance(vertx, shiroAuthOptions);
+    AuthProvider shiroAuthProvider = ShiroAuthProviderImpl.create(vertx, shiroAuthOptions);
+
     JWTAuth jwtAuthProvider = JWTAuth.create(vertx, jwtAuthOptions);
 
     AuthHandler jwtAuthHandler = JWTAuthHandler.create(jwtAuthProvider);
@@ -44,7 +45,7 @@ public class AuthHandlerImpl {
 
     return chain;
     // return redirectAuthHandler;
-//     return basicAuthHandler;
+    // return basicAuthHandler;
 
   }
 

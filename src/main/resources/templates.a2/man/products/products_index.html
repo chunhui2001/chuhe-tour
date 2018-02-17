@@ -1,0 +1,120 @@
+{{#partial "blocks/title"}}
+<title>产品管理 - 所有产品</title>
+{{/partial}}
+
+
+
+{{#partial "content" }}
+<h1>产品管理 - 所有产品</h1>
+
+{{#if errorTrace }}
+<pre>{{errorTrace}}</pre>
+{{/if}}
+
+{{#if flashMessage}}
+<div style="color: brown">
+    {{flashMessage}}
+</div>
+{{/if}}
+
+<div style="display: none;" class="product-new-form">
+    <form action="/mans/products" method="POST">
+        产品名称：<input type="text" name="product_name" required placeholder="请输入产品名称"/>  <br />
+        产品单位：<input type="text" name="product_unit" required placeholder="请输入产品单位" />  <br />
+        产品单价：<input type="float" name="product_price" required placeholder="请输入产品单价" />  <br />
+        产品规格：<input type="text" name="product_spec" placeholder="请输入产品规格" />  <br />
+        产品描述：<textarea type="text" name="product_desc" placeholder="请输入产品描述"></textarea><br />
+        <input type="submit" value="保存" />
+        <input type="reset" value="清除" />
+    </form>
+</div>
+
+<div style="text-align: right;">
+    <div style="display: inline-block;">
+    <input type="button" id="btn-product-new" value="新增产品"  style="float:left;" />
+
+    <form action="/mans/products" method="POST" style="float:left;">
+        <input type="hidden" name="_method" value="delete" />
+        <input type="hidden" id="product_ids" name="product_ids" value="" />
+        <input type="submit" id="btn-product-del" value="删除所有选中产品" />
+    </form>
+    <div class="clearFixed"></div>
+    </div>
+</div>
+
+<div>
+
+    <table style="width: 100%;">
+        <colgroup>
+            <col width="35">
+            <col width="85">
+            <col width="385">
+            <col width="45">
+            <col width="65">
+            <col width="165">
+            <col width="205">
+        </colgroup>
+        <thead>
+            <tr>
+                <th><input type="checkbox" id="select-all-product" /></th>
+                <th>产品编号</th>
+                <th>产品名称</th>
+                <th>单位</th>
+                <th>单价</th>
+                <th>规格</th>
+                <!--<th>产品描述</th>-->
+                <th>更新时间</th>
+                <th>&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody class="product-list">
+
+            {{#compare viewData.length 'gt' 0 }}
+                {{#each viewData}}
+                <tr>
+                    <td style="text-align: center;"><input type="checkbox" id="{{product_id}}" name="{{product_id}}" value="{{product_id}}" /></td>
+                    <td style="text-align: center;">{{product_id}}</td>
+                    <td style="text-align: left;">{{product_name}}</td>
+                    <td style="text-align: center;">{{product_unit}}</td>
+                    <td style="text-align: right;">{{product_price}}</td>
+                    <td style="text-align: center;">{{product_spec}}</td>
+                    <!--td>{{product_desc}}</td-->
+                    <td style="text-align: center;">{{last_updated}}</td>
+                    <td style="text-align: left;"><a href="/mans/products/{{product_id}}">产品详情</a></td>
+                </tr>
+                {{/each}}
+            {{/compare}}
+
+            {{#compare viewData.length 'eq' 0 }}
+            <td colspan="7">当前还没有任何产品 ~</td>
+            {{/compare}}
+
+        </tbody>
+    </table>
+
+
+</div>
+
+{{/partial}}
+
+
+
+{{#partial "blocks/script"}}
+<script type="text/javascript" src="/scripts/table/table-selectable.js"></script>
+<script type="text/javascript" id="r_1">
+
+
+    $(function() {
+
+        var selectTable = new SelectTable(
+            ".product-list", "#select-all-product", "#product_ids", "#btn-product-del");
+
+        selectTable.init();
+
+    });
+
+</script>
+{{/partial}}
+
+
+{{> layouts/layout_default}}

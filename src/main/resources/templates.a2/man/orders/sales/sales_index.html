@@ -1,0 +1,187 @@
+{{#partial "blocks/title"}}
+<title>销售管理</title>
+{{/partial}}
+
+
+
+{{#partial "content" }}
+<h1>进销存管理 -- 销售管理</h1>
+
+{{#if errorTrace }}
+<pre>{{errorTrace}}</pre>
+{{/if}}
+
+{{#if flashMessage}}
+<div style="color: brown">
+    {{flashMessage}}
+</div>
+{{/if}}
+
+<div style="display: none;" class="orders-new-sales-order-form">
+    <form id="orders-order-detail-form" action="/mans/orders/sales" method="POST">
+        <fieldset style="margin-bottom: 1em;">
+            <legend style="font-weight: bold;color:gray;">新增销售单</legend>
+            销单流水号：<input type="text" name="order_flow_no" required placeholder="请输入销单流水号"/>&ensp;&ensp;&ensp;&ensp;
+            经办人：<input type="text" name="order_person" required placeholder="请输入经办人" /> &ensp;
+            <!--
+            客户姓名：<input type="text" name="customer_name" required placeholder="请输入客户姓名" />&ensp;&ensp;&ensp;&ensp;
+            联系方式：<input type="text" name="customer_phone" required placeholder="请输入客户联系方式" />&ensp;&ensp;&ensp;&ensp;
+            -->
+            备注：<input type="text" name="order_desc" placeholder="请输入销单备注" />
+        </fieldset>
+
+        <fieldset style="margin-bottom: 1em;">
+            <legend style="font-weight: bold;color:gray;">销售单详情</legend>
+
+            <div style="margin: .4n 25em 0;">
+                <input type="button" id="btn-append-new-order-row" value="增加新行" />
+            </div>
+
+            <div class="order-detail-sales">
+
+                <table border="0" cellspacing="0">
+                    <thead>
+                    <tr>
+                        <th>序号</th>
+                        <th>商品编号</th>
+                        <th>商品名称</th>
+                        <th>品牌</th>
+                        <th>规格</th>
+                        <th>销售单价</th>
+                        <th>单位</th>
+                        <th>数量</th>
+                        <th>合计金额</th>
+                        <th>生产厂家</th>
+                        <th>备注</th>
+                        <th>&ensp;</th>
+                    </tr>
+                    </thead>
+                    <tbody class="order-detail-sales-items">
+                    <tr>
+                        <td style="width: 40px;text-align: center;font-weight: bold;">
+                            <input type="text" autocomplete="off" disabled="disabled" style="width: 40px;text-align: center;" value="1" /></td>
+                        <td><input type="text" autocomplete="off" style="width: 95px;" id="product_id" /></td>
+                        <td><input type="text" autocomplete="off" style="width: 385px;" id="product_name" /></td>
+                        <td><input type="text" autocomplete="off" disabled="disabled" style="width: 70px;text-align: center;" id="product_brand" /></td>
+                        <td><input type="text" autocomplete="off" disabled="disabled" style="width: 75px;" id="product_spec" /></td>
+                        <td><input type="text" autocomplete="off" style="width: 75px; text-align: right;" id="product_price" /></td>
+                        <td><input type="text" autocomplete="off" disabled="disabled" style="width: 75px;text-align: center;" id="product_unit" /></td>
+                        <td><input type="text" autocomplete="off" style="width: 75px;text-align: center;" id="product_sale_count" /></td>
+                        <td><input type="text" autocomplete="off" disabled="disabled" style="width: 75px;text-align: right;" id="product_total_money" /></td>
+                        <td><input type="text" autocomplete="off" disabled="disabled" style="width: 75px;" id="product_vender" /></td>
+                        <td><input type="text" autocomplete="off" style="width: 125px;" id="order_item_desc" /></td>
+                        <td><a title="删除该行" class="remove-order-row" href="javascript:void(this);">X</a></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="margin-top: .625em;">
+                <!--<input type="submit" value="保存" />-->
+                <input type="button" id="btn-order-save" value="保存" />
+                <input type="button" id="btn-clean-order-row" value="清除空行" />
+            </div>
+
+        </fieldset>
+    </form>
+</div>
+
+
+<div style="text-align: left;">
+    <div style="display: inline-block;">
+        <input type="button" id="btn-product-new-sales-order" value="新增销售单"  style="float:left;" />
+        <div class="clearFixed"></div>
+    </div>
+</div>
+
+
+
+<fieldset style="margin-top: 1em;">
+    <legend style="font-weight: bold;color:gray;">历史销售单</legend>
+    <div style="width: 1220px;">
+
+        <table style="width: 100%;">
+            <thead>
+            <tr>
+                <th>单据编号（自动生成）</th>
+                <th>单据流水号</th>
+                <th>单据类型</th>
+                <th style="text-align: right;">金额</th>
+                <th>销售日期</th>
+                <th>经办人</th>
+                <th>备注</th>
+                <th>创建时间</th>
+                <th>&nbsp;</th>
+            </tr>
+            </thead>
+            <tbody class="sales-order-list">
+
+            {{#compare viewData.length 'gt' 0 }}
+            {{#each viewData}}
+            <tr>
+                <td style="text-align: center;">{{order_id}}</td>
+                <td style="text-align: center;">{{order_flow_no}}</td>
+                <td style="text-align: center;">{{order_type_name}}单</td>
+                <td style="text-align: right;">{{order_money}}</td>
+                <td style="text-align: center;">{{order_date}}</td>
+                <td style="text-align: center;">{{order_person}}</td>
+                <td style="text-align: center;">{{order_desc}}</td>
+                <td style="text-align: center;">{{created_at}}</td>
+                <td><a href="/mans/orders/sales/{{order_id}}">单据详情</a></td>
+            </tr>
+            {{/each}}
+            {{/compare}}
+
+
+            {{#compare viewData.length 'eq' 0 }}
+            <td colspan="7">当前还没有任何销售单据 ~</td>
+            {{/compare}}
+
+            </tbody>
+        </table>
+
+
+    </div>
+</fieldset>
+
+{{/partial}}
+
+
+
+{{#partial "blocks/script"}}
+<script type="text/javascript" src="/scripts/table/table-calculate.js"></script>
+<script type="text/javascript" id="r_1">
+
+    var productModelFields = [ 'product_id', 'product_price', 'product_sale_count', 'order_item_desc' ];
+    var calculateTable = new CalculateTable(".order-detail-sales-items", "product_id", 'product_price', 'product_sale_count', 'product_total_money');
+
+    $(function () {
+
+        calculateTable.init();
+
+        $("#btn-order-save").on("click", function () {
+            calculateTable.appendOrderItemsToForm(productModelFields, "#orders-order-detail-form", "order_item_", "order_item_count");
+            $("#orders-order-detail-form").submit();
+        });
+
+        $("#btn-product-new-sales-order").on("click", function () {
+            $(".orders-new-sales-order-form").slideDown();
+        });
+
+        calculateTable.newOrderRow("#btn-append-new-order-row");
+        calculateTable.removeEmptyOrderDetailItemRow("btn-clean-order-row");
+        calculateTable.removeOrderItemRow(".remove-order-row");
+        calculateTable.enterOrTabToSearch("/mans/products");
+
+        for (var i=0; i<4; i++) {
+            $("#btn-append-new-order-row").click();
+        }
+
+    });
+
+
+</script>
+{{/partial}}
+
+
+{{> layouts/layout_default}}

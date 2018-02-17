@@ -1,0 +1,67 @@
+<html lang="zh-CN">
+<head>
+  <base href="/">
+  <meta charset="utf-8">
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+  {{#block "blocks/title"}}
+  <title>Title here</title>
+  {{/block}}
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <!-- cssset -->
+  <link media="all" type="text/css" rel="stylesheet" href="/assets/libs/normalize-7.0.0.css">
+  <link media="all" type="text/css" rel="stylesheet" href="/assets/libs/fonts-family-roboto.css">
+  <!--Font Icons: https://material.io/icons/-->
+  <link media="all" type="text/css" rel="stylesheet" href="/assets/libs/google-material-icons.css">
+  <!-- Foundation Flex: https://cdnjs.com/libraries/foundation/6.3.0 -->
+  <link media="all" type="text/css" rel="stylesheet" href="/assets/libs/foundation-flex-6.3.0.min.css">
+  <!-- site style -->
+  <link media="all" type="text/css" rel="stylesheet" href="/assets/styles.css">
+  <link href="/angular/styles.bundle.css" rel="stylesheet"/>
+
+  {{#block "blocks/styles"}}
+  <style type="text/css">
+
+  </style>
+  {{/block}}
+
+</head>
+<body>
+
+
+  {{#block "fragments/header"}}
+  <h1>Title</h1>
+  {{/block}}
+
+  <div class="main-content">
+    {{#block "content"}}
+    {{/block}}
+  </div>
+
+
+  {{#block "fragments/footer" }}
+  <span>Powered by Handlebars.java</span>
+  {{/block}}
+
+  <!-- websocket -->
+  <script src="/scripts/sockjs.js"></script>
+  <script src="/scripts/vertx-eventbus.js"></script>
+
+  <!-- jquery -->
+  <script type="text/javascript" src="/assets/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/assets/jquery/jquery-3.2.0.slim.min.js"></script>
+  <!-- web-animations: https://cdnjs.com/libraries/web-animations/2.2.2 -->
+  <script type="text/javascript" src="/assets/libs/web-animations-2.2.2.min.js"></script>
+  <script type="text/javascript" src="/angular/inline.bundle.js"></script>
+  <script type="text/javascript" src="/angular/polyfills.bundle.js"></script>
+  <script type="text/javascript" src="/angular/main.bundle.js"></script>
+
+  {{#block "blocks/script"}}
+  <script type="text/javascript">
+
+  </script>
+  {{/block}}
+
+</body>
+</html>

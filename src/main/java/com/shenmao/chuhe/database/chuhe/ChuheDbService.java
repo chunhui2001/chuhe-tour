@@ -63,14 +63,31 @@ public interface ChuheDbService {
     @Fluent
     ChuheDbService fetchAllStocks(Handler<AsyncResult<List<JsonObject>>> resultHandler);
 
-
     // users
     @Fluent
-    ChuheDbService createUser(JsonObject user, Handler<AsyncResult<Long>> resultHandler) ;
+    ChuheDbService fetchAllUsers(Handler<AsyncResult<List<JsonObject>>> resultHandler);
+
+    @Fluent
+    ChuheDbService createUser(JsonObject user, JsonArray userRoles, Handler<AsyncResult<Long>> resultHandler) ;
+
+    @Fluent
+    ChuheDbService deleteUserBatch(List<Long> userIdList, Handler<AsyncResult<Integer>> resultHandler);
+
+    @Fluent
+    ChuheDbService userDetail(Long userId, Handler<AsyncResult<JsonObject>> resultHandler) ;
+
+    @Fluent
+    ChuheDbService updateUser(Long userId, JsonObject newUser, Handler<AsyncResult<Integer>> resultHandler);
+
+    @Fluent
+    ChuheDbService updateUserRoles(Long userId, String userRoles, Handler<AsyncResult<Integer>> resultHandler);
+
+    @Fluent
+    ChuheDbService validateUser(String username, String passwd, Handler<AsyncResult<Boolean>> resultHandler) ;
 
     // dealers
     @Fluent
-    ChuheDbService createDealer(JsonObject dealer, Handler<AsyncResult<Long>> resultHandler) ;
+    ChuheDbService createDealer(JsonObject dealer, JsonArray userRoles, Handler<AsyncResult<Long>> resultHandler) ;
 
     @Fluent
     ChuheDbService dealerDetail(Long dealerId, Handler<AsyncResult<JsonObject>> resultHandler) ;

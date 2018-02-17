@@ -1,10 +1,12 @@
 package com.shenmao.chuhe.handlers;
 
+import com.shenmao.chuhe.database.chuhe.ChuheDbService;
 import com.shenmao.chuhe.database.wikipage.WikiPageDbService;
 import com.shenmao.chuhe.serialization.SerializeType;
 import com.shenmao.chuhe.passport.AuthHandlerImpl;
 import com.shenmao.chuhe.serialization.ChainSerialization;
 import io.vertx.core.Handler;
+import io.vertx.core.json.JsonArray;
 import io.vertx.rxjava.core.Vertx;
 import io.vertx.core.json.JsonObject;
 import org.slf4j.Logger;
@@ -23,18 +25,19 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.Set;
 
-public class PortalHandlers {
+public class PortalHandlers extends BaseHandler {
 
   private static final Logger logger = LoggerFactory.getLogger(PortalHandlers.class);
 
-  public static PortalHandlers create(WikiPageDbService wikiPageDbService) {
-
-    return new PortalHandlers(wikiPageDbService);
+  public static PortalHandlers create(ChuheDbService chuheDbService, WikiPageDbService wikiPageDbService) {
+    return new PortalHandlers(chuheDbService, wikiPageDbService);
   }
 
+  ChuheDbService chuheDbService;
   WikiPageDbService wikiPageDbService;
 
-  public PortalHandlers(WikiPageDbService wikiPageDbService) {
+  public PortalHandlers(ChuheDbService chuheDbService, WikiPageDbService wikiPageDbService) {
+    this.chuheDbService = chuheDbService;
     this.wikiPageDbService = wikiPageDbService;
   }
 
@@ -87,6 +90,50 @@ public class PortalHandlers {
     }).subscribe(token -> {
       routingContext.response().putHeader("Context-Type", "text/plain").end(token);
     }, t -> routingContext.fail(401));
+
+  }
+
+  public void registry(RoutingContext routingContext) {
+
+    JsonObject contextData = new JsonObject();
+
+    ChainSerialization.create(routingContext.getDelegate())
+            .putViewName("/registry.html")
+            .putContextData(contextData)
+            .serialize();
+  }
+
+  public void userRegistry(RoutingContext routingContext) {
+
+    JsonObject user = new JsonObject();
+    JsonArray roles = new JsonArray();
+
+    user.put("user_name", getString(routingContext, "user_name"));
+    user.put("user_passwd", getString(routingContext, "user_passwd"));
+    roles.add("role_user");
+
+
+    ChainSerialization chainSerialization =
+            ChainSerialization.create(routingContext.getDelegate());
+
+    this.chuheDbService.createUser(user, roles, reply -> {
+
+      if (reply.succeeded()) {
+        chainSerialization
+                .putContextData(reply.result())
+                .putFlashMessage("注册成功")
+                .redirect("/login");
+      } else {
+        chainSerialization
+                .putFlashMessage(reply.cause().getMessage())
+                .putMessage(reply.cause().getMessage())
+                .putException(reply.cause())
+                .putFlashException(reply.cause())
+                .redirect("/registry");
+      }
+
+    });
+
 
   }
 

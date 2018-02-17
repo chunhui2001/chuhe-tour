@@ -131,6 +131,9 @@ public class ChuheDbVerticle extends AbstractVerticle {
         sqlQueries.put(ChuheSqlQuery.CREATE_USERS_TABLE, queriesProps.getProperty("create-users-table"));
         sqlQueries.put(ChuheSqlQuery.SAVE_USER, queriesProps.getProperty("save-user"));
         sqlQueries.put(ChuheSqlQuery.DELETE_USER_BATCH, queriesProps.getProperty("delete-user-batch"));
+        sqlQueries.put(ChuheSqlQuery.ALL_USERS, queriesProps.getProperty("all-users"));
+        sqlQueries.put(ChuheSqlQuery.GET_USER, queriesProps.getProperty("get-user"));
+        sqlQueries.put(ChuheSqlQuery.UPDATE_USER_ROLES, queriesProps.getProperty("update-user-roles"));
 
         sqlQueries.put(ChuheSqlQuery.CREATE_DEALER_TABLE, queriesProps.getProperty("create-dealer-table"));
         sqlQueries.put(ChuheSqlQuery.SAVE_DEALER, queriesProps.getProperty("save-dealer"));

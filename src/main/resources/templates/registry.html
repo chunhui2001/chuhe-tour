@@ -1,0 +1,91 @@
+{{#partial "blocks/title"}}
+<title>用户注册</title>
+{{/partial}}
+
+
+{{#partial "blocks/styles"}}
+<script type="text/css">
+
+</script>
+{{/partial}}
+
+
+{{#partial "content" }}
+<h1>用户注册</h1>
+
+{{#if errorTrace }}
+<pre>{{errorTrace}}</pre>
+{{/if}}
+
+{{#if flashMessage}}
+<div style="color: brown">
+    {{flashMessage}}
+</div>
+{{/if}}
+
+
+<div class="user-new-form">
+    <form action="/registry" method="POST">
+
+        <input type="hidden" name="X-XSRF-TOKEN" value='{{xsrfToken}}' />
+
+        <table>
+            <tbody>
+            <tr>
+                <td class="form-table-label">登录名：</td>
+                <td>
+                    <input type="text" required placeholder="请输入登录名"
+                           id="user_name" name="user_name" />
+                </td>
+                <td><strong style="color: brown;">*</strong></td>
+            </tr>
+            <tr>
+                <td class="form-table-label">密码：</td>
+                <td>
+                    <input type="text" required placeholder="请输入密码"
+                           id="user_passwd" name="user_passwd" />
+                </td>
+                <td><strong style="color: brown;">*</strong></td>
+            </tr>
+            <tr>
+                <td class="form-table-label">再次输入密码：</td>
+                <td>
+                    <input type="text" required placeholder="再次输入密码"
+                           id="user_passwd_confirm" name="user_passwd_confirm" />
+                </td>
+            </tr>
+            <tr>
+                <td class="form-table-label">联系电话：</td>
+                <td>
+                    <input type="text" placeholder="请输入联系电话"
+                           id="user_phone" name="user_phone" />
+                </td>
+            </tr>
+            <tr>
+                <td class="form-table-label">
+                    &ensp;
+                </td>
+                <td>
+                    <input type="submit" value="注册" />
+                    <input type="reset" value="清除" />
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </form>
+</div>
+
+{{/partial}}
+
+
+{{#partial "blocks/script"}}
+<script type="text/javascript" id="r_1">
+
+    window.onload = function (ev) {
+        document.getElementById('user_name').focus()
+    }
+</script>
+{{/partial}}
+
+{{> layouts/layout_default}}
