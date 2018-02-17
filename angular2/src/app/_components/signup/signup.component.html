@@ -1,0 +1,52 @@
+<div class="form-container signup-component" style="min-width: 400px;">
+
+
+  <h5 style="text-align: center;margin-bottom: 1em;font-weight: bold;">用户注册</h5>
+
+  <span class="error" *ngIf="error" [@fallIn]="state">{{ error }}</span>
+
+  <form #formData="ngForm" (onSubmit)="onSubmit(formData)">
+
+    <div class="input-group">
+      <span class="input-group-label" style="padding: 0 .425rem;color:dimgray;">
+        <i class="material-icons">&#xE8D3;</i>
+      </span>
+      <input class="input-group-field" type="text" 
+        placeholder="请输入用户名或邮箱地址" (ngModel)="username" id="user_name" name="user_name" required />
+    </div>
+
+
+    <div class="input-group">
+      <span class="input-group-label" style="padding: 0 .425rem;color:dimgray;">
+        <i class="material-icons">&#xE897;</i>
+      </span>
+      <input class="input-group-field" type="password" 
+        placeholder="请输入密码" (ngModel)="passwd" id="user_passwd" name="user_passwd" required>
+    </div>
+
+
+    <div class="input-group">
+      <span class="input-group-label" style="padding: 0 .425rem;color:dimgray;">
+        <i class="material-icons">&#xE0CD;</i>
+      </span>
+      <input class="input-group-field" type="text" 
+        placeholder="请输入手机号码" (ngModel)="phone" id="user_phone" name="user_phone">
+    </div>
+
+    <div class="input-group">
+      <span class="input-group-label" style="padding: 0 .425rem;color:dimgray;">
+        <i class="material-icons">&#xE88A;</i>
+      </span>
+      <input class="input-group-field" type="text" 
+        placeholder="请输入联系地址" (ngModel)="address" id="home_address" name="home_address">
+    </div>
+
+
+    <div style="text-align: right;">
+	    <button type="submit" [disabled]="!formData.valid" 
+	      class="basic-btn button">立即注册</button>
+  	</div>
+
+  </form>
+
+</div>
