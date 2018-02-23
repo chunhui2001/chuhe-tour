@@ -83,7 +83,12 @@ public class PortalVerticle extends AbstractVerticle {
         return;
       }
 
+
+
       String realMethod = routingContext.request().getParam("_method");
+
+      System.out.println(routingContext.request().uri());
+      System.out.println(routingContext.request().method() + ", routingContext.request().method()");
 
       if (realMethod == null || realMethod.trim().isEmpty()) {
         routingContext.next();

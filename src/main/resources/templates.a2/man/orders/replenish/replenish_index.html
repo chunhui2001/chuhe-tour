@@ -5,7 +5,7 @@
 
 
 {{#partial "content" }}
-<h1>进销存管理 -- 进货管理</h1>
+<h3>进销存管理 -- 进货管理</h3>
 
 {{#if errorTrace }}
 <pre>{{errorTrace}}</pre>
@@ -16,14 +16,26 @@
     {{flashMessage}}
 </div>
 {{/if}}
+<app-root></app-root>
 
 <div style="display: none;" class="orders-new-replenish-order-form">
     <form id="orders-order-detail-form" action="/mans/orders/replenish" method="POST">
         <fieldset  style="margin-bottom: 1em;">
             <legend style="font-weight: bold;color:gray;">新增进货单</legend>
-        订单流水号：<input type="text" name="order_flow_no" required placeholder="订单流水号"/>&ensp;&ensp;&ensp;&ensp;
-        经办人：<input type="text" name="order_person" required placeholder="请输入经办人" />&ensp;&ensp;&ensp;&ensp;
-        备注：<input type="text" name="order_desc" placeholder="请输入订单备注" />
+
+            <div>
+                <label for="order_flow_no">订单流水号：</label>
+                <input type="text" id="order_flow_no" name="order_flow_no" required placeholder="订单流水号"/>&ensp;&ensp;&ensp;
+            </div>
+            <div>
+                <label for="order_person">经办人：</label>
+                <input type="text" id="order_person" name="order_person" required placeholder="请输入经办人" />&ensp;&ensp;&ensp;&ensp;
+            </div>
+            <div>
+                <label for="order_desc">备注：</label>
+                <input type="text" id="order_desc" name="order_desc" placeholder="请输入订单备注" />
+            </div>
+
         </fieldset>
 
         <fieldset style="margin-bottom: 1em;">
@@ -93,19 +105,19 @@
 
 <fieldset style="margin-top: 1em;">
     <legend style="font-weight: bold;color:gray;">历史进货单</legend>
-    <div style="width: 1220px;">
+    <div>
 
-    <table style="width: 100%;">
+    <table class="table-basic" style="width: 100%;">
+
         <thead>
         <tr>
-            <th>单据编号（自动生成）</th>
+            <th>单据编号</th>
             <th>单据流水号</th>
-            <th>单据类型</th>
+            <th style="text-align: center;">单据类型</th>
             <th style="text-align: right;">金额</th>
-            <th>进货日期</th>
-            <th>经办人</th>
-            <th>备注</th>
-            <th>创建时间</th>
+            <th style="text-align: center;">进货日期</th>
+            <th style="text-align: center;">经办人</th>
+            <th style="text-align: center;">备注</th>
             <th>&nbsp;</th>
         </tr>
         </thead>
@@ -121,7 +133,6 @@
             <td style="text-align: center;">{{order_date}}</td>
             <td style="text-align: center;">{{order_person}}</td>
             <td style="text-align: center;">{{order_desc}}</td>
-            <td style="text-align: center;">{{created_at}}</td>
             <td><a href="/mans/orders/replenish/{{order_id}}">单据详情</a></td>
         </tr>
         {{/each}}

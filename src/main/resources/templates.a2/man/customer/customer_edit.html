@@ -5,7 +5,7 @@
 
 
 {{#partial "content" }}
-<h1>编辑客户信息</h1>
+<h3>编辑客户信息</h3>
 
 {{#if errorTrace }}
 <pre>{{errorTrace}}</pre>
@@ -17,6 +17,7 @@
 </div>
 {{/if}}
 
+<app-root></app-root>
 
 <div class="customer-new-form">
     <form action="/mans/customer/{{viewData.user_id}}" method="POST">
@@ -46,18 +47,18 @@
                 <td class="form-table-label">性别：</td>
 
                 <td>
-                    <label for="user_gender_man">男</label>
 
                     <input {{#compare viewData.user_gender 'eq' '男' }}
                     checked="checked"
                     {{/compare}}
                     type="radio" value="MAN" id="user_gender_man" name="user_gender" />
+                    <label for="user_gender_man">男</label>
 
-                    <label for="user_gender_women">女</label>
                     <input  {{#compare viewData.user_gender 'eq' '女' }}
                     checked="checked"
                     {{/compare}}
                     type="radio" value="WOMEN" id="user_gender_women" name="user_gender" />
+                    <label for="user_gender_women">女</label>
                 </td>
 
             </tr>

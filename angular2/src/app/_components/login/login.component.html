@@ -1,0 +1,36 @@
+<div class="form-container login-component" style="min-width: 400px;">
+
+
+  <h5 style="text-align: center;margin-bottom: 1em;font-weight: bold;">用户登录</h5>
+
+  <span class="error" *ngIf="error" [@fallIn]="state">{{ error }}</span>
+
+  <form id="login-form" #formData="ngForm" action="/login-auth" method="POST" class="form-horizontal" role="form">
+
+    <div class="input-group">
+      <span class="input-group-label" style="padding: 0 .425rem;color:dimgray;">
+        <i class="material-icons">&#xE8D3;</i>
+      </span>
+      <input class="input-group-field" type="text"
+             placeholder="请输入用户名或邮箱地址" (ngModel)="username" id="user_name" name="user_name" required />
+    </div>
+
+
+    <div class="input-group">
+      <span class="input-group-label" style="padding: 0 .425rem;color:dimgray;">
+        <i class="material-icons">&#xE897;</i>
+      </span>
+      <input class="input-group-field" type="password"
+             placeholder="请输入密码" (ngModel)="passwd" id="user_passwd" name="user_passwd" required>
+    </div>
+
+
+    <div style="text-align: right;">
+      <button type="submit" [disabled]="!formData.valid"
+              (click)="onSubmit(formData)"
+              class="basic-btn button">登录</button>
+    </div>
+
+  </form>
+
+</div>

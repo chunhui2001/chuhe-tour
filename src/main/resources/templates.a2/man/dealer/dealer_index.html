@@ -17,38 +17,21 @@
 </div>
 {{/if}}
 
+<app-root></app-root>
 
+<form action="/mans/dealer" method="POST" style="text-align: right;">
+    <input type="hidden" name="_method" value="delete" />
 
-<div style="text-align: left;">
-    <div style="display: inline-block;">
-        <a style="float:left;" href="/mans/dealer/new">新增经销商</a>
-        <form action="/mans/dealer" method="POST" style="float:left;">
-            <input type="hidden" name="_method" value="delete" />
-            <input type="hidden" id="dealer_ids" name="dealer_ids" value="" />
-            <input type="submit" id="btn-dealer-del" value="删除所有选中经销商" />
-        </form>
-        <div class="clearFixed"></div>
-    </div>
-</div>
+    <a class="button tiny primary" type="button" href="/mans/dealer/new">新增经销商</a>
+    <button class="button tiny clear" type="submit" id="btn-dealer-del" >删除所有选中经销商</button>
 
+    <input type="hidden" id="dealer_ids" name="dealer_ids" value="" />
+</form>
 
 
 <div>
 
-    <table style="width: 100%;">
-        <colgroup>
-            <col width="35">
-            <col width="135">
-            <col width="35">
-            <col width="165">
-            <col width="85">
-            <col width="85">
-            <col width="115">
-            <col width="135">
-            <col width="85">
-            <col width="85">
-            <col width="85">
-        </colgroup>
+    <table class="table-basic" style="width: 100%;">
         <thead>
         <tr>
             <th><input type="checkbox" id="select-all-dealer" /></th>

@@ -3,9 +3,16 @@
 {{/partial}}
 
 
+{{#partial "blocks/styles"}}
+<style type="text/css">
+
+
+</style>
+{{/partial}}
+
 
 {{#partial "content" }}
-<h1>产品管理 - 所有产品</h1>
+<h3>产品管理 - 所有产品</h3>
 
 {{#if errorTrace }}
 <pre>{{errorTrace}}</pre>
@@ -17,53 +24,64 @@
 </div>
 {{/if}}
 
+
+<app-root></app-root>
+
 <div style="display: none;" class="product-new-form">
-    <form action="/mans/products" method="POST">
-        产品名称：<input type="text" name="product_name" required placeholder="请输入产品名称"/>  <br />
-        产品单位：<input type="text" name="product_unit" required placeholder="请输入产品单位" />  <br />
-        产品单价：<input type="float" name="product_price" required placeholder="请输入产品单价" />  <br />
-        产品规格：<input type="text" name="product_spec" placeholder="请输入产品规格" />  <br />
-        产品描述：<textarea type="text" name="product_desc" placeholder="请输入产品描述"></textarea><br />
-        <input type="submit" value="保存" />
-        <input type="reset" value="清除" />
+    <form class="small-form" action="/mans/products" method="POST">
+
+        <div class="input-group">
+        <span>产品名称：</span>
+        <input type="text" name="product_name" required placeholder="请输入产品名称"/>
+        </div>
+
+        <div class="input-group">
+        <span>产品单位：</span>
+        <input type="text" name="product_unit" required placeholder="请输入产品单位" />
+        </div>
+        <div class="input-group">
+        <span>产品单价：</span>
+        <input type="number" name="product_price" required placeholder="请输入产品单价" />
+        </div>
+        <div class="input-group">
+        <span>产品规格：</span>
+        <input type="text" name="product_spec" placeholder="请输入产品规格" />
+        </div>
+        <div class="input-group">
+        <span>产品描述：</span>
+        <textarea rows="10" name="product_desc" placeholder="请输入产品描述"></textarea>
+        </div>
+
+        <div style="text-align: center;margin-bottom: 1em;">
+            <button type="submit" class="small primary button">保存</button>
+            <button type="reset" class="small clear button">清除</button>
+        </div>
+
+
     </form>
 </div>
 
-<div style="text-align: right;">
-    <div style="display: inline-block;">
-    <input type="button" id="btn-product-new" value="新增产品"  style="float:left;" />
-
-    <form action="/mans/products" method="POST" style="float:left;">
-        <input type="hidden" name="_method" value="delete" />
-        <input type="hidden" id="product_ids" name="product_ids" value="" />
-        <input type="submit" id="btn-product-del" value="删除所有选中产品" />
-    </form>
-    <div class="clearFixed"></div>
-    </div>
-</div>
+<form action="/mans/products" method="POST" style="text-align: right;">
+    <input type="hidden" name="_method" value="delete" />
+    <button class="button tiny primary" type="button" id="btn-product-new">新增产品</button>
+    <button class="button tiny clear" type="submit" id="btn-product-del" >删除所有选中产品</button>
+    <input type="hidden" id="product_ids" name="product_ids" value="" />
+</form>
 
 <div>
 
-    <table style="width: 100%;">
-        <colgroup>
-            <col width="35">
-            <col width="85">
-            <col width="385">
-            <col width="45">
-            <col width="65">
-            <col width="165">
-            <col width="205">
-        </colgroup>
+    <table class="table-basic" style="width: 100%;">
+
         <thead>
             <tr>
-                <th><input type="checkbox" id="select-all-product" /></th>
+                <th style="text-align: center;"><input type="checkbox" id="select-all-product" /></th>
                 <th>产品编号</th>
                 <th>产品名称</th>
-                <th>单位</th>
-                <th>单价</th>
-                <th>规格</th>
+                <th style="text-align: center;">单位</th>
+                <th style="text-align: right;">单价</th>
+                <th style="text-align: center">规格</th>
                 <!--<th>产品描述</th>-->
-                <th>更新时间</th>
+                <th style="text-align: center">更新时间</th>
                 <th>&nbsp;</th>
             </tr>
         </thead>
@@ -105,6 +123,10 @@
 
 
     $(function() {
+
+        $(document).on("click", "#btn-product-new", function () {
+            $(".product-new-form").slideDown();
+        });
 
         var selectTable = new SelectTable(
             ".product-list", "#select-all-product", "#product_ids", "#btn-product-del");

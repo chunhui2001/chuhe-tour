@@ -61,9 +61,15 @@ public class GlobalHandlers {
     }
 
     if (routingContext.statusCode() == 403) {
-      routingContext.response().setStatusCode(302);
+
+      /* routingContext.response().setStatusCode(302);
       routingContext.response().putHeader("Location", "/login");
-      routingContext.response().end();
+      routingContext.response().end(); */
+
+      ChainSerialization
+              .create(routingContext.getDelegate())
+              .putFlashMessage("用户名或密码错误!")
+              .redirect("login");
       return;
     }
 

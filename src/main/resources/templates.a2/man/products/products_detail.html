@@ -5,7 +5,7 @@
 
 
 {{#partial "content" }}
-<h1>产品管理 - 产品详情</h1>
+<h3>产品管理 - 产品详情</h3>
 
 {{#if errorTrace }}
 <pre>{{errorTrace}}</pre>
@@ -16,6 +16,7 @@
     {{flashMessage}}
 </div>
 {{/if}}
+<app-root></app-root>
 
 <div>
 
@@ -55,15 +56,18 @@
                 <td>{{viewData.last_updated}}</td>
             </tr>
             <tr>
-                <td style="text-align: right;vertical-align: top;">产品描述：</td>
+                <td style="text-align: left;vertical-align: top;">产品描述：</td>
                 <td>{{viewData.product_desc}}</td>
             </tr>
             </tbody>
         </table>
 
-        <input type="submit" value="删除该产品" />
-        <a href="/mans/products/{{viewData.product_id}}/edit">编辑产品信息</a>
-        <a href="/mans/products">返回产品列表</a>
+        <div style="text-align: right;">
+            <button type="submit" class="small primary button">删除该产品</button>
+            <a class="small clear button" href="/mans/products/{{viewData.product_id}}/edit">编辑产品信息</a>
+            <a class="small clear button" href="/mans/products">返回产品列表</a>
+        </div>
+
     </form>
 
 </div>

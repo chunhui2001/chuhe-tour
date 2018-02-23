@@ -1,34 +1,4 @@
 
-/*** global style: base html ***/
-h1, h2, h3, h4, h5, h6 {
-  width: 100%;
-}
-
-.button {
-  cursor: pointer;
-}
-
-.button, .button:hover, button:focus {
-  outline:0 !important;
-  -webkit-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.35);
-  -moz-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.35);
-  box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.35);
-}
-
-.button:active {
-  /*background-color: #3e8e41;*/
-  /*box-shadow: 0 5px #666;*/
-  transform: translateY(1px);
-  /*color:red !important;*/
-}
-
-/*a:link {color:#FF0000;}    !* unvisited link, same as regular 'a' *!*/
-/*a:hover {color:#FF00FF;}   !* mouse over link *!*/
-/*a:focus {color:#0000FF;}   !* link has focus *!*/
-/*a:active {color:#0000FF;}  !* selected link *!*/
-/*a:visited {color:#00FF00;} !* visited link *!*/
-
-
 
 .error {
   padding: .1em .5em;
@@ -38,14 +8,51 @@ h1, h2, h3, h4, h5, h6 {
   display: inline-block;
 }
 
+/*** angular ***/
+.ng-trigger-comp {
+  display: inline-block;
+  width: 100%;
+}
 
 /*** global style: site settings ***/
 body {
-  background-color: #ECEFF1;
+  /*background-color: #ECEFF1;*/
+  background-color: ghostwhite;
 }
+
+
+.header {
+  width: 90%;
+  max-width: 1024px;
+  margin: auto;
+  background-color: darkslateblue;
+  color: white;
+  padding: .5em .625em;
+}
+
+.header a {
+  color: white;
+}
+
 .main-content {
   width: 90%;
   max-width: 1024px;
-  background-color: white;
+  background-color: #ECEFF1;
   margin: auto;
+  min-height: 750px;
+  padding: .925em;
 }
+
+[type=color], [type=date], [type=datetime-local], [type=datetime],
+[type=email], [type=month], [type=number], [type=password], [type=search], [type=tel],
+[type=text], [type=time], [type=url], [type=week], textarea {
+  margin-bottom: 0;
+  box-shadow: none;
+}
+
+[type=checkbox]+label[for], [type=radio]+label[for] {
+  margin-left: 0;
+}
+
+
+

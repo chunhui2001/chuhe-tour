@@ -91,6 +91,8 @@ public class RealmImpl extends AuthorizingRealm {
       return new SimpleAuthenticationInfo(username, password, getName());
     }
 
+
+
     return null;
 
   }

@@ -43,6 +43,10 @@ public class PortalHandlers extends BaseHandler {
 
   public void indexHandler(RoutingContext routingContext) {
 
+    if (routingContext.user() == null) {
+      routingContext.response().setStatusCode(302).putHeader("Location", "/login").end();
+      return;
+    }
 
     ChainSerialization.create(routingContext.getDelegate())
       .putViewName("/index.html")
@@ -88,8 +92,12 @@ public class PortalHandlers extends BaseHandler {
       });
 
     }).subscribe(token -> {
-      routingContext.response().putHeader("Context-Type", "text/plain").end(token);
-    }, t -> routingContext.fail(401));
+
+      ChainSerialization.create(routingContext.getDelegate())
+              .putContextData(token)
+              .serialize();
+
+    }, err -> routingContext.fail(401));
 
   }
 

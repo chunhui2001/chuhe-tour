@@ -16,6 +16,7 @@
     {{flashMessage}}
 </div>
 {{/if}}
+<app-root></app-root>
 
 <!--div style="text-align: right;margin-bottom: 1em;">
     <a href="/mans/orders/{{viewData.order_type}}/1/edit">修改单据信息</a>
@@ -61,31 +62,19 @@
 <fieldset style="margin-bottom: 1em;">
     <legend style="font-weight: bold;color: gray;">订单详情</legend>
 
-    <table border="0" cellspacing="0">
-        <colgroup>
-            <col width="45">
-            <col width="85">
-            <col width="325">
-            <col width="85">
-            <col width="185">
-            <col width="105">
-            <col width="85">
-            <col width="85">
-            <col width="95">
-            <col width="145">
-        </colgroup>
+    <table class="table-basic" style="width: 100%;">
         <thead>
         <tr>
             <th>序号</th>
             <th>商品编号</th>
             <th>商品名称</th>
-            <th>品牌</th>
-            <th>规格</th>
-            <th>单位</th>
+            <th style="text-align: center;">品牌</th>
+            <th style="text-align: center;">规格</th>
+            <th style="text-align: center;">单位</th>
             <th style="text-align: right;">单价</th>
             <th style="text-align: right;">数量</th>
             <th style="text-align: right;">合计金额</th>
-            <th>生产厂家</th>
+            <th style="text-align: center;">生产厂家</th>
             <th>备注</th>
         </tr>
         </thead>

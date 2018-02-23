@@ -4,14 +4,30 @@
 
 
 {{#partial "blocks/styles"}}
-<script type="text/css">
+<style type="text/css">
+  .header, .footer {
+    display: none;
+  }
 
-</script>
+  body {
+    background-image: url(/images/bg02.jpg);
+    background-size: cover;
+  }
+  .main-content {
+    margin-top: 8%;
+    max-width: 450px;
+    min-height: auto;
+    background-color: transparent;
+  }
+
+  .main-content > div {
+    background-color: white;
+  }
+</style>
 {{/partial}}
 
 
 {{#partial "content" }}
-<h1>用户登录</h1>
 
 {{#if errorTrace }}
 <pre>{{errorTrace}}</pre>
@@ -23,30 +39,65 @@
 </div>
 {{/if}}
 
-<form action="/login-auth" method="POST" class="form-horizontal" role="form">
+<app-root></app-root>
 
-  <input type="hidden" name="X-XSRF-TOKEN" value='{{xsrfToken}}' />
+<div style="text-align: center; padding: 2em;">
+  <div class="form-container login-component ng-trigger-comp" style="width: 100%;">
 
-  <div class="form-group">
-    <label for="username" class="col-sm-2 control-label">名字</label>
-    <div class="col-sm-10">
-      <input type="text" class="form-control" id="username" name="username" placeholder="login">
+
+
+    <h5 style="text-align: left;font-weight: bold;    font-size: .8em;color: dimgray;">
+      农资经营者管理软件
+    </h5>
+
+    <div class="input-group">
+      <img style="width: 25px; height: 25px;margin-right: .425em;" src="/assets/images/chuhe-logo.png" />
+      用户登录
     </div>
-  </div>
-  <div class="form-group">
-    <label for="password" class="col-sm-2 control-label">姓</label>
-    <div class="col-sm-10">
-      <input type="password" class="form-control" id="password" name="password" placeholder="password">
-    </div>
-  </div>
-  <div class="form-group">
 
 
-    <div style="">
-      <button type="submit" class="basic-btn button">登录</button>
-    </div>
+    <form id="login-form" action="/login-auth" method="POST" class="form-horizontal" role="form">
+
+      <input type="hidden" name="X-XSRF-TOKEN" value='{{xsrfToken}}' />
+
+      <div class="input-group">
+        <span class="input-group-label" style="padding: 0 .425rem;color:black;">
+          <i class="material-icons">&#xE8D3;</i>
+        </span>
+        <input class="input-group-field" type="text"
+               placeholder="请输入用户名或邮箱地址" (ngModel)="username" id="username" name="username" required />
+      </div>
+
+
+      <div class="input-group">
+        <span class="input-group-label" style="padding: 0 .425rem;color:black;">
+          <i class="material-icons">&#xE897;</i>
+        </span>
+        <input class="input-group-field" type="password"
+               placeholder="请输入密码" (ngModel)="passwd" id="password" name="password" required>
+      </div>
+
+      <div style="text-align: right;margin-top: 2.5em;">
+        <a href="/registry" class="basic-btn button"
+           style="background-color: transparent;color: #1779ba;border: none;box-shadow: none;">注册</a>
+        <button type="submit" class="basic-btn button">登录</button>
+      </div>
+
+    </form>
+
   </div>
-</form>
+
+</div>
+
+
+<div style="background-color: transparent;text-align: center;margin-top:1.5em;font-size:.9em;">
+  <a href="javascript:void(this);" style="color: darkgoldenrod;">帮助</a>
+  <span style="color: gray;">&Iota;</span>
+  <a href="javascript:void(this);" style="color: darkgoldenrod;">隐私权</a>
+  <span style="color: gray;">&Iota;</span>
+  <a href="javascript:void(this);" style="color: darkgoldenrod;">条款</a>
+</div>
+
 {{/partial}}
 
 

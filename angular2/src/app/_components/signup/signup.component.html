@@ -1,50 +1,70 @@
-<div class="form-container signup-component" style="min-width: 400px;">
+<div class="form-container signup-component">
 
 
-  <h5 style="text-align: center;margin-bottom: 1em;font-weight: bold;">用户注册</h5>
+  <h5 style="text-align: left;font-weight: bold;    font-size: .8em;color: dimgray;">
+    农资经营者管理软件
+  </h5>
+
+  <div class="input-group">
+      <img style="width: 25px; height: 25px;margin-right: .425em;" src="/assets/images/chuhe-logo.png" />
+    新用户注册
+  </div>
 
   <span class="error" *ngIf="error" [@fallIn]="state">{{ error }}</span>
 
-  <form #formData="ngForm" (onSubmit)="onSubmit(formData)">
+  <form id="signup-form" #formData="ngForm"  action="/registry" method="POST">
 
     <div class="input-group">
-      <span class="input-group-label" style="padding: 0 .425rem;color:dimgray;">
+      <span class="input-group-label" style="padding: 0 .425rem;color:black;">
         <i class="material-icons">&#xE8D3;</i>
       </span>
-      <input class="input-group-field" type="text" 
+      <input class="input-group-field" type="text"
         placeholder="请输入用户名或邮箱地址" (ngModel)="username" id="user_name" name="user_name" required />
     </div>
 
 
     <div class="input-group">
-      <span class="input-group-label" style="padding: 0 .425rem;color:dimgray;">
+      <span class="input-group-label" style="padding: 0 .425rem;color:black;">
         <i class="material-icons">&#xE897;</i>
       </span>
-      <input class="input-group-field" type="password" 
+      <input class="input-group-field" type="password"
         placeholder="请输入密码" (ngModel)="passwd" id="user_passwd" name="user_passwd" required>
     </div>
 
 
     <div class="input-group">
-      <span class="input-group-label" style="padding: 0 .425rem;color:dimgray;">
+      <span class="input-group-label" style="padding: 0 .425rem;color:black;">
         <i class="material-icons">&#xE0CD;</i>
       </span>
-      <input class="input-group-field" type="text" 
+      <input class="input-group-field" type="text"
         placeholder="请输入手机号码" (ngModel)="phone" id="user_phone" name="user_phone">
     </div>
 
     <div class="input-group">
-      <span class="input-group-label" style="padding: 0 .425rem;color:dimgray;">
+      <span class="input-group-label" style="padding: 0 .425rem;color:black;">
         <i class="material-icons">&#xE88A;</i>
       </span>
-      <input class="input-group-field" type="text" 
+      <input class="input-group-field" type="text"
         placeholder="请输入联系地址" (ngModel)="address" id="home_address" name="home_address">
     </div>
 
 
-    <div style="text-align: right;">
-	    <button type="submit" [disabled]="!formData.valid" 
-	      class="basic-btn button">立即注册</button>
+    <div style="text-align: right;font-size: .9em;">
+      <a href="/login">登录</a>
+      <span style="color: gray;">&Iota;</span>
+      <a href="javascript:void(this);">忘记密码!</a>
+    </div>
+
+    <div style="text-align: left;font-size: .9em;margin-top: 1em;">
+      <mat-checkbox [checked]="isAgreeRule" (change)="isAgreeRule = !isAgreeRule">
+        同意 <a href="javascript:void(this);" style="font-weight: bold;">"服务条款"</a> 和
+        <a href="javascript:void(this);" style="font-weight: bold;">"隐私权相关政策"</a></mat-checkbox>
+    </div>
+
+    <div style="text-align: left;    margin-top: 1em;margin-bottom: 2em;">
+	    <button style="margin-bottom: 0;" type="submit" [disabled]="!formData.valid || !isAgreeRule"
+              (click)="onSubmit(formData)"
+	            class="basic-btn button">立即注册</button>
   	</div>
 
   </form>

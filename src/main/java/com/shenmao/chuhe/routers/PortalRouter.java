@@ -49,7 +49,6 @@ public class PortalRouter  implements ChuheRouter {
     this.globalHandlers = GlobalHandlers.create();
     this.portalHandlers = PortalHandlers.create(chuheDbService, wikiPageDbService);
 
-
     this.init();
 
   }
@@ -100,11 +99,11 @@ public class PortalRouter  implements ChuheRouter {
   private void mainRouter() {
 
     this.router.route(HttpMethod.GET, "/registry")
-            .handler(CSRFHandler.create("csrf secret here"))
+            //.handler(CSRFHandler.create("csrf secret here"))
             .handler(portalHandlers::registry);
 
     this.router.route(HttpMethod.POST, "/registry")
-            .handler(CSRFHandler.create("csrf secret here"))
+            //.handler(CSRFHandler.create("csrf secret here"))
             .handler(portalHandlers::userRegistry);
 
     this.router.route(HttpMethod.GET, "/signout").handler(portalHandlers::logout);
@@ -127,7 +126,7 @@ public class PortalRouter  implements ChuheRouter {
 
     this.router.routeWithRegex(HttpMethod.POST,"/login-auth" + GlobalHandlers._SUPPORT_EXTS_PATTERN)
       .handler(FormLoginHandler.create(AuthHandlerImpl.getAuthProvider(),
-        "username", "password", "return_url", "/"));
+              "username", "password", "return_url", "/"));
 
   }
 

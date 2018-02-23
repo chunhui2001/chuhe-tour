@@ -4,9 +4,21 @@
 
 
 {{#partial "blocks/styles"}}
-<script type="text/css">
-
-</script>
+<style type="text/css">
+    body {
+        background-image: url(/images/bg01.jpg);
+        background-size: cover;
+    }
+    .header, .footer {
+        display: none;
+    }
+    .main-content {
+        background-color: white;
+        margin-top: 8%;
+        max-width: 450px;
+        min-height: auto;
+    }
+</style>
 {{/partial}}
 
 
@@ -22,10 +34,8 @@
 </div>
 {{/if}}
 
-<div>
-    <app-root>
-
-    </app-root>
+<div style="text-align: center; padding: 1em;">
+    <app-root></app-root>
 </div>
 
 

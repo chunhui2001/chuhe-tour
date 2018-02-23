@@ -3,6 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
+import * as $ from 'jquery';
+
 import {fallIn, moveIn, comp} from '../../routers/router.animations';
 
 @Component({
@@ -21,21 +23,28 @@ export class SignupComponent implements OnInit {
   passwd: String = '';
   phone: String = '';
   address: String = '';
+  isAgreeRule: boolean = false;
 
-  constructor(private router: Router ) {
+  constructor(private http: HttpClient, private router: Router ) {
 
   }
 
   onSubmit(formData) {
-    
+
+
     if (!formData.valid) {
       return;
     }
 
+    debugger;
+    $(".signup-component #signup-form").submit();
+
+    debugger;
+
     // validate user
     // curl -v -l -H "Content-type: application/json" \
     // -X POST -d '{"username":"tongtong","password":"Cc"}' http://localhost:8844/login
-    
+
     // need to setup a proxy to backend
 
     /*const req = this.http.post('/login', {
