@@ -5,14 +5,14 @@
 
 
 {{#partial "content" }}
-<h1>经销商详情</h1>
+<h3>经销商详情</h3>
 
 {{#if errorTrace }}
 <pre>{{errorTrace}}</pre>
 {{/if}}
 
 {{#if flashMessage}}
-<div style="color: brown">
+<div class="flash-message">
     {{flashMessage}}
 </div>
 {{/if}}
@@ -96,17 +96,15 @@
                     {{viewData.dealer_desc}}
                 </td>
             </tr>
-            <tr>
-                <td class="form-table-label">
-                    &ensp;
-                </td>
-                <td>
-                    <input onclick="confirmDel('确认删除么?');" type="button" value="删除" />
-                    <a href="/mans/dealer/{{viewData.dealer_id}}/edit">编辑</a>
-                </td>
-            </tr>
             </tbody>
         </table>
+
+
+        <div style="text-align: center;margin: 1.5em 0;">
+            <button type="button" onclick="confirmDel('确认删除该经销商么?');" class="small primary button">删除该经销商</button>
+            <!--<button type="button" id="btn-order-save" class="small primary button">保存</button>-->
+            <a href="/mans/dealer/{{viewData.dealer_id}}/edit" class="small clear button">编辑</a>
+        </div>
 
     </form>
 </div>

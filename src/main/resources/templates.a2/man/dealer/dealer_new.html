@@ -2,17 +2,14 @@
 <title>新增经销商</title>
 {{/partial}}
 
-
-
 {{#partial "content" }}
-<h1>新增经销商</h1>
 
 {{#if errorTrace }}
 <pre>{{errorTrace}}</pre>
 {{/if}}
 
 {{#if flashMessage}}
-<div style="color: brown">
+<div class="flash-message">
     {{flashMessage}}
 </div>
 {{/if}}
@@ -20,101 +17,76 @@
 
 
 <div class="dealer-new-form">
-    <form action="/mans/dealer" method="POST">
+    <form class="small-form" action="/mans/dealer" method="POST">
+        <fieldset style="margin-bottom: 1em;">
+            <legend style="font-weight: bold;color:gray;">新增经销商</legend>
 
-        <table>
-            <tbody>
-            <tr>
-                <td class="form-table-label">经销商名称：</td>
-                <td>
-                    <input type="text" required placeholder="请输入经销商名称"
-                           id="dealer_name" name="dealer_name" />
-                </td>
-                <td><strong style="color: brown;">*</strong></td>
-            </tr>
-            <tr>
-                <td class="form-table-label">性别：</td>
-                <td>
-                    <input checked="checked" type="radio" value="MAN" id="dealer_gender_man" name="dealer_gender" />
-                    <label for="dealer_gender_man">男</label>
-                    <input type="radio" value="WOMEN" id="dealer_gender_women" name="dealer_gender" />
-                    <label for="dealer_gender_women">女</label>
-                </td>
-            </tr>
-            <tr>
-                <td class="form-table-label">身份证：</td>
-                <td>
-                    <input type="text" placeholder="请输入经销商身份证"
-                           id="dealer_identity" name="dealer_identity" />
-                </td>
-            </tr>
-            <tr>
-                <td class="form-table-label">来源：</td>
-                <td>
-                    <input type="text" placeholder="请输入经销商来源"
-                           id="dealer_source_from" name="dealer_source_from" />
-                </td>
-            </tr>
-            <tr>
-                <td class="form-table-label">联系电话：</td>
-                <td>
-                    <input type="text" placeholder="请输入联系电话"
-                           id="dealer_phone" name="dealer_phone" />
-                </td>
-            </tr>
-            <tr>
-                <td class="form-table-label">家庭电话：</td>
-                <td>
-                    <input type="text" placeholder="请输入家庭电话"
-                           id="dealer_home_tel" name="dealer_home_tel" />
-                </td>
-            </tr>
-            <tr>
-                <td class="form-table-label">家庭住址：</td>
-                <td>
-                    <input type="text" placeholder="请输入家庭住址"
-                           id="dealer_home_address" name="dealer_home_address" />
-                </td>
-            </tr>
-            <tr>
-                <td class="form-table-label">微信号：</td>
-                <td>
-                    <input type="text" placeholder="请输入经销商微信号"
-                           id="dealer_wchat_id" name="dealer_wchat_id" />
-                </td>
-            </tr>
-            <tr>
-                <td class="form-table-label">经销商级别：</td>
-                <td>
-                    <input type="text" placeholder="请输入经销商级别"
-                           id="dealer_level" name="dealer_level" />
-                </td>
-            </tr>
-            <tr>
-                <td class="form-table-label">经销区域：</td>
-                <td>
-                    <input type="text" placeholder="请输入经销区域"
-                           id="dealer_scope" name="dealer_scope" />
-                </td>
-            </tr>
-            <tr>
-                <td class="form-table-label">区域内作物特点：</td>
-                <td>
-                    <input type="text" placeholder="请输入区域内作物特点"
-                           id="dealer_desc" name="dealer_desc" />
-                </td>
-            </tr>
-            <tr>
-                <td class="form-table-label">
-                    &ensp;
-                </td>
-                <td>
-                    <input type="submit" value="保存" />
-                    <input type="reset" value="清除" />
-                </td>
-            </tr>
-            </tbody>
-        </table>
+            <div>
+                <label for="dealer_name"><strong style="color: brown;">*</strong> 经销商名称：</label>
+                <input type="text" id="dealer_name" name="dealer_name" required placeholder="请输入经销商名称"/>&ensp;&ensp;
+            </div>
+
+            <div>
+                <label>性别：</label>
+                <input checked="checked" type="radio" value="MAN" id="dealer_gender_man" name="dealer_gender" />
+                <label for="dealer_gender_man">男</label>
+                <input type="radio" value="WOMEN" id="dealer_gender_women" name="dealer_gender" />
+                <label for="dealer_gender_women">女</label>
+            </div>
+
+            <div>
+                <label for="dealer_identity">身份证：</label>
+                <input type="text" id="dealer_identity" name="dealer_identity" placeholder="请输入经销商身份证"/>&ensp;&ensp;
+            </div>
+
+            <div>
+                <label for="dealer_source_from">来源：</label>
+                <input type="text" id="dealer_source_from" name="dealer_source_from" placeholder="请输入经销商来源"/>&ensp;&ensp;
+            </div>
+
+            <div>
+                <label for="dealer_phone">联系电话：</label>
+                <input type="text" id="dealer_phone" name="dealer_phone" placeholder="请输入经销商联系电话"/>&ensp;&ensp;
+            </div>
+
+            <div>
+                <label for="dealer_home_tel">家庭电话：</label>
+                <input type="text" id="dealer_home_tel" name="dealer_home_tel" placeholder="请输入经销商家庭电话"/>&ensp;&ensp;
+            </div>
+
+            <div>
+                <label for="dealer_home_address">家庭住址：</label>
+                <input type="text" id="dealer_home_address" name="dealer_home_address" placeholder="请输入经销商家庭住址"/>&ensp;&ensp;
+            </div>
+
+            <div>
+                <label for="dealer_wchat_id">微信号：</label>
+                <input type="text" id="dealer_wchat_id" name="dealer_wchat_id" placeholder="请输入经销商微信号"/>&ensp;&ensp;
+            </div>
+
+            <div>
+                <label for="dealer_level">经销商级别：</label>
+                <input type="text" id="dealer_level" name="dealer_level" placeholder="请输入经销商级别"/>&ensp;&ensp;
+            </div>
+
+            <div>
+                <label for="dealer_scope">经销区域：</label>
+                <input type="text" id="dealer_scope" name="dealer_scope" placeholder="请输入经销区域"/>&ensp;&ensp;
+            </div>
+
+            <div>
+                <label for="dealer_desc">区域内作物特点：</label>
+                <input type="text" id="dealer_desc" name="dealer_desc" placeholder="请输入区域内作物特点"/>&ensp;&ensp;
+            </div>
+
+            <div style="text-align: center;margin: 1.5em 0;">
+                <button type="submit" class="small primary button">保存</button>
+                <!--<button type="button" id="btn-order-save" class="small primary button">保存</button>-->
+                <button type="reset" class="small clear button">清除</button>
+            </div>
+
+
+        </fieldset>
 
     </form>
 </div>

@@ -12,7 +12,7 @@
 {{/if}}
 
 {{#if flashMessage}}
-<div style="color: brown">
+<div class="flash-message">
     {{flashMessage}}
 </div>
 {{/if}}
@@ -21,36 +21,24 @@
 <app-root></app-root>
 
 
-<div style="text-align: left;">
-    <div style="display: inline-block;">
-        <a style="float:left;" href="/mans/customer/new">新增客户</a>
-        <form action="/mans/customer" method="POST" style="float:left;">
-            <input type="hidden" name="_method" value="delete" />
-            <input type="hidden" id="user_ids" name="user_ids" value="" />
-            <input type="submit" id="btn-user-del" value="删除所有选中客户" />
-        </form>
-        <div class="clearFixed"></div>
-    </div>
+<div style="text-align: right;">
+    <form action="/mans/customer" method="POST">
+        <input type="hidden" name="_method" value="delete" />
+        <input type="hidden" id="user_ids" name="user_ids" value="" />
+
+        <a class="button tiny primary" href="/mans/customer/new" >新增客户</a>
+        <button class="button tiny clear" type="submit" id="btn-user-del" >删除所有选中客户</button>
+
+    </form>
 </div>
 
 
 <div>
 
-    <table style="width: 100%;">
-        <colgroup>
-            <col width="35">
-            <col width="135">
-            <col width="35">
-            <col width="165">
-            <col width="85">
-            <col width="85">
-            <col width="115">
-            <col width="135">
-            <col width="85">
-        </colgroup>
+    <table class="table-basic">
         <thead>
         <tr>
-            <th><input type="checkbox" id="select-all-users" /></th>
+            <th style="width:55px;"><input type="checkbox" id="select-all-users" /></th>
             <th style="text-align: left;">客户姓名</th>
             <th>性别</th>
             <th>身份证</th>
@@ -67,7 +55,7 @@
         {{#compare viewData.length 'gt' 0 }}
         {{#each viewData}}
         <tr>
-            <td style="text-align: center;"><input type="checkbox" id="{{user_id}}" name="{{users_id}}" value="{{user_id}}" /></td>
+            <td style="width:55px;text-align: center;"><input type="checkbox" id="{{user_id}}" name="{{users_id}}" value="{{user_id}}" /></td>
             <td style="text-align: left;">{{user_name}}</td>
             <td style="text-align: center;">{{user_gender}}</td>
             <td style="text-align: center;">{{user_identity}}</td>
@@ -82,7 +70,7 @@
         {{/compare}}
 
         {{#compare viewData.length 'eq' 0 }}
-        <td colspan="7">当前还没有任何经销商 ~</td>
+        <td colspan="10">当前还没有任何经销商 ~</td>
         {{/compare}}
 
         </tbody>

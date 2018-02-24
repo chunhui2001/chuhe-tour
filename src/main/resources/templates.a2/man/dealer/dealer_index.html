@@ -12,7 +12,7 @@
 {{/if}}
 
 {{#if flashMessage}}
-<div style="color: brown">
+<div class="flash-message">
     {{flashMessage}}
 </div>
 {{/if}}
@@ -35,7 +35,7 @@
         <thead>
         <tr>
             <th><input type="checkbox" id="select-all-dealer" /></th>
-            <th style="text-align: left;">经销商名称</th>
+            <th style="width:185px;text-align: left;">经销商名称</th>
             <th>性别</th>
             <th>身份证</th>
             <th>来源</th>
@@ -54,7 +54,7 @@
         {{#each viewData}}
         <tr>
             <td style="text-align: center;"><input type="checkbox" id="{{dealer_id}}" name="{{dealer_id}}" value="{{dealer_id}}" /></td>
-            <td style="text-align: left;">{{dealer_name}}</td>
+            <td style="width:185px;text-align: left;">{{dealer_name}}</td>
             <td style="text-align: center;">{{dealer_gender}}</td>
             <td style="text-align: center;">{{dealer_identity}}</td>
             <td style="text-align: center;">{{dealer_source_from}}</td>
@@ -64,7 +64,7 @@
             <td style="text-align: center;">{{dealer_wchat_id}}</td>
             <td style="text-align: center;">{{dealer_level}}</td>
             <td style="text-align: center;">{{dealer_scope}}</td>
-            <td style="text-align: left;"><a href="/mans/dealer/{{dealer_id}}">经销商详情</a></td>
+            <td style="text-align: left;"><a href="/mans/dealer/{{dealer_id}}">详情</a></td>
         </tr>
         {{/each}}
         {{/compare}}

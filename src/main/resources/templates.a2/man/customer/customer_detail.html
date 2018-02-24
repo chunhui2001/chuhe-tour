@@ -12,7 +12,7 @@
 {{/if}}
 
 {{#if flashMessage}}
-<div style="color: brown">
+<div class="flash-message">
     {{flashMessage}}
 </div>
 {{/if}}
@@ -82,17 +82,15 @@
                     {{viewData.wchat_id}}
                 </td>
             </tr>
-            <tr>
-                <td class="form-table-label">
-                    &ensp;
-                </td>
-                <td>
-                    <input onclick="confirmDel('确认删除该客户么?');" type="button" value="删除客户" />
-                    <a href="/mans/customer/{{viewData.user_id}}/edit">编辑</a>
-                </td>
-            </tr>
             </tbody>
         </table>
+
+        <div style="text-align: center;margin: 1.5em 0;">
+            <button type="button" onclick="confirmDel('确认删除该客户么?');" class="small primary button">删除客户</button>
+            <!--<button type="button" id="btn-order-save" class="small primary button">保存</button>-->
+            <a href="/mans/customer/{{viewData.user_id}}/edit" class="small clear button">编辑</a>
+        </div>
+
 
     </form>
 </div>

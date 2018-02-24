@@ -12,7 +12,7 @@
 {{/if}}
 
 {{#if flashMessage}}
-<div style="color: brown">
+<div class="flash-message">
     {{flashMessage}}
 </div>
 {{/if}}
@@ -25,20 +25,19 @@
         <table>
             <tbody>
             <tr>
-                <td class="form-table-label">客户姓名：</td>
+                <td class="form-table-label"><strong style="color: brown;">*</strong> 客户姓名：</td>
                 <td>
                     <input type="text" required placeholder="请输入客户姓名"
                            id="user_name" name="user_name" />
                 </td>
-                <td><strong style="color: brown;">*</strong></td>
             </tr>
             <tr>
                 <td class="form-table-label">性别：</td>
                 <td>
-                    <label for="user_gender_man">男</label>
                     <input checked="checked" type="radio" value="MAN" id="user_gender_man" name="user_gender" />
-                    <label for="user_gender_women">女</label>
+                    <label for="user_gender_man">男</label>
                     <input type="radio" value="WOMEN" id="user_gender_women" name="user_gender" />
+                    <label for="user_gender_women">女</label>
                 </td>
             </tr>
             <tr>
@@ -83,17 +82,16 @@
                            id="wchat_id" name="wchat_id" />
                 </td>
             </tr>
-            <tr>
-                <td class="form-table-label">
-                    &ensp;
-                </td>
-                <td>
-                    <input type="submit" value="保存" />
-                    <input type="reset" value="清除" />
-                </td>
-            </tr>
             </tbody>
         </table>
+
+
+        <div style="text-align: center;margin: 1.5em 0;">
+            <button type="submit" class="small primary button">保存</button>
+            <!--<button type="button" id="btn-order-save" class="small primary button">保存</button>-->
+            <button type="reset" class="small clear button">清除</button>
+        </div>
+
 
     </form>
 </div>

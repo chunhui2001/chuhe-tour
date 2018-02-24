@@ -12,7 +12,7 @@
 {{/if}}
 
 {{#if flashMessage}}
-<div style="color: brown">
+<div class="flash-message">
     {{flashMessage}}
 </div>
 {{/if}}
@@ -24,17 +24,7 @@
 
     <input type="hidden" id="_hid_user_roles" value="{{all_user_roles}}" />
 
-    <table>
-        <colgroup>
-            <col width="135">
-            <col width="95">
-            <col width="135">
-            <col width="35">
-            <col width="165">
-            <col width="85">
-            <col width="85">
-            <col width="135">
-        </colgroup>
+    <table class="table-basic">
         <thead>
         <tr>
             <th style="text-align: left;">用户名</th>
@@ -181,7 +171,7 @@
 
         var pk = user.userId;
         var count = $(user.tr).find("td").length;
-        var trHtml = "<tr style='background-color: burlywood;' "+ user.trKeyNameForId +"='" + pk + "'>";
+        var trHtml = "<tr style='background-color: aliceblue;' "+ user.trKeyNameForId +"='" + pk + "'>";
 
         var allUserRolesHtml = getAllUserRolesHtml(allUserRoles, user);
 
@@ -205,8 +195,10 @@
             roleHtml = roleHtml + '</div>' ;
         });
 
-        var saveButtonHtml = '<input class="btn-grant-user-roles" style="float:right;font-size: .725em;' +
-                                'padding: 0 .3em;margin: .2em;" type="button" value="保存" />';
+
+
+        var saveButtonHtml = '<button class="btn-grant-user-roles ssmall primary button" style="float:right;font-size: .725em;' +
+                                'margin: .2em;">保存</button>';
 
         return  '<div style="text-align: center;margin-top: .2em;">'
                 + roleHtml + '<div class="clearFixed"></div></div>'

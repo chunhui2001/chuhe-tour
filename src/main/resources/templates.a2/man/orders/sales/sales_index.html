@@ -5,47 +5,67 @@
 
 
 {{#partial "content" }}
-<h1>进销存管理 -- 销售管理</h1>
+<h3>进销存管理 -- 销售管理</h3>
 
 {{#if errorTrace }}
 <pre>{{errorTrace}}</pre>
 {{/if}}
 
 {{#if flashMessage}}
-<div style="color: brown">
+<div class="flash-message" style="color: brown">
     {{flashMessage}}
 </div>
 {{/if}}
 <app-root></app-root>
 
 <div style="display: none;" class="orders-new-sales-order-form">
-    <form id="orders-order-detail-form" action="/mans/orders/sales" method="POST">
+    <form class="small-form" id="orders-order-detail-form" action="/mans/orders/sales" method="POST">
         <fieldset style="margin-bottom: 1em;">
             <legend style="font-weight: bold;color:gray;">新增销售单</legend>
-            销单流水号：<input type="text" name="order_flow_no" required placeholder="请输入销单流水号"/>&ensp;&ensp;&ensp;&ensp;
-            经办人：<input type="text" name="order_person" required placeholder="请输入经办人" /> &ensp;
+
+
+            <div>
+                <label for="order_flow_no">销单流水号：</label>
+                <input type="text" id="order_flow_no" name="order_flow_no" required placeholder="请输入销单流水号"/>&ensp;&ensp;&ensp;
+            </div>
+
+            <div>
+                <label for="order_flow_no">经办人：</label>
+                <input type="text" id="order_person" name="order_person" placeholder="请输入经办人"/>&ensp;&ensp;&ensp;
+            </div>
+
             <!--
             客户姓名：<input type="text" name="customer_name" required placeholder="请输入客户姓名" />&ensp;&ensp;&ensp;&ensp;
             联系方式：<input type="text" name="customer_phone" required placeholder="请输入客户联系方式" />&ensp;&ensp;&ensp;&ensp;
             -->
-            备注：<input type="text" name="order_desc" placeholder="请输入销单备注" />
+
+            <div>
+                <label for="order_flow_no">备注：</label>
+                <input type="text" id="order_desc" name="order_desc" placeholder="请输入销单备注"/>&ensp;&ensp;&ensp;
+            </div>
+
+
         </fieldset>
 
         <fieldset style="margin-bottom: 1em;">
-            <legend style="font-weight: bold;color:gray;">销售单详情</legend>
 
-            <div style="margin: .4n 25em 0;">
-                <input type="button" id="btn-append-new-order-row" value="增加新行" />
+            <div style="margin-bottom: -1em; text-align: right">
+                <a style="float:right;" id="btn-append-new-order-row" class="ssmall primary button">增加新行</a>
+                <div class="clearFixed"></div>
             </div>
+            <div style="text-align: left">
+                <legend style="font-weight: bold;color:gray;">销售单详情</legend>
+            </div>
+
 
             <div class="order-detail-sales">
 
-                <table border="0" cellspacing="0">
+                <table class="table-cells" border="0" cellspacing="0">
                     <thead>
                     <tr>
                         <th>序号</th>
                         <th>商品编号</th>
-                        <th>商品名称</th>
+                        <th style="width:385px;">商品名称</th>
                         <th>品牌</th>
                         <th>规格</th>
                         <th>销售单价</th>
@@ -60,45 +80,43 @@
                     <tbody class="order-detail-sales-items">
                     <tr>
                         <td style="width: 40px;text-align: center;font-weight: bold;">
-                            <input type="text" autocomplete="off" disabled="disabled" style="width: 40px;text-align: center;" value="1" /></td>
-                        <td><input type="text" autocomplete="off" style="width: 95px;" id="product_id" /></td>
-                        <td><input type="text" autocomplete="off" style="width: 385px;" id="product_name" /></td>
-                        <td><input type="text" autocomplete="off" disabled="disabled" style="width: 70px;text-align: center;" id="product_brand" /></td>
-                        <td><input type="text" autocomplete="off" disabled="disabled" style="width: 75px;" id="product_spec" /></td>
-                        <td><input type="text" autocomplete="off" style="width: 75px; text-align: right;" id="product_price" /></td>
-                        <td><input type="text" autocomplete="off" disabled="disabled" style="width: 75px;text-align: center;" id="product_unit" /></td>
-                        <td><input type="text" autocomplete="off" style="width: 75px;text-align: center;" id="product_sale_count" /></td>
-                        <td><input type="text" autocomplete="off" disabled="disabled" style="width: 75px;text-align: right;" id="product_total_money" /></td>
-                        <td><input type="text" autocomplete="off" disabled="disabled" style="width: 75px;" id="product_vender" /></td>
-                        <td><input type="text" autocomplete="off" style="width: 125px;" id="order_item_desc" /></td>
-                        <td><a title="删除该行" class="remove-order-row" href="javascript:void(this);">X</a></td>
+                            <input type="text" autocomplete="off" disabled="disabled" style="text-align: center;" value="1" /></td>
+                        <td><input type="text" autocomplete="off" id="product_id" /></td>
+                        <td style="width:385px;"><input type="text" autocomplete="off" id="product_name" /></td>
+                        <td><input type="text" autocomplete="off" disabled="disabled" style="text-align: center;" id="product_brand" /></td>
+                        <td><input type="text" autocomplete="off" disabled="disabled" id="product_spec" /></td>
+                        <td><input type="text" autocomplete="off" style="text-align: right;" id="product_price" /></td>
+                        <td><input type="text" autocomplete="off" disabled="disabled" style="text-align: center;" id="product_unit" /></td>
+                        <td><input type="text" autocomplete="off" style="text-align: center;" id="product_sale_count" /></td>
+                        <td><input type="text" autocomplete="off" disabled="disabled" style="text-align: right;" id="product_total_money" /></td>
+                        <td><input type="text" autocomplete="off" disabled="disabled" id="product_vender" /></td>
+                        <td><input type="text" autocomplete="off" id="order_item_desc" /></td>
+                        <td style="width: 40px;text-align: center;"><a title="删除该行" class="remove-order-row" href="javascript:void(this);">&Chi;</a></td>
                     </tr>
                     </tbody>
                 </table>
             </div>
 
-            <div style="margin-top: .625em;">
-                <!--<input type="submit" value="保存" />-->
-                <input type="button" id="btn-order-save" value="保存" />
-                <input type="button" id="btn-clean-order-row" value="清除空行" />
+            <div style="text-align: center;margin: 1.5em 0;">
+                <a type="button" id="btn-order-save" class="small primary button">保存</a>
+                <!--<button type="button" id="btn-order-save" class="small primary button">保存</button>-->
+                <button type="button" id="btn-clean-order-row" class="small clear button">清除空行</button>
             </div>
+
 
         </fieldset>
     </form>
 </div>
 
 
-<div style="text-align: left;">
-    <div style="display: inline-block;">
-        <input type="button" id="btn-product-new-sales-order" value="新增销售单"  style="float:left;" />
-        <div class="clearFixed"></div>
-    </div>
+<div style="text-align: right;">
+    <button class="button ssmall2 primary" type="button" id="btn-product-new-sales-order">新增销售单</button>
 </div>
 
+<fieldset>
 
-
-<fieldset style="margin-top: 1em;">
     <legend style="font-weight: bold;color:gray;">历史销售单</legend>
+
     <div>
 
         <table class="table-basic" style="width: 100%;">

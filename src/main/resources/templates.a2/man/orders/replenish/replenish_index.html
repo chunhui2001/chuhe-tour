@@ -19,7 +19,7 @@
 {{/if}}
 
 {{#if flashMessage}}
-<div style="color: brown">
+<div class="flash-message">
     {{flashMessage}}
 </div>
 {{/if}}
@@ -46,9 +46,9 @@
         </fieldset>
 
         <fieldset style="margin-bottom: 1em;">
-            <div style="margin-bottom: -1.5em; text-align: right">
-                <button style="margin-bottom: 0;padding: .3rem;" style="float:right;padding: 0.4em;" type="button"
-                        id="btn-append-new-order-row" class="small primary button">增加新行</button>
+            <div style="margin-bottom: -1em; text-align: right">
+                <button style="float:right;padding: 0.4em;" type="button"
+                        id="btn-append-new-order-row" class="ssmall primary button">增加新行</button>
                 <div class="clearFixed"></div>
             </div>
             <div style="text-align: left">
@@ -105,7 +105,7 @@
                 </table>
             </div>
 
-            <div style="text-align: center;margin: 1em 0;">
+            <div style="text-align: center;margin: 1.5em 0;">
                 <button type="button" id="btn-order-save" class="small primary button">保存</button>
                 <button type="button" id="btn-clean-order-row" class="small clear button">清除空行</button>
             </div>
@@ -115,7 +115,7 @@
 </div>
 
 <div style="text-align: right;">
-    <button style="margin-bottom: 0" class="button tiny primary" type="button" id="btn-orders-new-replenish-order">新增进货单</button>
+    <button class="button ssmall2 primary" type="button" id="btn-orders-new-replenish-order">新增进货单</button>
 </div>
 
 

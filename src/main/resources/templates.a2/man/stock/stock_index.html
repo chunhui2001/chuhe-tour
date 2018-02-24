@@ -12,7 +12,7 @@
 {{/if}}
 
 {{#if flashMessage}}
-<div style="color: brown">
+<div class="flash-message">
     {{flashMessage}}
 </div>
 {{/if}}
@@ -21,8 +21,8 @@
 <table class="table-basic" style="width: 100%;">
     <thead>
         <tr>
-            <th>产品ID</th>
-            <th style="text-align: left;">产品名称</th>
+            <th style="width:65px;">产品ID</th>
+            <th style="width:325px;text-align: left;">产品名称</th>
             <!--<th>品牌</th>-->
             <!--<th>生产厂家</th>-->
             <th>单位</th>
@@ -37,8 +37,8 @@
     <tbody>
         {{#each viewData}}
             <tr>
-                <td style="text-align: center;">{{product_id}}</td>
-                <td style="text-align: left;font-size: .925em;">{{product_name}}</td>
+                <td style="width:65px;text-align: center;">{{product_id}}</td>
+                <td style="width:325px;text-align: left;font-size: .925em;">{{product_name}}</td>
                 <!--td style="text-align: center;">{{product_brand}}</td>
                 <td style="text-align: center;">{{product_vender}}</td-->
                 <td style="text-align: center;">{{product_unit}}</td>
@@ -69,7 +69,10 @@
         {{/each}}
 
 
+        {{#compare viewData.length 'eq' 0 }}
         <td colspan="9">当前还没有任何数据 ~</td>
+        {{/compare}}
+
     </tbody>
 </table>
 

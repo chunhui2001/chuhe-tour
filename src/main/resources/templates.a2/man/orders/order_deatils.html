@@ -12,7 +12,7 @@
 {{/if}}
 
 {{#if flashMessage}}
-<div style="color: brown">
+<div class="flash-message">
     {{flashMessage}}
 </div>
 {{/if}}
@@ -67,7 +67,7 @@
         <tr>
             <th>序号</th>
             <th>商品编号</th>
-            <th>商品名称</th>
+            <th style="width:325px;">商品名称</th>
             <th style="text-align: center;">品牌</th>
             <th style="text-align: center;">规格</th>
             <th style="text-align: center;">单位</th>
@@ -84,7 +84,7 @@
         <tr>
             <td style="text-align: center;">{{order_item_no}}</td>
             <td style="text-align: center;">{{product_id}}</td>
-            <td>{{product_name}}</td>
+            <td style="width:325px;">{{product_name}}</td>
             <td style="text-align: center;">{{product_brand}}</td>
             <td style="text-align: center;">{{product_spec}}</td>
             <td style="text-align: center;">{{product_unit}}</td>

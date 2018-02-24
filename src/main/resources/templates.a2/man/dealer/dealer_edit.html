@@ -12,7 +12,7 @@
 {{/if}}
 
 {{#if flashMessage}}
-<div style="color: brown">
+<div class="flash-message">
     {{flashMessage}}
 </div>
 {{/if}}
@@ -35,29 +35,28 @@
                 </td>
             </tr>
             <tr>
-                <td class="form-table-label">经销商名称：</td>
+                <td class="form-table-label"><strong style="color: brown;">*</strong> 经销商名称：</td>
                 <td>
                     <input type="text" required placeholder="请输入经销商名称"
                            id="dealer_name" name="dealer_name"
                            value="{{viewData.dealer_name}}" />
                 </td>
-                <td><strong style="color: brown;">*</strong></td>
             </tr>
             <tr>
                 <td class="form-table-label">性别：</td>
                 <td>
-                    <label for="dealer_gender_man">男</label>
 
                     <input {{#compare viewData.dealer_gender 'eq' '男' }}
                                checked="checked"
                            {{/compare}}
                            type="radio" value="MAN" id="dealer_gender_man" name="dealer_gender" />
+                    <label for="dealer_gender_man">男</label>
 
-                    <label for="dealer_gender_women">女</label>
                     <input  {{#compare viewData.dealer_gender 'eq' '女' }}
                                checked="checked"
                             {{/compare}}
                             type="radio" value="WOMEN" id="dealer_gender_women" name="dealer_gender" />
+                    <label for="dealer_gender_women">女</label>
                 </td>
             </tr>
             <tr>
@@ -132,17 +131,14 @@
                            value="{{viewData.dealer_desc}}" />
                 </td>
             </tr>
-            <tr>
-                <td class="form-table-label">
-                    &ensp;
-                </td>
-                <td>
-                    <input type="submit" value="保存" />
-                    <input type="reset" value="清除" />
-                </td>
-            </tr>
             </tbody>
         </table>
+
+
+        <div style="text-align: center;margin: 1.5em 0;">
+            <button type="submit" class="small primary button">保存</button>
+            <a href="/mans/dealer/{{viewData.dealer_id}}" class="small clear button">返回</a>
+        </div>
 
     </form>
 </div>
