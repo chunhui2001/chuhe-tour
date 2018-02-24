@@ -64,7 +64,7 @@ public class ChuheDbVerticle extends AbstractVerticle {
 
         JsonObject mySQLClientConfig = new JsonObject()
                 .put("host", "127.0.0.1")
-                .put("port", 3306)
+                .put("port", 3307)
                 .put("database", "db_chuhe_local")
                 .put("driver_class", config().getString(CONFIG_CHUHEDB_JDBC_DRIVER_CLASS, "com.mysql.jdbc.Driver"))
                 .put("maxPoolSize", config().getInteger(CONFIG_CHUHEDB_JDBC_MAX_POOL_SIZE, 30))
