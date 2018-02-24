@@ -8,6 +8,9 @@
 }
 
 /*** global style: base html ***/
+body {
+  line-height: 1;
+}
 h1, h2, h3, h4, h5, h6 {
   width: 100%;
 }
@@ -19,6 +22,11 @@ textarea {
 .clearFixed {
   float:none;
   clear: both;
+}
+
+.flash-message {
+  color: brown;
+  text-align: center;
 }
 
 .button {
@@ -104,6 +112,8 @@ table.table-basic tr:nth-child(odd) td {
 }
 table.table-basic thead th {
   padding: .425rem .625rem;
+  line-height: 1.2rem;
+  text-align: center;
 }
 table.table-basic tbody td {
   /*color: transparent;*/
@@ -152,6 +162,7 @@ table.table-cells th {
   padding: 10px 15px;
   position: relative;
   text-shadow: 0 1px 0 #000;
+  line-height: 1.2rem;
 }
 
 
@@ -280,6 +291,18 @@ table.table-cells td a {
 .button.primary {
   background-color: #0091ea;
   color: #fefefe;
+}
+
+.button.ssmall {
+  margin-bottom: 0;
+  padding: .3rem;
+  font-size: .6rem;
+}
+
+.button.ssmall2 {margin-bottom: 0;
+  margin-bottom: 0;
+  padding: .55rem;
+  font-size: .6rem;
 }
 
 .small-form {

@@ -23,10 +23,14 @@ export const router: Routes = [
   { path: 'mans/products/:productId', component: EmptyComponent },
   { path: 'mans/products/:productId/:oper', component: EmptyComponent },
   { path: 'mans/dealer', component: EmptyComponent },
-  { path: 'mans/dealer/:oper', component: EmptyComponent },
+  { path: 'mans/dealer/:dealerId', component: EmptyComponent },
+  { path: 'mans/dealer/:dealerId/:oper', component: EmptyComponent },
   { path: 'mans/customer', component: EmptyComponent },
   { path: 'mans/customer/:customerId', component: EmptyComponent },
   { path: 'mans/customer/:customerId/:oper', component: EmptyComponent },
+  { path: 'mans/user', component: EmptyComponent },
+  { path: 'mans/user/:userId', component: EmptyComponent },
+  { path: 'mans/user/:userId/:oper', component: EmptyComponent },
   { path: 'mans/priv', component: EmptyComponent },
   { path: 'mans/stock', component: EmptyComponent }
 

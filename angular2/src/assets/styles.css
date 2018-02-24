@@ -39,7 +39,7 @@ body {
   max-width: 1024px;
   background-color: #ECEFF1;
   margin: auto;
-  min-height: 750px;
+  min-height: 650px;
   padding: .925em;
 }
 
@@ -50,9 +50,9 @@ body {
   box-shadow: none;
 }
 
-[type=checkbox]+label[for], [type=radio]+label[for] {
-  margin-left: 0;
-}
+/*[type=checkbox]+label[for], [type=radio]+label[for] {*/
+  /*margin-left: 0;*/
+/*}*/
 
 
 
