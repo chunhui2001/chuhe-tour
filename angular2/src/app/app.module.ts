@@ -6,11 +6,11 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
-import * as $ from 'jquery';
-window['$'] = $;
-window['jQuery'] = $;
-import 'froala-editor/js/froala_editor.pkgd.min.js';
+// import * as $ from 'jquery';
+// import 'froala-editor/js/froala_editor.pkgd.min.js';
 
+// window['$'] = $;
+// window['jQuery'] = $;
 
 // angular html editer:
 // https://github.com/froala/angular-froala-wysiwyg
