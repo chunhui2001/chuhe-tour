@@ -7,10 +7,14 @@ import { SignupComponent } from '../_components/signup/signup.component';
 import { LoginComponent } from '../_components/login/login.component';
 
 
+import { ProductNewComponent } from '../_components/product/product-new/product-new.component';
+
+
 export const router: Routes = [
 
   { path: '_c/signup', component: SignupComponent },
   { path: '_c/login', component: LoginComponent },
+  { path: '_c/product/new', component: ProductNewComponent },
 
   { path: '', component: EmptyComponent },
   { path: 'index', component: EmptyComponent },
@@ -20,6 +24,7 @@ export const router: Routes = [
   { path: 'mans/orders/:orderType', component: EmptyComponent },
   { path: 'mans/orders/:orderType/:orderId', component: EmptyComponent },
   { path: 'mans/products', component: EmptyComponent },
+  { path: 'mans/products/new', component: ProductNewComponent },
   { path: 'mans/products/:productId', component: EmptyComponent },
   { path: 'mans/products/:productId/:oper', component: EmptyComponent },
   { path: 'mans/dealer', component: EmptyComponent },

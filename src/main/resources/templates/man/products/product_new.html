@@ -1,0 +1,72 @@
+{{#partial "blocks/title"}}
+<title>新增产品</title>
+{{/partial}}
+
+{{#partial "content" }}
+
+{{#if errorTrace }}
+<pre>{{errorTrace}}</pre>
+{{/if}}
+
+{{#if flashMessage}}
+<div class="flash-message">
+    {{flashMessage}}
+</div>
+{{/if}}
+
+
+<app-root></app-root>
+
+<div class="product-new-form">
+    <form class="small-form" action="/mans/products" method="POST">
+
+        <div class="input-group">
+            <span>产品名称：</span>
+            <input type="text" name="product_name" required placeholder="请输入产品名称"/>
+        </div>
+
+        <div class="input-group">
+            <span>产品类别：</span>
+            <input type="text" name="product_type" required placeholder="请输入产品类别"/>
+        </div>
+
+        <div class="input-group">
+            <span>产品单位：</span>
+            <input type="text" name="product_unit" required placeholder="请输入产品单位" />
+        </div>
+        <div class="input-group">
+            <span>产品单价：</span>
+            <input type="number" name="product_price" required placeholder="请输入产品单价" />
+        </div>
+        <div class="input-group">
+            <span>产品规格：</span>
+            <input type="text" name="product_spec" placeholder="请输入产品规格" />
+        </div>
+        <div class="input-group">
+            <span>产品描述：</span>
+            <textarea rows="10" name="product_desc" placeholder="请输入产品描述"></textarea>
+        </div>
+
+        <div style="text-align: center;margin-bottom: 1em;">
+            <button type="submit" class="small primary button">保存</button>
+            <button type="reset" class="small clear button">清除</button>
+            <a class="small clear link button" type="button" href="/mans/products">返回</a>
+        </div>
+
+
+    </form>
+</div>
+
+{{/partial}}
+
+
+
+{{#partial "blocks/script"}}
+<script type="text/javascript" id="r_1">
+
+
+</script>
+{{/partial}}
+
+
+{{> layouts/layout_default}}

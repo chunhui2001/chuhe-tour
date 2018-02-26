@@ -23,7 +23,7 @@ export class SignupComponent implements OnInit {
   passwd: String = '';
   phone: String = '';
   address: String = '';
-  isAgreeRule: boolean = false;
+  isAgreeRule: Boolean = false;
 
   constructor(private http: HttpClient, private router: Router ) {
 
@@ -36,10 +36,8 @@ export class SignupComponent implements OnInit {
       return;
     }
 
-    debugger;
-    $(".signup-component #signup-form").submit();
+    $('.signup-component #signup-form').submit();
 
-    debugger;
 
     // validate user
     // curl -v -l -H "Content-type: application/json" \

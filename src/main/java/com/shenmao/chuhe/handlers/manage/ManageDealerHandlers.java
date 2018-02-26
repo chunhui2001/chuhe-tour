@@ -163,8 +163,6 @@ public class ManageDealerHandlers extends BaseHandler {
 
         });
 
-
-
     }
 
     public void deleteDealerBatch(RoutingContext routingContext) {

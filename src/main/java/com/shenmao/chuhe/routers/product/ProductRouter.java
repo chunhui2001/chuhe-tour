@@ -40,6 +40,10 @@ public class ProductRouter {
         this.router.routeWithRegex(POST, getProductRouter())
                 .handler(manageHandlers::productsSave);
 
+
+        this.router.routeWithRegex(GET, getProductRouter("new"))
+                .handler(manageHandlers::newProduct);
+
         this.router.routeWithRegex(GET, getProductRouter(_PRODUCT_ID_ROUTE))
                 .handler(manageHandlers::productDetail);
 

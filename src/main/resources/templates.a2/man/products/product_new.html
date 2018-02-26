@@ -1,0 +1,33 @@
+{{#partial "blocks/title"}}
+<title>新增产品</title>
+{{/partial}}
+
+{{#partial "content" }}
+
+{{#if errorTrace }}
+<pre>{{errorTrace}}</pre>
+{{/if}}
+
+{{#if flashMessage}}
+<div class="flash-message">
+    {{flashMessage}}
+</div>
+{{/if}}
+
+<h3>新增产品</h3>
+<app-root></app-root>
+
+
+{{/partial}}
+
+
+
+{{#partial "blocks/script"}}
+<script type="text/javascript" id="r_1">
+
+
+</script>
+{{/partial}}
+
+
+{{> layouts/layout_default}}

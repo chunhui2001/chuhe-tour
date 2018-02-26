@@ -27,43 +27,10 @@
 
 <app-root></app-root>
 
-<div style="display: none;" class="product-new-form">
-    <form class="small-form" action="/mans/products" method="POST">
-
-        <div class="input-group">
-        <span>产品名称：</span>
-        <input type="text" name="product_name" required placeholder="请输入产品名称"/>
-        </div>
-
-        <div class="input-group">
-        <span>产品单位：</span>
-        <input type="text" name="product_unit" required placeholder="请输入产品单位" />
-        </div>
-        <div class="input-group">
-        <span>产品单价：</span>
-        <input type="number" name="product_price" required placeholder="请输入产品单价" />
-        </div>
-        <div class="input-group">
-        <span>产品规格：</span>
-        <input type="text" name="product_spec" placeholder="请输入产品规格" />
-        </div>
-        <div class="input-group">
-        <span>产品描述：</span>
-        <textarea rows="10" name="product_desc" placeholder="请输入产品描述"></textarea>
-        </div>
-
-        <div style="text-align: center;margin-bottom: 1em;">
-            <button type="submit" class="small primary button">保存</button>
-            <button type="reset" class="small clear button">清除</button>
-        </div>
-
-
-    </form>
-</div>
 
 <form action="/mans/products" method="POST" style="text-align: right;">
     <input type="hidden" name="_method" value="delete" />
-    <button class="button tiny primary" type="button" id="btn-product-new">新增产品</button>
+    <a class="button tiny primary" type="button" href="/mans/products/new">新增产品</a>
     <button class="button tiny clear" type="submit" id="btn-product-del" >删除所有选中产品</button>
     <input type="hidden" id="product_ids" name="product_ids" value="" />
 </form>
@@ -123,10 +90,6 @@
 
 
     $(function() {
-
-        $(document).on("click", "#btn-product-new", function () {
-            $(".product-new-form").slideDown();
-        });
 
         var selectTable = new SelectTable(
             ".product-list", "#select-all-product", "#product_ids", "#btn-product-del");

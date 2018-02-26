@@ -176,6 +176,20 @@ public class ChuheDbServiceImpl implements ChuheDbService {
 
         byte[] productDesc = product.getBinary("product_desc");
 
+        product.fieldNames().stream().forEach(p -> {
+
+            Object val = product.getValue(p);
+
+            if (val == null) {
+                product.put(p, "无");
+            }
+
+            if (val instanceof String) {
+                if (((String)val).trim().isEmpty()) {
+                    product.put(p, "无");
+                }
+            }
+        });
 
         if (!product.containsKey("product_desc")
                 || productDesc == null || (new String(productDesc)).trim().isEmpty()) {
@@ -212,10 +226,18 @@ public class ChuheDbServiceImpl implements ChuheDbService {
         String createProductSql = sqlQueries.get(ChuheSqlQuery.CREATE_PRODUCT);
         LOGGER.info( createProductSql);
 
-        JsonArray data = new JsonArray()
-                .add(product.getValue("product_name"))
-                .add(product.getValue("product_unit"))
-                .add(product.getValue("product_price"));
+        JsonArray data = new JsonArray();
+
+        data.add(product.getValue("product_name"));
+
+        if (Strings.emptyToNull(product.getString("product_type")) != null) {
+            data.add(product.getString("product_type"));
+        } else {
+            data.addNull();
+        }
+
+        data.add(product.getValue("product_unit"));
+        data.add(product.getValue("product_price"));
 
         if (Strings.emptyToNull(product.getString("product_spec")) != null) {
             data.add(product.getString("product_spec"));
@@ -271,13 +293,24 @@ public class ChuheDbServiceImpl implements ChuheDbService {
             String updateProductSql = sqlQueries.get(ChuheSqlQuery.SAVE_PRODUCT);
             LOGGER.info(updateProductSql);
 
-            JsonArray sqlParams = new JsonArray()
-                    .add(product.getValue("product_name"))
-                    .add(product.getValue("product_unit"))
-                    .add(product.getValue("product_price"));
 
+            String productType = Strings.emptyToNull(product.getString("product_type"));
             String productSpecStr = Strings.emptyToNull(product.getString("product_spec"));
             String productDescStr = Strings.emptyToNull(product.getString("product_desc"));
+
+            JsonArray sqlParams = new JsonArray();
+
+            sqlParams.add(product.getValue("product_name"));
+
+            if (productType != null && !productType.trim().equals("无")) {
+                sqlParams.add(product.getString("product_type"));
+            } else {
+                sqlParams.addNull();
+            }
+
+            sqlParams.add(product.getValue("product_unit"));
+            sqlParams.add(product.getValue("product_price"));
+
 
             if (productSpecStr != null && !productSpecStr.trim().equals("无")) {
                 sqlParams.add(product.getString("product_spec"));

@@ -50,7 +50,7 @@ public class ManageProductsHandlers extends BaseHandler {
 
 
         ChainSerialization chainSerialization = ChainSerialization.create(routingContext.getDelegate())
-                .putViewName("/man/products/products_" + detailOrEditPage + ".html")
+                .putViewName("/man/products/product_" + detailOrEditPage + ".html")
                 .putMessage("产品详细信息");
 
         this.chuheDbService.fetchProductById(productId, reply -> {
@@ -83,7 +83,7 @@ public class ManageProductsHandlers extends BaseHandler {
     public void productsList(RoutingContext routingContext) {
 
         ChainSerialization chainSerialization = ChainSerialization.create(routingContext.getDelegate())
-                .putViewName("/man/products/products_index.html")
+                .putViewName("/man/products/product_index.html")
                 .putMessage("所有产品列表");
 
         chuheDbService.fetchAllProducts(reply -> {
@@ -104,12 +104,30 @@ public class ManageProductsHandlers extends BaseHandler {
 
     }
 
+
+    public void newProduct(RoutingContext routingContext) {
+
+        ChainSerialization chainSerialization =
+                ChainSerialization.create(routingContext.getDelegate());
+
+        chainSerialization.putContextData(new JsonObject())
+                .putViewName("/man/products/product_new.html")
+                .putMessage("新增产品");
+
+        chainSerialization.serialize();
+
+    }
+
     private JsonObject getProductObject(RoutingContext routingContext) {
 
         JsonObject result = new JsonObject();
 
         if (paramExists(routingContext, "product_name")) {
             result.put("product_name", getString(routingContext,"product_name"));
+        }
+
+        if (paramExists(routingContext, "product_type")) {
+            result.put("product_type", getString(routingContext,"product_type"));
         }
 
         if (paramExists(routingContext, "product_unit")) {
@@ -156,7 +174,7 @@ public class ManageProductsHandlers extends BaseHandler {
                         .putMessage(reply.cause().getMessage())
                         .putException(reply.cause())
                         .putFlashException(reply.cause())
-                        .redirect("/mans/products");
+                        .redirect("/mans/products/new");
             }
         });
 

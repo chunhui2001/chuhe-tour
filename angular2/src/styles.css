@@ -27,6 +27,7 @@ textarea {
 .flash-message {
   color: brown;
   text-align: center;
+  margin-bottom: 1em;
 }
 
 .button {
@@ -288,6 +289,12 @@ table.table-cells td a {
   color: black;
 }
 
+.button.link {
+  box-shadow: none;
+  text-decoration: underline;
+  color: #0091ea;
+}
+
 .button.primary {
   background-color: #0091ea;
   color: #fefefe;
@@ -311,6 +318,11 @@ table.table-cells td a {
 
 .small-form label {
   font-size: .675rem;
+}
+
+.small-form .field-label {
+  margin-bottom: .3em;
+  display: inline-block;
 }
 
 .small-form input, .small-form textarea{
