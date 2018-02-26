@@ -26,6 +26,7 @@ export const router: Routes = [
   { path: 'mans/products', component: EmptyComponent },
   { path: 'mans/products/new', component: ProductNewComponent },
   { path: 'mans/products/:productId', component: EmptyComponent },
+  { path: 'mans/products/:productId/edit', component: ProductNewComponent },
   { path: 'mans/products/:productId/:oper', component: EmptyComponent },
   { path: 'mans/dealer', component: EmptyComponent },
   { path: 'mans/dealer/:dealerId', component: EmptyComponent },

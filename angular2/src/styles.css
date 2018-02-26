@@ -284,6 +284,15 @@ table.table-cells td a {
 /***** table theme cells end *****/
 
 /***** foundation resize *****/
+
+.button:not(.link) {
+  margin-left: .5em;
+}
+
+div > .button:first-child {
+  margin-left: 0;
+}
+
 .button.clear {
   background-color: transparent;
   color: black;
@@ -293,6 +302,8 @@ table.table-cells td a {
   box-shadow: none;
   text-decoration: underline;
   color: #0091ea;
+  padding-left: .3rem;
+  padding-right: .3rem;
 }
 
 .button.primary {

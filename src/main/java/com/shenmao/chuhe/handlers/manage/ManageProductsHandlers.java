@@ -46,7 +46,7 @@ public class ManageProductsHandlers extends BaseHandler {
     public void productDetail(RoutingContext routingContext) {
 
         Long productId = Long.parseLong(routingContext.request().getParam("param0"));
-        String detailOrEditPage = routingContext.normalisedPath().endsWith("/edit") ? "edit" : "detail";
+        String detailOrEditPage = routingContext.normalisedPath().endsWith("/edit") ? "new" : "detail";
 
 
         ChainSerialization chainSerialization = ChainSerialization.create(routingContext.getDelegate())
@@ -70,6 +70,8 @@ public class ManageProductsHandlers extends BaseHandler {
                         .redirect("/not-found", true);
                 return;
             }
+
+            routingContext.put("product_model_json", reply.result().encode());
 
             chainSerialization.putContextData(reply.result()).serialize();
 

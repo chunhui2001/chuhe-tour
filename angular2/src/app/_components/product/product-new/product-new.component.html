@@ -1,34 +1,35 @@
 
 <div class="form-container product-new-form product-new-component">
 
-  <form class="small-form" id="product-new-form" #formData="ngForm"  action="/mans/products" method="POST">
+  <form class="small-form" id="product-new-form" #formData="ngForm"  action="{{the_action}}" method="POST">
+
 
     <div class="input-group">
       <span class="field-label">产品名称：</span>
       <input class="input-group-field"
-             type="text" (ngModel)="product_name" id="product_name" name="product_name" required placeholder="请输入产品名称"/>
+             type="text" [(ngModel)]="product_name" id="product_name" name="product_name" required placeholder="请输入产品名称"/>
     </div>
 
     <div class="input-group">
       <span class="field-label">产品类别：</span>
       <input class="input-group-field"
-             type="text" (ngModel)="product_type" id="product_type" name="product_type" required placeholder="请输入产品类别"/>
+             type="text" [(ngModel)]="product_type" id="product_type" name="product_type" required placeholder="请输入产品类别"/>
     </div>
 
     <div class="input-group">
       <span class="field-label">产品单位：</span>
       <input class="input-group-field"
-             type="text" (ngModel)="product_unit" id="product_unit" name="product_unit" required placeholder="请输入产品单位" />
+             type="text" [(ngModel)]="product_unit" id="product_unit" name="product_unit" required placeholder="请输入产品单位" />
     </div>
     <div class="input-group">
       <span class="field-label">产品单价：</span>
       <input class="input-group-field"
-             type="number" (ngModel)="product_price" id="product_price" name="product_price" required placeholder="请输入产品单价" />
+             type="number" [(ngModel)]="product_price" id="product_price" name="product_price" required placeholder="请输入产品单价" />
     </div>
     <div class="input-group">
       <span class="field-label">产品规格：</span>
       <input class="input-group-field"
-             type="number" (ngModel)="product_spec" id="product_spec" type="text" name="product_spec" placeholder="请输入产品规格" />
+             type="number" [(ngModel)]="product_spec" id="product_spec" type="text" name="product_spec" placeholder="请输入产品规格" />
     </div>
     <div class="input-group">
       <span class="field-label">产品描述：</span>
@@ -38,12 +39,15 @@
     </div>
 
 
-    <div style="text-align: center;margin-bottom: 1em;">
+    <div style="text-align: right;margin-bottom: 1em;">
+
+      <input type="hidden" [disabled]="editOrNew !== 'edit'" name="_method" value="put" />
+
       <button type="submit"  [disabled]="!formData.valid"
               (click)="onSubmit(formData)"
               class="small primary button">保存</button>
-      <button type="reset" class="small clear button">清除</button>
-      <a class="small clear link button" type="button" href="/mans/products">返回</a>
+      <a class="small clear button last" href="/mans/products/{{product_id}}">取消编辑</a>
+      <a class="small clear link button" href="/mans/products">返回产品列表</a>
     </div>
 
 

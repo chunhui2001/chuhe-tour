@@ -10,6 +10,9 @@ cp dist/fontawesome-webfont.*.woff2 ../src/main/resources/static/assets/fonts/fo
 cp dist/fontawesome-webfont.*.ttf ../src/main/resources/static/assets/fonts/fontawesome-webfont.ttf
 cp dist/fontawesome-webfont.*.woff ../src/main/resources/static/assets/fonts/fontawesome-webfont.woff
 
+rm -rf ../src/main/resources/static/angular/fontawesome-webfont.*.*
+cp -rf dist/fontawesome-webfont.*.* ../src/main/resources/static/angular
+
 cp ./dist/styles.*.bundle.css ../src/main/resources/static/angular/styles.bundle.css
 cp ./dist/inline.*.bundle.js ../src/main/resources/static/angular/inline.bundle.js
 cp ./dist/polyfills.*.bundle.js ../src/main/resources/static/angular/polyfills.bundle.js
