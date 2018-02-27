@@ -42,6 +42,7 @@ textarea {
   min-height: 650px;
   padding: .925em;
   position: relative;
+  line-height: 1.325em;
 }
 
 .error {
