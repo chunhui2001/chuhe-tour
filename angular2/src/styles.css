@@ -3,12 +3,25 @@
 
 @import '~@angular/material/prebuilt-themes/indigo-pink.css';
 
+
+/*** google material resize ***/
 .mat-checkbox-inner-container {
   background-color: ghostwhite;
 }
 
+.mat-form-field, input.mat-chip-input {
+  width:100% !important;
+}
+
+input.mat-chip-input {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
 /*** global style: base html ***/
 body {
+  /*background-color: #ECEFF1;*/
+  background-color: ghostwhite;
   line-height: 1;
 }
 h1, h2, h3, h4, h5, h6 {

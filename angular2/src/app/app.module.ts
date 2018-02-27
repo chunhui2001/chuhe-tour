@@ -21,13 +21,14 @@ import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
 import {
   MatIconModule, MatToolbarModule, MatMenuModule, MatCardModule,
   MatButtonModule, MatCheckboxModule, MatChipInputEvent, MatSelectModule,
-  MatChipsModule, MatProgressBarModule
+  MatChipsModule, MatProgressBarModule, MAT_LABEL_GLOBAL_OPTIONS
 } from '@angular/material';
 
 
 import { HttpIntercepor } from './_interceptor/http.interceptor';
 import { routers } from './routers/app.router';
 
+import { BasicComponent } from './_components/basic.component';
 import { AppComponent } from './_components/app/app.component';
 import { SignupComponent } from './_components/signup/signup.component';
 import { EmptyComponent } from './_components/empty/empty.component';
@@ -36,6 +37,7 @@ import { ProductNewComponent } from './_components/product/product-new/product-n
 
 @NgModule({
   declarations: [
+    BasicComponent,
     AppComponent,
     SignupComponent,
     EmptyComponent,
@@ -47,13 +49,15 @@ import { ProductNewComponent } from './_components/product/product-new/product-n
     HttpClientModule, FormsModule, ReactiveFormsModule, BrowserAnimationsModule,
     FroalaEditorModule.forRoot(), FroalaViewModule.forRoot(),
     MatIconModule, MatToolbarModule, MatMenuModule, MatCardModule, MatButtonModule,
-    MatCheckboxModule, MatSelectModule,  MatChipsModule, MatProgressBarModule,
+    MatCheckboxModule, MatSelectModule, MatChipsModule, MatProgressBarModule,
     routers
   ],
   providers: [{
+    provide: MAT_LABEL_GLOBAL_OPTIONS, useValue: {float: 'always'}
+  }, {
     provide: HTTP_INTERCEPTORS,
     useClass: HttpIntercepor,
-    multi: true
+    multi: true,
   }],
   bootstrap: [AppComponent]
 })

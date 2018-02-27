@@ -1,6 +1,7 @@
 
 <div class="form-container product-new-form product-new-component">
 
+  <!--<input type="hidden" id="hid_product_model_json" value="{&quot;product_id&quot;:11,&quot;product_name&quot;:&quot;8&quot;,&quot;product_type&quot;:&quot;产品描述,产品描述2,产品描述3&quot;,&quot;product_unit&quot;:&quot;8&quot;,&quot;product_price&quot;:0.0,&quot;product_spec&quot;:&quot;8&quot;,&quot;product_desc&quot;:&quot;&lt;p&gt;8888&lt;/p&gt;&quot;,&quot;created_at&quot;:&quot;2018年02月27日 11时36分&quot;,&quot;last_updated&quot;:&quot;2018年02月27日 11时36分&quot;}" />-->
 
   <form class="small-form" id="product-new-form" #formData="ngForm"  action="{{the_action}}" method="POST">
 
@@ -11,11 +12,29 @@
              type="text" [(ngModel)]="product_name" id="product_name" name="product_name" required placeholder="请输入产品名称"/>
     </div>
 
-    <div class="input-group">
-      <span class="field-label">产品类别：</span>
-      <input class="input-group-field"
-             type="text" [(ngModel)]="product_type" id="product_type" name="product_type" required placeholder="请输入产品类别"/>
-    </div>
+    <!--<div class="input-group">-->
+      <!--<span class="field-label">产品类别：</span>-->
+      <!--<input class="input-group-field"-->
+             <!--type="text" [(ngModel)]="product_type" id="product_type" name="product_type" required placeholder="请输入产品类别"/>-->
+    <!--</div>-->
+
+
+    <mat-form-field class="product-type-list" [floatLabel]="formGroupOptions.value.floatLabel">
+      <mat-chip-list #productTypeList>
+        <mat-chip *ngFor="let pType of productTypeFruits" [selectable]="pTypeSelectable"
+                  [removable]="pTypeRemovable" (remove)="remove(pType)">
+          {{pType.name}}
+          <mat-icon matChipRemove *ngIf="pTypeRemovable">cancel</mat-icon>
+        </mat-chip>
+      </mat-chip-list>
+      <mat-label>产品类别</mat-label>
+      <input matInput placeholder="请输入产品类别"
+             [matChipInputFor]="productTypeList"
+             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+             [matChipInputAddOnBlur]="pTypeAddOnBlur"
+             (matChipInputTokenEnd)="add($event)"
+             id="product_type" name="product_type" />
+    </mat-form-field>
 
     <div class="input-group">
       <span class="field-label">产品单位：</span>

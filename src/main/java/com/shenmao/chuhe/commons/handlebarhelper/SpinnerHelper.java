@@ -35,6 +35,8 @@ public class SpinnerHelper implements Helper<Object> {
                 themeClass = "red";
         }
 
+        // http://tobiasahlin.com/spinkit/
+
         return new Handlebars.SafeString(
                 "<div class=\"hd-spinner " + themeClass + "\">\n" +
                 "    <div class=\"rect1\"></div>\n" +

@@ -30,6 +30,7 @@
     "expose-loader": "^0.7.4",
     "froala-editor": "^2.7.5",
     "jquery": "^3.3.1",
+    "lodash": "^4.17.5",
     "rxjs": "^5.5.2",
     "zone.js": "^0.8.14"
   },

@@ -1,7 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {ENTER, COMMA, TAB} from '@angular/cdk/keycodes';
+
+import {MatChipInputEvent} from '@angular/material';
 
 import * as $ from 'jquery';
+import * as _ from 'lodash';
+import {BasicComponent} from '../../basic.component';
 
 
 @Component({
@@ -9,10 +15,8 @@ import * as $ from 'jquery';
   templateUrl: './product-new.component.html',
   styleUrls: ['./product-new.component.css']
 })
-export class ProductNewComponent implements OnInit {
+export class ProductNewComponent extends BasicComponent implements OnInit {
 
-  state: String = '';
-  error: any;
 
   froalaOptions: Object = {
     placeholderText: '请输入产品描述',
@@ -22,7 +26,7 @@ export class ProductNewComponent implements OnInit {
         editor.edit.on();
       }
     }
-  }
+  };
 
   editOrNew: String = 'new';
   the_action: String = '/mans/products';
@@ -38,14 +42,49 @@ export class ProductNewComponent implements OnInit {
   created_at: Date;
   last_updated: Date;
 
-  getCurrentUrl() {
-    return '/' + this.route.snapshot.url.map(p => {
-      return p.path;
-    }).join('/');
+  // visible: Boolean = true;
+  pTypeSelectable: Boolean = true;
+  pTypeRemovable: Boolean = true;
+  pTypeAddOnBlur: Boolean = true;
+
+
+  productTypeFruits = [ ];
+
+  add(event: MatChipInputEvent): void {
+
+    const input = event.input;
+    const value = event.value;
+
+    // Add our fruit
+    if ((value || '').trim()) {
+
+      (value.trim().replace(/,|-|\.|;|\/|\s/g, ',').split(','))
+        .forEach(v => {
+          const currentType = {name: v.trim()};
+          const isFind = _.find(this.productTypeFruits, { 'name': v.trim()});
+          if (v.trim().length > 0 && !isFind) {
+            this.productTypeFruits.push(currentType);
+          }
+      });
+
+    }
+
+    // Reset the input value
+    if (input) {
+      input.value = '';
+    }
   }
 
-  constructor(private route: ActivatedRoute) {
+  remove(pType: any): void {
+    const index = this.productTypeFruits.indexOf(pType);
+    if (index >= 0) {
+      this.productTypeFruits.splice(index, 1);
+    }
+  }
 
+  constructor(protected route: ActivatedRoute, fb: FormBuilder) {
+
+    super(route, fb);
 
   }
 
@@ -73,12 +112,34 @@ export class ProductNewComponent implements OnInit {
     this.editOrNew = this.the_url.endsWith('/edit') ? 'edit' : 'new';
     this.the_action = this.editOrNew === 'edit' ? (this.the_action + '/' + this.product_id) : '/mans/products';
 
+
+    this.productTypeFruits = this.product_type
+                                  .split(',')
+                                  .filter(t => t !== '无')
+                                  .map(t => {
+                                  return {name: t};
+                                });
+
+    if (this.productTypeFruits.length === 0) {
+      this.product_type = '';
+    }
+
   }
 
   onSubmit(formData) {
 
     if (!formData.valid) {
       return;
+    }
+
+    if (this.productTypeFruits.length === 0) {
+      this.product_type = '';
+    } else {
+      $('#product_type').val(
+              this.productTypeFruits.map( t => {
+                return t.name;
+              }).join(',')
+      );
     }
 
     $('.product-new-component #product-new-form').submit();
