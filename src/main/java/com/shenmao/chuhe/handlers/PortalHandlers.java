@@ -186,6 +186,12 @@ public class PortalHandlers extends BaseHandler {
 
   public void uploadFiles(RoutingContext routingContext) {
     Set<FileUpload> uploads = routingContext.getDelegate().fileUploads();
+    uploads.stream().forEach( f -> {
+      System.out.println(f.name() + ", ddd 1");
+      System.out.println(f.fileName() + ", ddd 2");
+    });
+    System.out.println(routingContext.request().getParam("userid") + " 3");
+    System.out.println(routingContext.request().getParam("filecomment") + " 4");
     routingContext.response().end("<" + uploads.size() + "> files uploaded");
   }
 

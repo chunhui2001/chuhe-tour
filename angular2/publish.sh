@@ -9,6 +9,7 @@ ng build --prod --aot --vc --cc --dop --build-optimizer --stats-json --vendor-ch
 cp -rf ./dist/assets/* ../src/main/resources/static/assets/
 
 cp -rf dist/fontawesome-webfont.* ../src/main/resources/static/angular/
+cp -rf dist/roboto-v15-latin-regular.* ../src/main/resources/static/angular/
 cp -rf dist/*.js ../src/main/resources/static/angular/
 cp -rf dist/*.css ../src/main/resources/static/angular/
 

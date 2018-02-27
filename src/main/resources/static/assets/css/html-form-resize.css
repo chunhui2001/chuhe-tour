@@ -1,0 +1,25 @@
+
+
+.small-form {
+  font-size: .825em;
+}
+
+.small-form label {
+  font-size: .675rem;
+}
+
+.small-form .field-label {
+  margin-bottom: .3em;
+  display: inline-block;
+}
+
+.small-form input, .small-form textarea{
+  padding: .3rem;
+  font-size: .85rem;
+  height: auto;
+}
+
+.small-form .input-group {
+  display: inherit;
+  margin-bottom: .925rem;
+}

@@ -1,0 +1,27 @@
+
+/*** google material resize ***/
+.mat-checkbox-inner-container {
+  background-color: ghostwhite;
+}
+
+.mat-form-field, input.mat-chip-input {
+  width:100% !important;
+}
+
+input.mat-chip-input {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+.mat-chip:not(.mat-basic-chip) {
+  border-radius: 10px !important;
+  padding: 3px 8px !important;
+}
+
+.mat-chip:not(.mat-basic-chip)+.mat-chip:not(.mat-basic-chip) {
+  margin: 0 8px 5px 0 !important;
+}
+
+.mat-chip:not(.mat-basic-chip) {
+  margin-right: 8px !important;
+}

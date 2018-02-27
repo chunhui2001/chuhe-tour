@@ -150,7 +150,8 @@ public class PortalRouter  implements ChuheRouter {
     /* curl \
     -F "userid=6887" \
     -F "filecomment=This is an image file" \
-    -F "image=@/home/keesh/Desktop/timg.jpg" http://localhost:8081/file_uploads */
+    -F "file_1=@/home/keesh/Desktop/timg.jpg" http://localhost:8081/file_uploads */
+    // curl -F "userid=6887" -F "filecomment=This is an image file" -F "file_1=@/Users/cc/Dropbox/images/long-1.png" -F "file_2=@/Users/cc/Dropbox/images/long-1.png" http://localhost:8081/file_uploads
     this.router.routeWithRegex(HttpMethod.POST, "/file_uploads" + GlobalHandlers._SUPPORT_EXTS_PATTERN)
       .handler(portalHandlers::uploadFiles);
   }
