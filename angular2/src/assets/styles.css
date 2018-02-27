@@ -41,6 +41,7 @@ body {
   margin: auto;
   min-height: 650px;
   padding: .925em;
+  position: relative;
 }
 
 [type=color], [type=date], [type=datetime-local], [type=datetime],

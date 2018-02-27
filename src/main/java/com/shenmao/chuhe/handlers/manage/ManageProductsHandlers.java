@@ -45,9 +45,9 @@ public class ManageProductsHandlers extends BaseHandler {
      */
     public void productDetail(RoutingContext routingContext) {
 
+        boolean isEdit = routingContext.normalisedPath().endsWith("/edit");
         Long productId = Long.parseLong(routingContext.request().getParam("param0"));
-        String detailOrEditPage = routingContext.normalisedPath().endsWith("/edit") ? "new" : "detail";
-
+        String detailOrEditPage = isEdit ? "new" : "detail";
 
         ChainSerialization chainSerialization = ChainSerialization.create(routingContext.getDelegate())
                 .putViewName("/man/products/product_" + detailOrEditPage + ".html")
@@ -69,6 +69,10 @@ public class ManageProductsHandlers extends BaseHandler {
                         .putContextData(null)
                         .redirect("/not-found", true);
                 return;
+            }
+
+            if (isEdit) {
+                routingContext.put("page_title", "编辑产品信息");
             }
 
             routingContext.put("product_model_json", reply.result().encode());
@@ -109,12 +113,16 @@ public class ManageProductsHandlers extends BaseHandler {
 
     public void newProduct(RoutingContext routingContext) {
 
+        String pageTitle = "新增产品";
+
         ChainSerialization chainSerialization =
                 ChainSerialization.create(routingContext.getDelegate());
 
+        routingContext.put("page_title", pageTitle);
+
         chainSerialization.putContextData(new JsonObject())
                 .putViewName("/man/products/product_new.html")
-                .putMessage("新增产品");
+                .putMessage(pageTitle);
 
         chainSerialization.serialize();
 

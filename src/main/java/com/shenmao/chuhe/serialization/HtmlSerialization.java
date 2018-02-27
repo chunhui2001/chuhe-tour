@@ -1,5 +1,6 @@
 package com.shenmao.chuhe.serialization;
 
+import com.shenmao.chuhe.commons.handlebarhelper.SpinnerHelper;
 import com.shenmao.chuhe.exceptions.HbsTemplateParseException;
 import com.shenmao.chuhe.commons.handlebarhelper.CompareHelper;
 import io.vertx.core.json.JsonObject;
@@ -18,7 +19,8 @@ public class HtmlSerialization {
   public static HandlebarsTemplateEngine getHandlebarsTemplateEngine() {
     HandlebarsTemplateEngine handlebarsTemplateEngine = HandlebarsTemplateEngine.create().setExtension("html");
     handlebarsTemplateEngine.getHandlebars()
-      .registerHelper("compare", new CompareHelper());
+      .registerHelper("compare", new CompareHelper())
+      .registerHelper("spinner", new SpinnerHelper());
     return handlebarsTemplateEngine;
   }
 

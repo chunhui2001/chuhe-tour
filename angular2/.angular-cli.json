@@ -24,6 +24,9 @@
         "../node_modules/froala-editor/css/froala_style.min.css",
         "../node_modules/font-awesome/css/font-awesome.css"
       ],
+
+      "//" : "jquery",
+      "//" : "froala",
       "scripts": [
 
       ],

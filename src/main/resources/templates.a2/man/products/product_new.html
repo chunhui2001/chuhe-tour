@@ -1,5 +1,12 @@
 {{#partial "blocks/title"}}
-<title>新增产品</title>
+<title>{{page_title}}</title>
+{{/partial}}
+
+
+{{#partial "blocks/styles"}}
+<style type="text/css">
+
+</style>
 {{/partial}}
 
 {{#partial "content" }}
@@ -14,11 +21,13 @@
 </div>
 {{/if}}
 
-<h3>新增产品</h3>
+<h3>{{page_title}}</h3>
 
 <input type="hidden" id="hid_product_model_json" value="{{product_model_json}}" />
 
-<app-root></app-root>
+<app-root>
+{{#spinner 'theme1' }}{{/spinner}}
+</app-root>
 
 
 {{/partial}}

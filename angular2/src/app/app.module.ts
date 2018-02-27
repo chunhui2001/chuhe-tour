@@ -18,9 +18,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
 
 // google material
-import { MatIconModule, MatToolbarModule, MatMenuModule, MatCardModule,
+import {
+  MatIconModule, MatToolbarModule, MatMenuModule, MatCardModule,
   MatButtonModule, MatCheckboxModule, MatChipInputEvent, MatSelectModule,
-  MatChipsModule} from '@angular/material';
+  MatChipsModule, MatProgressBarModule
+} from '@angular/material';
 
 
 import { HttpIntercepor } from './_interceptor/http.interceptor';
@@ -45,7 +47,7 @@ import { ProductNewComponent } from './_components/product/product-new/product-n
     HttpClientModule, FormsModule, ReactiveFormsModule, BrowserAnimationsModule,
     FroalaEditorModule.forRoot(), FroalaViewModule.forRoot(),
     MatIconModule, MatToolbarModule, MatMenuModule, MatCardModule, MatButtonModule,
-    MatCheckboxModule, MatSelectModule,  MatChipsModule,
+    MatCheckboxModule, MatSelectModule,  MatChipsModule, MatProgressBarModule,
     routers
   ],
   providers: [{
