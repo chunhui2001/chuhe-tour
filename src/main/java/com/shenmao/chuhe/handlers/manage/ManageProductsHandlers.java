@@ -176,19 +176,11 @@ public class ManageProductsHandlers extends BaseHandler {
 
         JsonObject product = getProductObject(routingContext);
 
-        Set<FileUpload> uploads = routingContext.getDelegate().fileUploads();
+        List<String> uploadedFilePaths = Application.moveUpload(
+                routingContext.getDelegate().vertx(), routingContext.getDelegate().fileUploads()
+                , "product_image", Application.UploadType.IMAGE);
 
-        uploads.stream()
-                .filter(fileUpload -> fileUpload.name().equals("product_image") && fileUpload.size() > 0)
-                .forEach( fileUpload -> {
-
-                    Application.moveUpload(routingContext.getDelegate().vertx(), fileUpload, Application.UploadType.IMAGE);
-
-                    // Use the Event Bus to dispatch the file now
-                    // Since Event Bus does not support POJOs by default so we need to create a MessageCodec implementation
-                    // and provide methods for encode and decode the bytes
-
-                });
+        System.out.println(uploadedFilePaths.size());
 
         chuheDbService.createProducts(product, reply -> {
 

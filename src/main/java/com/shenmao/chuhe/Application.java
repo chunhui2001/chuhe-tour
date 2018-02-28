@@ -1,5 +1,6 @@
 package com.shenmao.chuhe;
 
+import com.shenmao.chuhe.exceptions.PurposeException;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
@@ -10,14 +11,13 @@ import io.vertx.rxjava.core.buffer.Buffer;
 import io.vertx.rxjava.ext.web.RoutingContext;
 
 import java.io.UnsupportedEncodingException;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.SimpleTimeZone;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Application {
 
@@ -75,10 +75,7 @@ public class Application {
         String pname = parent + path.substring(0, pos == -1 ? path.length() : pos);
 
         if (!vertx.fileSystem().existsBlocking(pname)) {
-            System.out.println(pname + ", dddd 1");
             vertx.fileSystem().mkdirBlocking(pname);
-        } else {
-            System.out.println(pname + ", dddd 2");
         }
 
         if (pos != -1)
@@ -124,31 +121,66 @@ public class Application {
         routingContext.next();
     }
 
-    public static List<String> moveUpload(Vertx vertx, FileUpload fileUpload, UploadType type) {
+    public static List<String> moveUpload(Vertx vertx,  Set<FileUpload> fileUploads, String fieldName, UploadType type) {
 
         // Buffer uploadedFile = vertx.fileSystem().readFileBlocking(fileUpload.uploadedFileName());
 
-        List<String> returnUploadPath = new ArrayList<>();
+        List<String> result = fileUploads.stream()
+            .filter(fileUpload -> fileUpload.name().equals(fieldName) && fileUpload.size() > 0)
+            .map( fileUpload -> {
+
+                String uploadedDir = getUploadPath(type);
+                String uploadedFile = uploadedDir + "/" + getUploadFileName(fileUpload.fileName());
+
+                mkdirp(vertx, uploadedDir, null);
+                vertx.fileSystem().moveBlocking(fileUpload.uploadedFileName(), uploadedFile);
+
+                // Use the Event Bus to dispatch the file now
+                // Since Event Bus does not support POJOs by default so we need to create a MessageCodec implementation
+                // and provide methods for encode and decode the bytes
+
+                return uploadedFile;
+
+            }).collect(Collectors.toList());
+
+        return result;
+
+    }
+
+    public static String getUploadFileName(String uploadFilename) {
 
         String fileName = null;
 
         try {
-            fileName = URLDecoder.decode(fileUpload.fileName(), "UTF-8");
+            fileName = URLDecoder.decode(uploadFilename, "UTF-8");
         } catch (UnsupportedEncodingException e) {
-            return null;
+            throw new PurposeException(e.getMessage());
         }
 
-        String uploadedDir = UPLOAD_FOLDER_IMAGE_PRODUCT + "/" + (new SimpleDateFormat("yyyyMMdd")).format(new Date());
-        String uploadedFile = uploadedDir + "/" + fileName;
+        return fileName;
+    }
 
-        mkdirp(vertx, uploadedDir, null);
-        vertx.fileSystem().copyBlocking(fileUpload.uploadedFileName(), uploadedFile);
+    private static String getUploadPath(UploadType type) {
 
-        returnUploadPath.add(uploadedFile);
-        System.out.println(uploadedFile + ", move upload file fileName");
+        String path = null;
 
-        return returnUploadPath;
+        switch (type) {
+            case IMAGE:
+                path = UPLOAD_FOLDER_IMAGE_PRODUCT;
+                break;
+            case PDF:
+                path = UPLOAD_FOLDER_PDF_PRODUCT;
+                break;
+            case VIDEO:
+                path = UPLOAD_FOLDER_VIDEO_PRODUCT;
+                break;
+            case AUDIO:
+                path = UPLOAD_FOLDER_AUDIO_PRODUCT;
+                break;
+            default:
+        }
 
+        return path + "/" + (new SimpleDateFormat("yyyyMMdd")).format(new Date());
     }
 
 }
