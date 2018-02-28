@@ -1,6 +1,5 @@
 package com.shenmao.chuhe.verticle;
 
-import com.shenmao.chuhe.passport.AuthHandlerImpl;
 import com.shenmao.chuhe.routers.ChuheRouter;
 import com.shenmao.chuhe.routers.GlobalRouter;
 import com.shenmao.chuhe.routers.ManageRouter;
@@ -8,9 +7,7 @@ import com.shenmao.chuhe.routers.PortalRouter;
 import com.shenmao.chuhe.sessionstore.RedisSessionStore;
 import io.vertx.core.Handler;
 import io.vertx.core.http.HttpMethod;
-import io.vertx.core.json.JsonObject;
-import io.vertx.rxjava.core.MultiMap;
-import io.vertx.rxjava.core.buffer.Buffer;
+import io.vertx.ext.web.FileUpload;
 import io.vertx.rxjava.ext.web.handler.*;
 import io.vertx.rxjava.ext.web.sstore.SessionStore;
 import org.slf4j.Logger;
@@ -19,6 +16,9 @@ import io.vertx.rxjava.ext.web.Router;
 import io.vertx.rxjava.core.AbstractVerticle;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Set;
+
+import com.shenmao.chuhe.Application;
 
 public class PortalVerticle extends AbstractVerticle {
 
@@ -51,7 +51,16 @@ public class PortalVerticle extends AbstractVerticle {
     // vertxRouter.route().handler(ResponseContentTypeHandler.create());
     router.route().handler(FaviconHandler.create());
     router.route().handler(CookieHandler.create());                      // Cookie cookie = routingContext.getCookie("cookie name here")
-    router.route().handler(BodyHandler.create().setBodyLimit(50 * MB).setUploadsDirectory("uploads"));                        // file upload and body parameters parser
+
+    // file upload and body parameters parser
+    router.route()
+            .handler(BodyHandler.create()
+                    .setBodyLimit(50 * MB)
+                    .setMergeFormAttributes(true)
+                    .setUploadsDirectory(Application.UPLOAD_FOLDER))
+            .handler(Application::methodOverride)
+            .handler(Application::remoteUploadedEmptyFile);
+
     router.route().handler(SessionHandler.create(sessionStore).setCookieHttpOnlyFlag(false));
     //.setCookieSecureFlag(true));         // Session session = routingContext.session(); session.put("foo", "bar");
     //router.route().handler(CSRFHandler.create("not a good secret"));
@@ -78,55 +87,12 @@ public class PortalVerticle extends AbstractVerticle {
 
     });
 
-    router.route("/*").handler(routingContext -> {
-
-      if (routingContext.request().method() == HttpMethod.GET) {
-        routingContext.next();
-        return;
-      }
-
-
-
-      String realMethod = routingContext.request().getParam("_method");
-
-      System.out.println(routingContext.request().uri());
-      System.out.println(routingContext.request().method() + ", routingContext.request().method()");
-
-      if (realMethod == null || realMethod.trim().isEmpty()) {
-        routingContext.next();
-        return;
-      }
-
-      if (routingContext.request().method() == HttpMethod.POST) {
-
-        HttpMethod putOrDelete = null;
-
-        if (realMethod.toLowerCase().equals("delete")) putOrDelete = HttpMethod.DELETE;
-        if (realMethod.toLowerCase().equals("put")) putOrDelete = HttpMethod.PUT;
-
-        if (putOrDelete != null) {
-          routingContext.reroute(putOrDelete, routingContext.normalisedPath());
-          return;
-        }
-
-      }
-
-
-      routingContext.next();
-
-    });
-
-
     router.mountSubRouter("/", ChuheRouter.create(PortalRouter.class.getName(), vertx).getRouter());
     router.mountSubRouter("/mans/", ChuheRouter.create(ManageRouter.class.getName(), vertx).getRouter());
     router.mountSubRouter("/", ChuheRouter.create(GlobalRouter.class.getName(), vertx).getRouter());
 
-
     vertx.createHttpServer().requestHandler(router::accept).listen(_PORT);
 
-
   }
-
-
 
 }

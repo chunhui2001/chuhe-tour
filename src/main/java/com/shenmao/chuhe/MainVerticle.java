@@ -27,7 +27,6 @@ public class MainVerticle extends AbstractVerticle {
   }
 
   private Future<String> startHttpServer() {
-
     Future<String> future = Future.future();
     vertx.deployVerticle(
             "com.shenmao.chuhe.verticle.PortalVerticle"
@@ -35,15 +34,21 @@ public class MainVerticle extends AbstractVerticle {
     return future;
   }
 
+  private Future<Void> appPrepare() {
+    Future<Void> future = Future.future();
+    Application.prepare(vertx, future.completer());
+    return future;
+  }
+
   @Override
   public void start(Future<Void> startFuture) throws Exception {
 
-    Future<String> steps = deployWikiPageVerticle()
+    Future<String> steps = appPrepare()
+                           .compose(Void -> deployWikiPageVerticle())
                            .compose(id -> deployChuheDbVerticle())
                            .compose(id -> startHttpServer());
 
     steps.setHandler(ar -> {
-
         if (ar.succeeded()) {
           startFuture.complete();
         } else {

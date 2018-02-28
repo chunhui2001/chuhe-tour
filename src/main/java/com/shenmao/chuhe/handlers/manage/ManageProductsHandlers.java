@@ -1,6 +1,7 @@
 package com.shenmao.chuhe.handlers.manage;
 
 import com.google.common.base.Strings;
+import com.shenmao.chuhe.Application;
 import com.shenmao.chuhe.database.chuhe.ChuheDbService;
 import com.shenmao.chuhe.handlers.BaseHandler;
 import com.shenmao.chuhe.serialization.ChainSerialization;
@@ -12,6 +13,7 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.FileUpload;
 import io.vertx.rx.java.RxHelper;
 import io.vertx.rx.java.SingleOnSubscribeAdapter;
+import io.vertx.rxjava.core.buffer.Buffer;
 import io.vertx.rxjava.ext.web.Router;
 import io.vertx.rxjava.ext.web.RoutingContext;
 import org.slf4j.Logger;
@@ -19,10 +21,14 @@ import org.slf4j.LoggerFactory;
 import rx.Observable;
 import rx.Single;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
+
+import static com.shenmao.chuhe.Application.UPLOAD_FOLDER_IMAGE_PRODUCT;
 
 public class ManageProductsHandlers extends BaseHandler {
 
@@ -172,14 +178,17 @@ public class ManageProductsHandlers extends BaseHandler {
 
         Set<FileUpload> uploads = routingContext.getDelegate().fileUploads();
 
-        uploads.stream().forEach( f -> {
-            System.out.println(f.name() + ", ddd 1");
-            System.out.println(f.fileName() + ", ddd 2");
-            System.out.println(f.uploadedFileName() + ", ddd 3");
-        });
+        uploads.stream()
+                .filter(fileUpload -> fileUpload.name().equals("product_image") && fileUpload.size() > 0)
+                .forEach( fileUpload -> {
 
+                    Application.moveUpload(routingContext.getDelegate().vertx(), fileUpload, Application.UploadType.IMAGE);
 
-        System.out.println("<" + uploads.size() + "> files uploaded");
+                    // Use the Event Bus to dispatch the file now
+                    // Since Event Bus does not support POJOs by default so we need to create a MessageCodec implementation
+                    // and provide methods for encode and decode the bytes
+
+                });
 
         chuheDbService.createProducts(product, reply -> {
 
