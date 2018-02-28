@@ -18,11 +18,14 @@
 {{/if}}
 
 <div style="display: none;" class="product-new-form">
-    <form action="/mans/products" method="POST">
+    <form action="/mans/products" method="POST" enctype="multipart/form-data">
         产品名称：<input type="text" name="product_name" required placeholder="请输入产品名称"/>  <br />
         产品单位：<input type="text" name="product_unit" required placeholder="请输入产品单位" />  <br />
         产品单价：<input type="float" name="product_price" required placeholder="请输入产品单价" />  <br />
         产品规格：<input type="text" name="product_spec" placeholder="请输入产品规格" />  <br />
+
+        产品图片：<input type="file" name="product_image" /> <br />
+
         产品描述：<textarea type="text" name="product_desc" placeholder="请输入产品描述"></textarea><br />
         <input type="submit" value="保存" />
         <input type="reset" value="清除" />
@@ -110,6 +113,10 @@
             ".product-list", "#select-all-product", "#product_ids", "#btn-product-del");
 
         selectTable.init();
+
+        $(document).on('click', '#btn-product-new', function () {
+            $('.product-new-form').show();
+        });
 
     });
 

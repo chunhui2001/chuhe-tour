@@ -9,6 +9,7 @@ import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.web.FileUpload;
 import io.vertx.rx.java.RxHelper;
 import io.vertx.rx.java.SingleOnSubscribeAdapter;
 import io.vertx.rxjava.ext.web.Router;
@@ -168,6 +169,17 @@ public class ManageProductsHandlers extends BaseHandler {
     public void productsSave(RoutingContext routingContext) {
 
         JsonObject product = getProductObject(routingContext);
+
+        Set<FileUpload> uploads = routingContext.getDelegate().fileUploads();
+
+        uploads.stream().forEach( f -> {
+            System.out.println(f.name() + ", ddd 1");
+            System.out.println(f.fileName() + ", ddd 2");
+            System.out.println(f.uploadedFileName() + ", ddd 3");
+        });
+
+
+        System.out.println("<" + uploads.size() + "> files uploaded");
 
         chuheDbService.createProducts(product, reply -> {
 

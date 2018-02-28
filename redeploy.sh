@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 export LAUNCHER="io.vertx.core.Launcher"
-export VERTICLE="com.shenmao.chuhe.MainVerticleRx"
+export VERTICLE="com.shenmao.chuhe.MainVerticle"
 export CMD="mvn compile"
 export VERTX_CMD="run"
 

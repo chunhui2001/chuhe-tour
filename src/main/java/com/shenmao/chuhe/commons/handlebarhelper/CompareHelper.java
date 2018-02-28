@@ -15,29 +15,35 @@ public class CompareHelper implements Helper<Object> {
     Object right = options.params[1];
 
     boolean result = false;
-    int compareResult = getCompare(left, right);
 
-    if (compareResult == -2)
-      throw new PurposeException("仅支持 String, Integer, Double 该类型的比较，请在 com.shenmao.vertx.starter.commons.handlebarhelpers.CompareHelper 类中添加实现!");
+    if (left != null) {
 
-    switch (op) {
-      case "eq":
-        result = (compareResult == 0);
-        break;
-      case "gt":
-        result = (compareResult == 1);
-        break;
-      case "lt":
-        result = (compareResult == -1);
-        break;
-      case "gte":
-        result = ((compareResult == 1) || (compareResult == 0));
-        break;
-      case "lte":
-        result = ((compareResult == -1) || (compareResult == 0));
-        break;
-      default:
+      int compareResult = getCompare(left, right);
 
+      if (compareResult == -2)
+        throw new PurposeException("仅支持 String, Integer, Double 该类型的比较，" +
+                "请在 com.shenmao.vertx.starter.commons.handlebarhelpers.CompareHelper 类中添加实现! "
+                + "[" + left + "]");
+
+      switch (op) {
+        case "eq":
+          result = (compareResult == 0);
+          break;
+        case "gt":
+          result = (compareResult == 1);
+          break;
+        case "lt":
+          result = (compareResult == -1);
+          break;
+        case "gte":
+          result = ((compareResult == 1) || (compareResult == 0));
+          break;
+        case "lte":
+          result = ((compareResult == -1) || (compareResult == 0));
+          break;
+        default:
+
+      }
     }
 
     Options.Buffer buffer = options.buffer();
