@@ -1,5 +1,6 @@
 package com.shenmao.chuhe.serialization;
 
+import com.shenmao.chuhe.commons.handlebarhelper.EllipsisHelper;
 import com.shenmao.chuhe.commons.handlebarhelper.SpinnerHelper;
 import com.shenmao.chuhe.exceptions.HbsTemplateParseException;
 import com.shenmao.chuhe.commons.handlebarhelper.CompareHelper;
@@ -20,7 +21,8 @@ public class HtmlSerialization {
     HandlebarsTemplateEngine handlebarsTemplateEngine = HandlebarsTemplateEngine.create().setExtension("html");
     handlebarsTemplateEngine.getHandlebars()
       .registerHelper("compare", new CompareHelper())
-      .registerHelper("spinner", new SpinnerHelper());
+      .registerHelper("spinner", new SpinnerHelper())
+      .registerHelper("ellipsis", new EllipsisHelper());
     return handlebarsTemplateEngine;
   }
 

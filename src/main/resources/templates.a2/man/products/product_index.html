@@ -48,7 +48,7 @@
                 <th style="text-align: right;">单价</th>
                 <th style="text-align: center">规格</th>
                 <!--<th>产品描述</th>-->
-                <th style="text-align: center">更新时间</th>
+                <th style="width:115px;text-align: center">产品类别</th>
                 <th>&nbsp;</th>
             </tr>
         </thead>
@@ -64,7 +64,9 @@
                     <td style="text-align: right;">{{product_price}}</td>
                     <td style="text-align: center;">{{product_spec}}</td>
                     <!--td>{{product_desc}}</td-->
-                    <td style="text-align: center;">{{last_updated}}</td>
+                    <td style="text-align: center;">
+                        {{#ellipsis product_type '115px'}}{{/ellipsis}}
+                    </td>
                     <td style="text-align: left;"><a href="/mans/products/{{product_id}}">产品详情</a></td>
                 </tr>
                 {{/each}}
