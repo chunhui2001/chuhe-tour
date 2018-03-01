@@ -36,6 +36,7 @@ export class ProductNewComponent extends BasicComponent implements OnInit {
   product_type: String = '';
   product_unit: String = '';
   product_price: String = '0.0';
+  product_medias: any = [];
   product_spec: String = '';
   product_desc: String = '';
   created_at: Date;
@@ -90,17 +91,24 @@ export class ProductNewComponent extends BasicComponent implements OnInit {
   ngOnInit() {
 
     if ($('#hid_product_model_json').length > 0 && $('#hid_product_model_json').val().trim().length > 0) {
+      this.editOrNew = 'edit';
       this.loadProduct(JSON.parse($('#hid_product_model_json').val()));
+    } else {
+      this.editOrNew = 'new';
     }
 
   }
 
+  onReupload () {
+    window.location.href = '/mans/products/' + this.product_id + '/images';
+  }
 
   loadProduct(productObject) {
 
     this.product_id = productObject.product_id;
     this.product_name = productObject.product_name;
     this.product_price = productObject.product_price.toFixed(2);
+    this.product_medias = (productObject.product_medias && productObject.product_medias.trim().split(',')) || [];
     this.product_spec = productObject.product_spec;
     this.product_type = productObject.product_type;
     this.product_unit = productObject.product_unit;
@@ -108,8 +116,6 @@ export class ProductNewComponent extends BasicComponent implements OnInit {
     this.created_at = productObject.created_at;
     this.last_updated = productObject.last_updated;
 
-    this.the_url = this.getCurrentUrl();
-    this.editOrNew = this.the_url.endsWith('/edit') ? 'edit' : 'new';
     this.the_action = this.editOrNew === 'edit' ? (this.the_action + '/' + this.product_id) : '/mans/products';
 
 

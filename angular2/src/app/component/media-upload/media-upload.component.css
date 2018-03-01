@@ -1,21 +1,33 @@
 
-.upload_hand > img {
+.upload_hand img {
   opacity: .85;
   border-radius: 40px;
 }
 
-.upload_preview {
+.upload_hand a {
+  color: white;
+}
+
+.upload_preview, .media_preview {
   margin-right: .325em;
   font-size: 2em;
   color: cadetblue;
 }
+.media_preview {
+  width: 56px;
+  height: 56px;
+  float:left;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
 .upload_hand {
   font-size: 1.325em;
   cursor: pointer;
   color: aliceblue;
 }
 
-.upload_hand, .upload_preview {
+.upload_hand, .upload_preview, .media_preview {
   margin-bottom: .325em;
   position: relative;
 }

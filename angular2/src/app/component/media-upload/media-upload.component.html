@@ -1,17 +1,37 @@
 <div class="media-upload-component">
-  <div>
-    <div class="upload_preview" *ngFor="let name of uploadFiles" style="float:left;">
-      <img src="/assets/images/chuhe-logo.png" />
-      <span>{{name}}</span>
+  <div *ngIf="editOrNew === 'new'" class="media-upload-component-new">
+    <div>
+      <div class="upload_preview" *ngFor="let name of uploadFiles" style="float:left;">
+        <img src="/assets/images/chuhe-logo.png" />
+        <span>{{name}}</span>
+      </div>
+      <div class="upload_hand" style="float:left;">
+        <img src="/assets/images/chuhe-logo.png" />
+        <span>上传</span>
+      </div>
+      <div class="clearFixed"></div>
     </div>
-    <div class="upload_hand" style="float:left;">
-      <img src="/assets/images/chuhe-logo.png" />
-      <span>上传</span>
+    <div>
+      <input style="display: none;" type="file" multiple="multiple" class="upload_holder" name="upload_holder" />
     </div>
-    <div class="clearFixed"></div>
   </div>
+  <div *ngIf="editOrNew === 'edit'" class="media-upload-component-edit">
+    <h1 *ngIf="srcs == null || srcs.length == 0">无图片</h1>
 
-  <div>
-    <input style="display: none;" type="file" multiple="multiple" class="upload_holder" name="upload_holder" />
+    <div *ngIf="srcs.length > 0">
+      <div class="media_preview" *ngFor="let s of srcs"
+           [style.background-image]="'url(' + s + ')'">
+
+      </div>
+      <div class="upload_hand" style="float:left;">
+        <a (click)="reupload()">
+          <img src="/assets/images/chuhe-logo.png" />
+          <span style="font-size: .3em;">重新上传</span>
+        </a>
+      </div>
+      <div class="clearFixed"></div>
+    </div>
+
+
   </div>
 </div>

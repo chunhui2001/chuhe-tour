@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {Component, Input, Output, OnInit, EventEmitter} from '@angular/core';
 import * as $ from 'jquery';
 
 
@@ -11,10 +11,16 @@ import * as $ from 'jquery';
 export class MediaUploadComponent implements OnInit {
 
   @Input()
-  parentComponentClassName: String;
+  uploadFieldName: String;
 
   @Input()
-  uploadFieldName: String;
+  editOrNew: String;
+
+  @Input()
+  srcs: any = [];
+
+  @Output()
+  onReupload: EventEmitter<any> = new EventEmitter();
 
   uploadFiles: any = [];
 
@@ -25,13 +31,12 @@ export class MediaUploadComponent implements OnInit {
   ngOnInit() {
 
     const _that = this;
-    const _upload_hand_selector = '.' + _that.parentComponentClassName + ' .upload_hand';
+    const _upload_hand_selector = '.product-new-component .upload_hand';
 
     $(document).on('click', _upload_hand_selector, function (event) {
 
-      const currentComponentInstance = $($(event.target).parents('.' + _that.parentComponentClassName)[0]);
+      const currentComponentInstance = $($(event.target).parents('.product-new-component')[0]);
       const currentFileUploadElement = $(currentComponentInstance).find('.upload_holder');
-      const currentUploadHandlerElement = $(_upload_hand_selector);
 
       $(currentFileUploadElement).unbind('change').on('change', function (ev) {
         const currentFiles = (<HTMLInputElement>ev.target).files;
@@ -71,6 +76,10 @@ export class MediaUploadComponent implements OnInit {
 
     _that.uploadFiles.push(prviewName);
 
+  }
+
+  reupload() {
+    this.onReupload.emit();
   }
 
 }
