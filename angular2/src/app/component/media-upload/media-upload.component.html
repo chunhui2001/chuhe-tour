@@ -1,0 +1,17 @@
+<div class="media-upload-component">
+  <div>
+    <div class="upload_preview" *ngFor="let name of uploadFiles" style="float:left;">
+      <img src="/assets/images/chuhe-logo.png" />
+      <span>{{name}}</span>
+    </div>
+    <div class="upload_hand" style="float:left;">
+      <img src="/assets/images/chuhe-logo.png" />
+      <span>上传</span>
+    </div>
+    <div class="clearFixed"></div>
+  </div>
+
+  <div>
+    <input style="display: none;" type="file" multiple="multiple" class="upload_holder" name="upload_holder" />
+  </div>
+</div>

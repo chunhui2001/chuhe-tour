@@ -34,6 +34,7 @@ import { SignupComponent } from './_components/signup/signup.component';
 import { EmptyComponent } from './_components/empty/empty.component';
 import { LoginComponent } from './_components/login/login.component';
 import { ProductNewComponent } from './_components/product/product-new/product-new.component';
+import { MediaUploadComponent } from './component/media-upload/media-upload.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { ProductNewComponent } from './_components/product/product-new/product-n
     SignupComponent,
     EmptyComponent,
     LoginComponent,
-    ProductNewComponent
+    ProductNewComponent,
+    MediaUploadComponent
   ],
   imports: [
     BrowserModule,

@@ -54,12 +54,9 @@
     </div>
     <div class="input-group">
       <span class="field-label">产品图片：</span>
-      <div>
-        <img class="upload_hand" src="/assets/images/chuhe-logo.png" />
-        <div>
-          <input type="file" id="image_hand" name="image_hand" />
-        </div>
-      </div>
+      <app-media-upload parentComponentClassName="product-new-component"
+                        uploadFieldName="product_media"></app-media-upload>
+
     </div>
     <div class="input-group">
       <span class="field-label">产品描述：</span>

@@ -3,6 +3,7 @@ package com.shenmao.chuhe.handlers.manage;
 import com.google.common.base.Strings;
 import com.shenmao.chuhe.Application;
 import com.shenmao.chuhe.database.chuhe.ChuheDbService;
+import com.shenmao.chuhe.exceptions.PurposeException;
 import com.shenmao.chuhe.handlers.BaseHandler;
 import com.shenmao.chuhe.serialization.ChainSerialization;
 import io.vertx.core.AsyncResult;
@@ -178,9 +179,14 @@ public class ManageProductsHandlers extends BaseHandler {
 
         List<String> uploadedFilePaths = Application.moveUpload(
                 routingContext.getDelegate().vertx(), routingContext.getDelegate().fileUploads()
-                , "product_image", Application.UploadType.IMAGE);
+                , "product_media", Application.UploadType.IMAGE, routingContext.user().principal().getString("username"));
 
-        System.out.println(uploadedFilePaths.size());
+        if (uploadedFilePaths == null) {
+            throw new PurposeException("文件上传失败!");
+        }
+
+        if (uploadedFilePaths.size() > 0)
+            product.put("product_medias", String.join(",", uploadedFilePaths));
 
         chuheDbService.createProducts(product, reply -> {
 

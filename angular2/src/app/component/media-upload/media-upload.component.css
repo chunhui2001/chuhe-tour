@@ -1,0 +1,30 @@
+
+.upload_hand > img {
+  opacity: .85;
+  border-radius: 40px;
+}
+
+.upload_preview {
+  margin-right: .325em;
+  font-size: 2em;
+  color: cadetblue;
+}
+.upload_hand {
+  font-size: 1.325em;
+  cursor: pointer;
+  color: aliceblue;
+}
+
+.upload_hand, .upload_preview {
+  margin-bottom: .325em;
+  position: relative;
+}
+
+.upload_hand span, .upload_preview span {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  font-weight: bold;
+  line-height: 56px;
+  top:0;
+}

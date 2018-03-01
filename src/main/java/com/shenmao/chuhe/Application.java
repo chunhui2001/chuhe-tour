@@ -121,7 +121,11 @@ public class Application {
         routingContext.next();
     }
 
-    public static List<String> moveUpload(Vertx vertx,  Set<FileUpload> fileUploads, String fieldName, UploadType type) {
+    public static List<String> moveUpload(Vertx vertx,  Set<FileUpload> fileUploads, String fieldName, UploadType type, String username) {
+
+        if (username == null || username.trim().isEmpty()) {
+            throw new PurposeException("Just log in user can upload files");
+        }
 
         // Buffer uploadedFile = vertx.fileSystem().readFileBlocking(fileUpload.uploadedFileName());
 
@@ -129,17 +133,17 @@ public class Application {
             .filter(fileUpload -> fileUpload.name().equals(fieldName) && fileUpload.size() > 0)
             .map( fileUpload -> {
 
-                String uploadedDir = getUploadPath(type);
-                String uploadedFile = uploadedDir + "/" + getUploadFileName(fileUpload.fileName());
+                String uploadedDir = getUploadPath(username, type);
+                String uploadedFile = uploadedDir + "/" +getUploadFileName(fileUpload.fileName());
 
                 mkdirp(vertx, uploadedDir, null);
-                vertx.fileSystem().moveBlocking(fileUpload.uploadedFileName(), uploadedFile);
+                vertx.fileSystem().moveBlocking(fileUpload.uploadedFileName(),  uploadedFile);
 
                 // Use the Event Bus to dispatch the file now
                 // Since Event Bus does not support POJOs by default so we need to create a MessageCodec implementation
                 // and provide methods for encode and decode the bytes
 
-                return uploadedFile;
+                return uploadedFile.substring(UPLOAD_FOLDER.length());
 
             }).collect(Collectors.toList());
 
@@ -160,7 +164,7 @@ public class Application {
         return fileName;
     }
 
-    private static String getUploadPath(UploadType type) {
+    private static String getUploadPath(String username, UploadType type) {
 
         String path = null;
 
@@ -180,7 +184,8 @@ public class Application {
             default:
         }
 
-        return path + "/" + (new SimpleDateFormat("yyyyMMdd")).format(new Date());
+        return path + "/" + (new SimpleDateFormat("yyyyMMdd")).format(new Date())
+                + "/" + username + "/" + (new SimpleDateFormat("yyyyMMddHHmm")).format(new Date()) ;
     }
 
 }

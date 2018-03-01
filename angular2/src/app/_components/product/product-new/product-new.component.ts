@@ -17,7 +17,6 @@ import {BasicComponent} from '../../basic.component';
 })
 export class ProductNewComponent extends BasicComponent implements OnInit {
 
-
   froalaOptions: Object = {
     placeholderText: '请输入产品描述',
     events : {
@@ -90,41 +89,12 @@ export class ProductNewComponent extends BasicComponent implements OnInit {
 
   ngOnInit() {
 
-    const _that = this;
-
     if ($('#hid_product_model_json').length > 0 && $('#hid_product_model_json').val().trim().length > 0) {
       this.loadProduct(JSON.parse($('#hid_product_model_json').val()));
     }
 
-    const componentClassName = 'product-new-component';
-
-    $(document).on('click', '.' + componentClassName + ' .upload_hand', function (event) {
-
-      const currentComponentInstance = event.target;
-      const currentInputFileElement = $($(currentComponentInstance).parents('.' + componentClassName)[0]).find('#image_hand');
-
-      $(currentInputFileElement).unbind('change').on('change', function (ev) {
-
-        let newFile = _that.newInputFile(ev);
-
-        $(newFile).insertAfter(_that.getLastInputFile(currentInputFileElement));
-
-        newFile = null;
-      });
-
-      $(currentInputFileElement).click();
-
-    });
-
   }
 
-  getLastInputFile(fileEle) {
-    return $($(fileEle).parents('div')[0]).find('input:file').last();
-  }
-
-  newInputFile(event) {
-    return $('<input type="file" name="files[]" class="dynamic-file" />');
-  }
 
   loadProduct(productObject) {
 

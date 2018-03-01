@@ -175,6 +175,7 @@ public class ChuheDbServiceImpl implements ChuheDbService {
         }
 
         byte[] productDesc = product.getBinary("product_desc");
+        byte[] productMedias = product.getBinary("product_medias");
 
         product.fieldNames().stream().forEach(p -> {
 
@@ -190,6 +191,13 @@ public class ChuheDbServiceImpl implements ChuheDbService {
                 }
             }
         });
+
+        if (!product.containsKey("product_medias")
+                || productMedias == null || (new String(productMedias)).trim().isEmpty()) {
+            product.put("product_medias", "无");
+        } else {
+            product.put("product_medias", new String(productMedias));
+        }
 
         if (!product.containsKey("product_desc")
                 || productDesc == null || (new String(productDesc)).trim().isEmpty()) {
@@ -239,6 +247,12 @@ public class ChuheDbServiceImpl implements ChuheDbService {
         data.add(product.getValue("product_unit"));
         data.add(product.getValue("product_price"));
 
+        if (Strings.emptyToNull(product.getString("product_medias")) != null) {
+            data.add(product.getString("product_medias"));
+        } else {
+            data.addNull();
+        }
+
         if (Strings.emptyToNull(product.getString("product_spec")) != null) {
             data.add(product.getString("product_spec"));
         } else {
@@ -250,7 +264,6 @@ public class ChuheDbServiceImpl implements ChuheDbService {
         } else {
             data.addNull();
         }
-
 
         this.dbClient.updateWithParams(createProductSql, data, reply -> {
 
@@ -311,6 +324,11 @@ public class ChuheDbServiceImpl implements ChuheDbService {
             sqlParams.add(product.getValue("product_unit"));
             sqlParams.add(product.getValue("product_price"));
 
+            if (Strings.emptyToNull(product.getString("product_medias")) != null) {
+                sqlParams.add(product.getString("product_medias"));
+            } else {
+                sqlParams.addNull();
+            }
 
             if (productSpecStr != null && !productSpecStr.trim().equals("无")) {
                 sqlParams.add(product.getString("product_spec"));
