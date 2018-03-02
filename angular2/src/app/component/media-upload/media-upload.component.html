@@ -16,7 +16,7 @@
     </div>
   </div>
   <div *ngIf="editOrNew === 'edit'" class="media-upload-component-edit">
-    <h1 *ngIf="srcs == null || srcs.length == 0">无图片</h1>
+    <h3 *ngIf="srcs == null || srcs.length == 0">无图片</h3>
 
     <div *ngIf="srcs.length > 0">
       <div class="media_preview" *ngFor="let s of srcs"

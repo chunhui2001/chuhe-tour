@@ -52,8 +52,14 @@ CalculateTable.prototype = {
     },
     getData: function (url, id, done) {
         var url = url + "/" + id + ".json";// "/mans/products/" + pid + ".json";
-        $.get(url, function(result){
+        fetch(url, {
+            method: 'get',
+            credentials: "same-origin"
+        }).then(function(response) {
+            return response.json();
+        }).then(function(result) {
             return done(result.error, result);
+        }).catch(function(err) {
         });
     },
     removeEmptyOrderDetailItemRow: function (btnRemoveId) {

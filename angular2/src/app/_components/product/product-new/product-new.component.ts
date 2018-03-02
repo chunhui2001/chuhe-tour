@@ -108,7 +108,7 @@ export class ProductNewComponent extends BasicComponent implements OnInit {
     this.product_id = productObject.product_id;
     this.product_name = productObject.product_name;
     this.product_price = productObject.product_price.toFixed(2);
-    this.product_medias = (productObject.product_medias && productObject.product_medias.trim().split(',')) || [];
+    this.product_medias = (productObject.product_medias && productObject.product_medias !== '无' && productObject.product_medias.trim().split(',')) || [];
     this.product_spec = productObject.product_spec;
     this.product_type = productObject.product_type;
     this.product_unit = productObject.product_unit;
