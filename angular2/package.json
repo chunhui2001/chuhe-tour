@@ -25,6 +25,7 @@
     "@angular/platform-browser-dynamic": "^5.2.6",
     "@angular/router": "^5.2.6",
     "ajv": "^6.1.1",
+    "angular-font-awesome": "^3.1.2",
     "angular-froala-wysiwyg": "^2.7.5",
     "core-js": "^2.4.1",
     "expose-loader": "^0.7.4",

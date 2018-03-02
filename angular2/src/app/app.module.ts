@@ -5,6 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+import { AngularFontAwesomeModule } from 'angular-font-awesome';
 
 // import * as $ from 'jquery';
 // import 'froala-editor/js/froala_editor.pkgd.min.js';
@@ -35,6 +36,7 @@ import { EmptyComponent } from './_components/empty/empty.component';
 import { LoginComponent } from './_components/login/login.component';
 import { ProductNewComponent } from './_components/product/product-new/product-new.component';
 import { MediaUploadComponent } from './component/media-upload/media-upload.component';
+import { ProductDetailsComponent } from './_components/product/product-details/product-details.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +46,8 @@ import { MediaUploadComponent } from './component/media-upload/media-upload.comp
     EmptyComponent,
     LoginComponent,
     ProductNewComponent,
-    MediaUploadComponent
+    MediaUploadComponent,
+    ProductDetailsComponent
   ],
   imports: [
     BrowserModule,
@@ -52,7 +55,7 @@ import { MediaUploadComponent } from './component/media-upload/media-upload.comp
     FroalaEditorModule.forRoot(), FroalaViewModule.forRoot(),
     MatIconModule, MatToolbarModule, MatMenuModule, MatCardModule, MatButtonModule,
     MatCheckboxModule, MatSelectModule, MatChipsModule, MatProgressBarModule,
-    routers
+    routers, AngularFontAwesomeModule
   ],
   providers: [{
     provide: MAT_LABEL_GLOBAL_OPTIONS, useValue: {float: 'always'}

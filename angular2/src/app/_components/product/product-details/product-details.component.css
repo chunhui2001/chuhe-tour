@@ -1,0 +1,74 @@
+
+/deep/ .product-pillar .mat-checkbox-inner-container {
+  height: 18px !important;
+  width: 18px !important;
+}
+
+/deep/ .product-pillar .mat-checkbox-frame {
+  border-color: rgba(52, 134, 1, 0.54);
+}
+
+/deep/ .product-pillar .mat-checkbox-checked.mat-accent .mat-checkbox-background, .mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {
+  background-color: #45aaad;
+}
+
+/deep/ .product-pillar .mat-checkbox-label {
+  color:rgba(52, 134, 1, 0.9);
+}
+
+ul {
+  font-size: .9em;
+  list-style: none;
+  margin: 0;
+}
+
+ul.list-item-info li {
+  float:left;
+}
+
+.product-skus {
+  margin-top: 2em;
+}
+
+.product-skus > li {
+  padding: 1em 0;
+  border-top: solid 1px #cfd8dc;
+}
+
+.product-skus > li:last-child {
+  border-bottom: solid 1px #cfd8dc;
+}
+
+.product-left {
+  width: 65%;
+}
+
+.product-right {
+  width: 35%;
+}
+
+.product-panel {
+  background-color: green;
+  height: 370px;
+}
+.product-left, .product-right {
+  float:left;
+}
+
+.product-gallery {
+  background-color: rebeccapurple;
+}
+
+.product-pillar {
+  min-height: 445px;
+  margin-left: 1em;
+  background-color: white;
+  padding: 1.25em;
+  box-shadow: 0 1px 1px rgba(0,0,0,.3);
+}
+
+.product-tab-boxes {
+  margin-top: 1em;
+  background-color: burlywood;
+  min-height: 400px;
+}
