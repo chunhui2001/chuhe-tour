@@ -20,6 +20,11 @@ export const router: Routes = [
   { path: 'index', component: EmptyComponent },
   { path: 'registry', component: SignupComponent },
   { path: 'login', component: EmptyComponent },
+
+  { path: 'p/:pid', component: EmptyComponent },
+  { path: 'store/p/:pid', component: EmptyComponent },
+  { path: 'store/:storeIdOrName', component: EmptyComponent },
+
   { path: 'mans/orders', component: EmptyComponent },
   { path: 'mans/orders/:orderType', component: EmptyComponent },
   { path: 'mans/orders/:orderType/:orderId', component: EmptyComponent },

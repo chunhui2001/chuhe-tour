@@ -4,7 +4,10 @@ import com.shenmao.chuhe.database.chuhe.ChuheDbService;
 import com.shenmao.chuhe.database.wikipage.WikiPageDbService;
 import com.shenmao.chuhe.handlers.GlobalHandlers;
 import com.shenmao.chuhe.handlers.PortalHandlers;
+import com.shenmao.chuhe.handlers.StoreHandlers;
 import com.shenmao.chuhe.handlers.manage.ManageUserHandlers;
+import com.shenmao.chuhe.routers.store.StoreRouter;
+import com.shenmao.chuhe.routers.user.UserRouter;
 import com.shenmao.chuhe.sessionstore.RedisSessionStore;
 import com.shenmao.chuhe.exceptions.PurposeException;
 import com.shenmao.chuhe.passport.AuthHandlerImpl;
@@ -37,6 +40,9 @@ public class PortalRouter  implements ChuheRouter {
   ChuheDbService chuheDbService;
   WikiPageDbService wikiPageDbService = null;
 
+
+  private StoreHandlers storeHandlers = null;
+
   public PortalRouter(Vertx vertx, AuthHandler authHandler) {
 
     this.vertx = vertx;
@@ -49,7 +55,11 @@ public class PortalRouter  implements ChuheRouter {
     this.globalHandlers = GlobalHandlers.create();
     this.portalHandlers = PortalHandlers.create(chuheDbService, wikiPageDbService);
 
+    this.storeHandlers = StoreHandlers.create(chuheDbService);
+
     this.init();
+
+    StoreRouter.create(this.router, storeHandlers).init();
 
   }
 
@@ -66,6 +76,7 @@ public class PortalRouter  implements ChuheRouter {
     this.router.route("/wiki-page*").handler(authHandler);
 
     this.indexRouter();
+    this.productRouter();
     this.pingRouter();
     this.mainRouter();
     this.labelRouter();
@@ -81,7 +92,17 @@ public class PortalRouter  implements ChuheRouter {
     // 首页
     this.router.route(HttpMethod.GET, "/").handler(routingContext ->
             routingContext.reroute("/index"));
-    this.router.routeWithRegex(HttpMethod.GET, "/index" + GlobalHandlers._SUPPORT_EXTS_PATTERN).handler(portalHandlers::indexHandler);
+    this.router.routeWithRegex(HttpMethod.GET, "/index" + GlobalHandlers._SUPPORT_EXTS_PATTERN)
+            .handler(portalHandlers::indexHandler);
+
+  }
+
+  private void productRouter() {
+
+    // 产品详情页
+    this.router.routeWithRegex(HttpMethod.GET, "/p/(?<productId>[^\\/.]+)" + GlobalHandlers._SUPPORT_EXTS_PATTERN)
+            .handler(routingContext ->
+                    routingContext.reroute("/store" + routingContext.normalisedPath()));
 
   }
 
