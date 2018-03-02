@@ -43,12 +43,13 @@
             <tr>
                 <th style="text-align: center;"><input type="checkbox" id="select-all-product" /></th>
                 <th>产品编号</th>
-                <th style="width:385px;">产品名称</th>
+                <th style="width:215px;">产品名称</th>
                 <th style="text-align: center;">单位</th>
                 <th style="text-align: right;">单价</th>
                 <th style="text-align: center">规格</th>
                 <!--<th>产品描述</th>-->
                 <th style="width:115px;text-align: center">产品类别</th>
+                <th>更新时间</th>
                 <th>&nbsp;</th>
             </tr>
         </thead>
@@ -59,13 +60,16 @@
                 <tr>
                     <td style="text-align: center;"><input type="checkbox" id="{{product_id}}" name="{{product_id}}" value="{{product_id}}" /></td>
                     <td style="text-align: center;">{{product_id}}</td>
-                    <td style="text-align: left; width:385px">{{product_name}}</td>
+                    <td style="text-align: left; width:215px">{{#ellipsis product_name '215px'}}{{/ellipsis}}</td>
                     <td style="text-align: center;">{{product_unit}}</td>
                     <td style="text-align: right;">{{product_price}}</td>
                     <td style="text-align: center;">{{product_spec}}</td>
                     <!--td>{{product_desc}}</td-->
                     <td style="text-align: center;">
                         {{#ellipsis product_type '115px'}}{{/ellipsis}}
+                    </td>
+                    <td style="text-align: center;">
+                        {{last_updated_friendly}}
                     </td>
                     <td style="text-align: left;">
                         <a href="/mans/products/{{product_id}}">查看</a>

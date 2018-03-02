@@ -25,9 +25,9 @@ import java.math.RoundingMode;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.regex.Pattern;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
+
+import com.shenmao.chuhe.commons.DatetimeHelper;
 
 public class ChuheDbServiceImpl implements ChuheDbService {
 
@@ -172,6 +172,7 @@ public class ChuheDbServiceImpl implements ChuheDbService {
 
         if (last_updated != null) {
             product.put("last_updated", _DATE_FM_MINUTE.format(last_updated));
+            product.put("last_updated_friendly", DatetimeHelper.getFriendlyTime(last_updated, "无"));
         }
 
         byte[] productDesc = product.getBinary("product_desc");
