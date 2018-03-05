@@ -1,16 +1,16 @@
 <div>
   <div style="width: 100%; margin-bottom: 1em;">
-    <h1 style="font-size: 1.3rem;margin-bottom: .2em;">感恩（ganen）儿童安全座椅 larky系列半人马座宝宝座椅 9个月-12岁 枫树蓝</h1>
+    <h1 style="font-size: 1.3rem;margin-bottom: .45em;">感恩（ganen）儿童安全座椅 larky系列半人马座宝宝座椅 9个月-12岁 枫树蓝</h1>
     <p style="font-size: .9em;color:gray;">
 
+      <fa name="star" style="color: rgb(244, 81, 30);"></fa>
+      <fa name="star" style="color: rgb(244, 81, 30)"></fa>
+      <fa name="star" style="color: rgb(244, 81, 30);"></fa>
+      <fa name="star" style="color: rgb(244, 81, 30)"></fa>
       <fa name="star" ></fa>
-      <fa name="star" ></fa>
-      <fa name="star" ></fa>
-      <i class="fas fa-accessible-icon"></i>
+
       <span style="color: gray;">&Iota;</span>
       类型: eBay <span style="color: gray;">&Iota;</span>
-      模板编号: 64437 <span style="color: gray;">&Iota;</span>
-      下载: 8 <span style="color: gray;">&Iota;</span>
       分享: 8 <span style="color: gray;">&Iota;</span>
       加入收藏
       <span style="color: gray;">&Iota;</span>
@@ -26,11 +26,34 @@
   </div>
   <div class="product-left">
     <div class="product-panel">
-      <div class="product-gallery"
-           style="height:100%;background-size: cover;background-position: center;background-image: url('/assets/images/p001.png');">
-       &nbsp;
-      </div>
+
+      <ngx-slick class="slider-for product-gallery carousel"
+                 [style.height]="'100%'"
+                 [config]="{ 'slidesToShow': 1, 'slidesToScroll': 1, arrows: false, asNavFor: '.slider-nav'}"
+                 >
+        <div ngxSlickItem *ngFor="let slide of images_slide"
+             [style.width]="'350px'" [style.height]="'100%'"
+             [style.background-image]="'url(' + slide.img + ')'"
+             [style.background-size]="'100% 100%'"
+             class="slide">
+        </div>
+      </ngx-slick>
+
     </div>
+    <ngx-slick class="slider-nav product-gallery-carousel carousel"
+               style="height:100px;margin-top:.5em;"
+               [config]="{ 'slidesToShow': 4, 'slidesToScroll': 1, arrows: true, asNavFor: '.slider-for', centerMode: true, focusOnSelect: true}"
+               >
+      <div ngxSlickItem *ngFor="let slide of thumbnails_slide"
+           [style.width]="'350px'" [style.height]="'100%'"
+           [style.background-image]="'url(' + slide.img + ')'"
+           [style.background-size]="'cover'"
+           class="slide">
+      </div>
+    </ngx-slick>
+
+
+
     <div class="product-tab-boxes">
       <div class="product-description">
      4
@@ -42,21 +65,12 @@
     <div class="product-pillar">
       <div class="product-pillar-container">
         <span class="fa-layers fa-fw">
-            <i class="fas fa-certificate" style="color: red;"></i>
-            <span class="fa-layers-text fa-inverse" data-fa-transform="shrink-11.5 rotate--30" style="font-weight:900">NEW</span>
-          </span>
-
-        <span class="fa-layers fa-fw">
-          <i class="fas fa-envelope"></i>
-          <span class="fa-layers-counter" style="background:Tomato">1,419</span>
+          <i class="fas fa-certificate" style="color: blue;"></i>
+          <span class="fa-layers-text fa-inverse" data-fa-transform="shrink-11.5 rotate--30" style="font-weight:900">NEW</span>
         </span>
         <span class="fa-layers fa-fw">
-          <i class="fas fa-envelope"></i>
-          <span class="fa-layers-counter" style="background:Tomato">1,419</span>
-        </span>
-        <span class="fa-layers fa-fw">
-          <i class="fas fa-envelope"></i>
-          <span class="fa-layers-counter" style="background:Tomato">1,419</span>
+          <i class="fas fa-certificate" style="color: red;"></i>
+          <span class="fa-layers-text fa-inverse" data-fa-transform="shrink-11.5 rotate--30" style="font-weight:900">HOT</span>
         </span>
 
 
@@ -64,9 +78,11 @@
 
           感恩（ganen）儿童安全座椅 larky系列半人马座宝宝座椅 9个月-12岁 枫树蓝</h1>
         <ul class="product-skus">
-          <li>
-            <mat-checkbox disableRipple="true">15个免费DepositPhotos图片</mat-checkbox>
-            <span style="float:right;color:darkorange;">￥120
+          <li *ngFor="let sku of skuItems">
+            <mat-checkbox (click)="skuClick(sku)"
+                          [ngClass]="{'skuChoosed': sku.selected === true }"
+                          disableRipple="true">{{sku.name}}</mat-checkbox>
+            <span style="float:right;color:darkorange;"><b>￥{{sku.price}}</b>
               <mat-icon _ngcontent-c1=""
                         [style.font-size]="'.7em'"
                         [style.color]="'gray'"
@@ -76,15 +92,6 @@
                       matchipremove="" role="img" aria-hidden="true">help</mat-icon>
             </span>
 
-          </li>
-          <li>
-            <mat-checkbox disableRipple="true" [style.color]="'red'">快速和可靠主机解决方案</mat-checkbox>
-            <span style="float:right;color:darkorange;">￥297
-              <mat-icon [style.font-size]="'.7em'"
-                        [style.color]="'gray'"
-                        [style.width]="'14px'"
-                        [style.height]="'14px'">help</mat-icon>
-            </span>
           </li>
         </ul>
 

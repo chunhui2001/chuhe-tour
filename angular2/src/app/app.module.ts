@@ -26,6 +26,11 @@ import {
 } from '@angular/material';
 
 
+// Import your library
+import { SlickModule } from 'ngx-slick';
+
+// https://www.learnrxjs.io/operators/filtering/takewhile.html
+
 import { HttpIntercepor } from './_interceptor/http.interceptor';
 import { routers } from './routers/app.router';
 
@@ -55,7 +60,7 @@ import { ProductDetailsComponent } from './_components/product/product-details/p
     FroalaEditorModule.forRoot(), FroalaViewModule.forRoot(),
     MatIconModule, MatToolbarModule, MatMenuModule, MatCardModule, MatButtonModule,
     MatCheckboxModule, MatSelectModule, MatChipsModule, MatProgressBarModule,
-    routers, AngularFontAwesomeModule
+    routers, AngularFontAwesomeModule, SlickModule.forRoot()
   ],
   providers: [{
     provide: MAT_LABEL_GLOBAL_OPTIONS, useValue: {float: 'always'}
