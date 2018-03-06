@@ -18,28 +18,27 @@ export class ProductDetailsComponent implements OnInit {
   @HostBinding('@.disabled') disabled = true;
 
   images_slide = [
-    {img: 'http://placehold.it/645x370/000000'},
-    {img: 'http://placehold.it/645x370/111111'},
-    {img: 'http://placehold.it/645x370/333333'},
-    {img: 'http://placehold.it/645x370/666666'},
-    {img: 'http://placehold.it/645x370/666666'},
-    {img: 'http://placehold.it/645x370/666666'},
-    {img: 'http://placehold.it/645x370/666666'}
+    '//placehold.it/646x370/000000',
+    '//placehold.it/646x370/111111',
+    '//placehold.it/646x370/333333',
+    '//placehold.it/646x370/444444',
+    '//placehold.it/646x370/555555',
+    '//placehold.it/646x370/666666',
+    '//placehold.it/646x370/777777'
   ];
 
 
   thumbnails_slide = [
-    {img: 'http://placehold.it/180x100/000000'},
-    {img: 'http://placehold.it/180x100/111111'},
-    {img: 'http://placehold.it/180x100/333333'},
-    {img: 'http://placehold.it/180x100/666666'},
-    {img: 'http://placehold.it/180x100/666666'},
-    {img: 'http://placehold.it/180x100/666666'},
-    {img: 'http://placehold.it/180x100/666666'}
+    '//placehold.it/181x100/000000',
+    '//placehold.it/181x100/111111',
+    '//placehold.it/181x100/333333',
+    '//placehold.it/181x100/444444',
+    '//placehold.it/181x100/555555',
+    '//placehold.it/181x100/666666',
+    '//placehold.it/181x100/777777'
   ];
 
   skuItems: any = [];
-
 
   constructor() {
 

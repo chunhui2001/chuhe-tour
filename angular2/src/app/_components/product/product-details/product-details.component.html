@@ -25,39 +25,118 @@
     </p>
   </div>
   <div class="product-left">
-    <div class="product-panel">
 
-      <ngx-slick class="slider-for product-gallery carousel"
-                 [style.height]="'100%'"
-                 [config]="{ 'slidesToShow': 1, 'slidesToScroll': 1, arrows: false, asNavFor: '.slider-nav'}"
-                 >
-        <div ngxSlickItem *ngFor="let slide of images_slide"
-             [style.width]="'350px'" [style.height]="'100%'"
-             [style.background-image]="'url(' + slide.img + ')'"
-             [style.background-size]="'100% 100%'"
-             class="slide">
-        </div>
-      </ngx-slick>
-
-    </div>
-    <ngx-slick class="slider-nav product-gallery-carousel carousel"
-               style="height:100px;margin-top:.5em;"
-               [config]="{ 'slidesToShow': 4, 'slidesToScroll': 1, arrows: true, asNavFor: '.slider-for', centerMode: true, focusOnSelect: true}"
-               >
-      <div ngxSlickItem *ngFor="let slide of thumbnails_slide"
-           [style.width]="'350px'" [style.height]="'100%'"
-           [style.background-image]="'url(' + slide.img + ')'"
-           [style.background-size]="'cover'"
-           class="slide">
-      </div>
-    </ngx-slick>
-
-
+    <app-slick-carousel [images]="images_slide" [thumbnails]="thumbnails_slide"></app-slick-carousel>
 
     <div class="product-tab-boxes">
-      <div class="product-description">
-     4
-      </div>
+      <mat-tab-group>
+        <mat-tab label="商品介绍">
+          <mat-card>
+            <perfect-scrollbar style="height: 600px;">
+              <ul class="parameter2 p-parameter-list">
+                <li title="飞利浦HP8230">商品名称：飞利浦HP8230</li>
+                <li title="928128">商品编号：928128</li>
+                <li title="0.8kg">商品毛重：0.8kg</li>
+                <li title="中国大陆">商品产地：中国大陆</li>
+                <li title="2000W以上">功率：2000W以上</li>
+              </ul>
+            </perfect-scrollbar>
+          </mat-card>
+        </mat-tab>
+        <mat-tab label="规格与包装">
+          <mat-card>
+            <perfect-scrollbar style="height: 600px;">
+              <div data-tab="item" style="display: block;">
+                <div class="Ptable">
+                  <div class="Ptable-item">
+                    <h3>主体</h3>
+                    <dl>
+                      <dt>类别</dt><dd>恒温</dd>
+                      <dt>型号</dt><dd>HP8230/00</dd>
+                      <dt>产地</dt><dd>东莞</dd>
+                    </dl>
+                  </div>
+                  <div class="Ptable-item">
+                    <h3>功能参数</h3>
+                    <dl>
+                      <dt>热风档位</dt><dd>两档</dd>
+                      <dt>风嘴类型</dt><dd>纤巧美发造型集风嘴</dd>
+                      <dt>负离子</dt><dd>不支持</dd>
+                      <dt>是否折叠</dt><dd>不支持</dd>
+                      <dt>漏电保护</dt><dd>支持</dd>
+                      <dt>过热保护</dt><dd>支持</dd>
+                      <dt>静音设计</dt><dd>支持</dd>
+                      <dt>恒温护发系统</dt><dd>恒温护发温度设定</dd>
+                      <dt>挂钩</dt><dd>有</dd>
+                      <dt>电源线长度</dt><dd>1.8米</dd>
+                    </dl>
+                  </div>
+                  <div class="Ptable-item">
+                    <h3>规格参数</h3>
+                    <dl>
+                      <dt>包装尺寸(mm)</dt><dd>110X310X230毫米</dd>
+                      <dt>毛重（kg）</dt><dd>0.841kg</dd>
+                    </dl>
+                  </div>
+                </div>
+                <div class="package-list">
+                  <h3>包装清单</h3>
+                  <p>吹风机X1，集风嘴X1</p>
+                </div>
+              </div>
+            </perfect-scrollbar>
+          </mat-card>
+        </mat-tab>
+        <mat-tab label="售后保障">
+          <mat-card>
+
+            <perfect-scrollbar style="height: 600px;">
+              <div class="serve-agree-bd">
+                <dl>
+                  <dt>
+                    <i class="goods"></i>
+                    <strong>厂家服务</strong>
+                  </dt>
+                  <dd>
+                    本产品全国联保，享受三包服务，质保期为：全国联保二年<br>
+                    自收到商品之日起，如您所购买家电商品出现质量问题，请先联系厂家进行检测，凭厂商提供的故障检测证明，在“我的京东-客户服务-返修退换货”页面提交退换申请，将有专业售后人员提供服务。京东承诺您：30天内产品出现质量问题可退货，180天内产品出现质量问题可换货，超过180天按国家三包规定享受服务。
+                  </dd>
+
+                  <dt>
+                    <i class="goods"></i>
+                    <strong>京东承诺</strong>
+                  </dt>
+                  <dd>
+                    京东平台卖家销售并发货的商品，由平台卖家提供发票和相应的售后服务。请您放心购买！<br>
+                    注：因厂家会在没有任何提前通知的情况下更改产品包装、产地或者一些附件，本司不能确保客户收到的货物与商城图片、产地、附件说明完全一致。只能确保为原厂正货！并且保证与当时市场上同样主流新品一致。若本商城没有及时更新，请大家谅解！
+                  </dd>
+
+                  <dt>
+                    <i class="goods"></i><strong>
+                    正品行货             </strong>
+                  </dt>
+                  <dd>京东商城向您保证所售商品均为正品行货，京东自营商品开具机打发票或电子发票。</dd>
+                  <dt><i class="unprofor"></i><strong>全国联保</strong></dt>
+                  <dd>
+                    凭质保证书及京东商城发票，可享受全国联保服务（奢侈品、钟表除外；奢侈品、钟表由京东联系保修，享受法定三包售后服务），与您亲临商场选购的商品享受相同的质量保证。京东商城还为您提供具有竞争力的商品价格和<a href="//help.jd.com/help/question-892.html" target="_blank">运费政策</a>，请您放心购买！
+                    <br><br>注：因厂家会在没有任何提前通知的情况下更改产品包装、产地或者一些附件，本司不能确保客户收到的货物与商城图片、产地、附件说明完全一致。只能确保为原厂正货！并且保证与当时市场上同样主流新品一致。若本商城没有及时更新，请大家谅解！
+                  </dd>
+                </dl>
+              </div>
+            </perfect-scrollbar>
+
+
+          </mat-card>
+        </mat-tab>
+        <mat-tab label="商品评价">
+          <mat-card>
+
+            <perfect-scrollbar style="height: 600px;">
+              商品评价
+            </perfect-scrollbar>
+          </mat-card>
+        </mat-tab>
+      </mat-tab-group>
     </div>
   </div>
 

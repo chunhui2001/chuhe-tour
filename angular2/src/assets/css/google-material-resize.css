@@ -25,3 +25,7 @@ input.mat-chip-input {
 .mat-chip:not(.mat-basic-chip) {
   margin-right: 8px !important;
 }
+
+.mat-tab-body-content {
+  height: auto !important;
+}
