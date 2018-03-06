@@ -3,6 +3,7 @@
 # https://segmentfault.com/a/1190000010981919
 
 ng build --prod --aot --vc --cc --dop --build-optimizer --stats-json --vendor-chunk true --output-hashing none
+#ng build --prod --aot --vc --cc --dop --build-optimizer --stats-json --vendor-chunk false --output-hashing none
 
 # npm run bundle-report
 

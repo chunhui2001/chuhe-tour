@@ -29,8 +29,6 @@ import {
 // Import your library
 import { SlickModule } from 'ngx-slick';
 
-// https://www.learnrxjs.io/operators/filtering/takewhile.html
-
 import { HttpIntercepor } from './_interceptor/http.interceptor';
 import { routers } from './routers/app.router';
 
@@ -58,6 +56,11 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   ]
 })
 export class GoogleMaterialModule {}
+
+
+
+// https://www.sitepoint.com/ultimate-angular-cli-reference/
+// https://www.learnrxjs.io/operators/filtering/takewhile.html
 
 @NgModule({
   declarations: [
