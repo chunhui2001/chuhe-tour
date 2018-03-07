@@ -27,6 +27,7 @@
         "../node_modules/primeng/resources/primeng.min.css",
         "styles.css",
         "assets/css/google-material-resize.css",
+        "assets/css/material-iconic-resize.css",
         "assets/css/foundation-resize.css",
         "assets/css/global-style.css",
         "assets/css/table-resize.css",

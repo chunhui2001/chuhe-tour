@@ -5,10 +5,11 @@ import {ENTER, COMMA, TAB} from '@angular/cdk/keycodes';
 
 import {MatChipInputEvent} from '@angular/material';
 
-import * as $ from 'jquery';
+declare var $: any;
+// import * as $ from 'jquery';
 import * as _ from 'lodash';
-import {BasicComponent} from '../../basic.component';
 
+import {BasicComponent} from '../../basic.component';
 
 @Component({
   selector: 'app-product-new',
@@ -17,15 +18,9 @@ import {BasicComponent} from '../../basic.component';
 })
 export class ProductNewComponent extends BasicComponent implements OnInit {
 
-  froalaOptions: Object = {
-    placeholderText: '请输入产品描述',
-    events : {
-      'froalaEditor.initialized' : function(e, editor) {
-        // editor.edit.off();
-        editor.edit.on();
-      }
-    }
-  };
+
+  // ['fullscreen', 'bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', '|', 'fontFamily', 'fontSize', 'color', 'inlineStyle', 'paragraphStyle', '|', 'paragraphFormat', 'align', 'formatOL', 'formatUL', 'outdent', 'indent', 'quote', '-', 'insertLink', 'insertImage', 'insertVideo', 'embedly', 'insertFile', 'insertTable', '|', 'emoticons', 'specialCharacters', 'insertHR', 'selectAll', 'clearFormatting', '|', 'print', 'spellChecker', 'help', 'html', '|', 'undo', 'redo']
+  froalaOptions: Object;
 
   editOrNew: String = 'new';
   the_action: String = '/mans/products';
@@ -89,6 +84,53 @@ export class ProductNewComponent extends BasicComponent implements OnInit {
   }
 
   ngOnInit() {
+
+    // customer icon button: https://www.froala.com/wysiwyg-editor/docs/concepts/custom/icon
+    /* $.FroalaEditor.DefineIcon('alert', {NAME: 'info'});
+    $.FroalaEditor.RegisterCommand('alert', {
+      title: 'Hello',
+      focus: false,
+      undo: false,
+      refreshAfterCallback: false,
+      callback: function () {
+        alert('Hello!');
+      }
+    }); */
+
+    //
+    $.FroalaEditor.DefineIconTemplate('material_design', '<i class="zmdi zmdi-[NAME]"></i>');
+    // $.FroalaEditor.ICON_DEFAULT_TEMPLATE = 'material_design';
+
+    this.froalaOptions = {
+      placeholderText: '请输入内容 ...',
+      charCounterCount: true,
+      toolbarInline: false,
+      theme: 'dark',
+      // https://www.froala.com/wysiwyg-editor/docs/options#toolbarButtons
+      toolbarButtons: [
+        'fullscreen', 'bold', 'italic', 'underline', 'strikeThrough',
+        'subscript', 'superscript', '|', 'fontFamily', 'fontSize', 'color',
+        'inlineStyle', 'paragraphStyle', '|', 'paragraphFormat', 'align', 'formatOL',
+        'formatUL', 'outdent', 'indent', 'quote', '-', 'insertLink',
+        'insertImage',
+        // 'insertVideo',
+        // 'embedly',
+        // 'insertFile',
+        'insertTable', '|',
+        // 'emoticons',
+        'specialCharacters', 'insertHR', 'selectAll', 'clearFormatting', '|',
+        'print', 'spellChecker', 'help', 'html'
+        // , '|', 'undo', 'redo'
+      ],
+      // imageCORSProxy: 'https://cors-anywhere.herokuapp.com',
+      // imageUploadURL: '/upload_image',
+      events : {
+        'froalaEditor.initialized' : function(e, editor) {
+          // editor.edit.off();
+          editor.edit.on();
+        }
+      }
+    };
 
     if ($('#hid_product_model_json').length > 0 && $('#hid_product_model_json').val().trim().length > 0) {
       this.editOrNew = 'edit';

@@ -20,7 +20,6 @@ export class BasicComponent {
   state: String = '';
   error: any;
 
-
   getCurrentUrl() {
     return '/' + this.route.snapshot.url.map(p => {
       return p.path;
