@@ -104,50 +104,6 @@
   <script type="text/javascript" src="/angular/vendor.bundle.js"></script>
   <script type="text/javascript" src="/angular/main.bundle.js"></script>
 
-  <script type="text/javascript">
-      $.FroalaEditor.DefineIcon('bold', {NAME: 'star'});
-
-      // Define a font icon called magicIcon.
-      // Because no template was specified, the default one will be used.
-      $.FroalaEditor.DefineIcon('magicIcon', {NAME: 'magic'});
-      $.FroalaEditor.RegisterCommand('magicButton', {
-          title: 'Magic',
-          icon: 'magicIcon'
-      });
-
-      // Define a text icon called textIcon.
-      $.FroalaEditor.DefineIcon('textIcon', {NAME: 'X', template: 'text'});
-      $.FroalaEditor.RegisterCommand('textButton', {
-          title: 'Text',
-          icon: 'textIcon'
-      });
-
-      // Define a text icon called imageIcon.
-      $.FroalaEditor.DefineIcon('imageIcon', {SRC: 'https://raw.githubusercontent.com/google/material-design-icons/master/social/1x_web/ic_share_black_36dp.png', ALT: 'Image button', template: 'image'});
-      $.FroalaEditor.RegisterCommand('imageButton', {
-          title: 'Image',
-          icon: 'imageIcon'
-      });
-
-      // Define a font icon called smartphoneIcon that uses the Material Design font.
-      // You should also make sure that you include the Material Design Iconic font in your <head>:
-      // <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.1.2/css/material-design-iconic-font.min.css" />
-      $.FroalaEditor.DefineIconTemplate('material_design', '<i class="zmdi zmdi-[NAME]"></i>');
-      $.FroalaEditor.DefineIcon('smartphoneIcon', {NAME: 'smartphone', template: 'material_design'});
-      $.FroalaEditor.RegisterCommand('smartphoneButton', {
-          title: 'Smartphone',
-          icon: 'smartphoneIcon'
-      });
-
-      // Initialize.
-      $(function () {
-          $('#froala-icons').froalaEditor({
-              toolbarButtons: ['bold', 'magicButton', 'textButton', 'imageButton', 'smartphoneButton']
-          })
-      })
-
-  </script>
-
 
   {{#block "blocks/script"}}
   <script type="text/javascript">

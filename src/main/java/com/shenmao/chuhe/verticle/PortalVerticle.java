@@ -7,6 +7,7 @@ import com.shenmao.chuhe.routers.PortalRouter;
 import com.shenmao.chuhe.sessionstore.RedisSessionStore;
 import io.vertx.core.Handler;
 import io.vertx.core.http.HttpMethod;
+import io.vertx.core.http.HttpServerOptions;
 import io.vertx.ext.web.FileUpload;
 import io.vertx.rxjava.ext.web.handler.*;
 import io.vertx.rxjava.ext.web.sstore.SessionStore;
@@ -92,8 +93,15 @@ public class PortalVerticle extends AbstractVerticle {
     router.mountSubRouter("/mans/", ChuheRouter.create(ManageRouter.class.getName(), vertx).getRouter());
     router.mountSubRouter("/", ChuheRouter.create(GlobalRouter.class.getName(), vertx).getRouter());
 
-    vertx.createHttpServer().requestHandler(router::accept).listen(_PORT);
+    vertx.createHttpServer(createDefaultHttpServerOptions()).requestHandler(router::accept).listen(_PORT);
 
+  }
+
+  private HttpServerOptions createDefaultHttpServerOptions() {
+    HttpServerOptions serverOptions = new HttpServerOptions();
+    serverOptions.setCompressionSupported(true);
+    // serverOptions.setCompressionLevel(9);
+    return serverOptions;
   }
 
 }
