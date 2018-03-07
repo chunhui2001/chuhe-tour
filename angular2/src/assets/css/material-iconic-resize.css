@@ -1,43 +1,4 @@
 .zmdi {
-  font-size: 1.5em;
+  font-size: 1.1em;
 }
 
-.zmdi.zmdi-expand:before {
-  content: '\f16d';
-}
-
-
-.zmdi.zmdi-bold:before {
-  content: '\f23d';
-}
-
-.zmdi.zmdi-italic:before {
-  content: '\f245';
-}
-
-.zmdi.zmdi-underline:before {
-  content: '\f24f';
-}
-
-.zmdi.zmdi-strikethrough:before {
-  content: '\f24d';
-}
-
-.zmdi.zmdi-subscript:before {
-  content: '\f24d';
-}
-.zmdi.zmdi-subscript:before {
-  content: '\f24d';
-}
-.zmdi.zmdi-subscript:before {
-  content: '\f24d';
-}
-.zmdi.zmdi-subscript:before {
-  content: '\f24d';
-}
-.zmdi.zmdi-subscript:before {
-  content: '\f24d';
-}
-.zmdi.zmdi-subscript:before {
-  content: '\f24d';
-}
