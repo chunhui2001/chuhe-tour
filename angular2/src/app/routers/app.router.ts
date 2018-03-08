@@ -9,6 +9,7 @@ import { LoginComponent } from '../_components/login/login.component';
 
 import { ProductNewComponent } from '../_components/product/product-new/product-new.component';
 import { ProductDetailsComponent } from '../_components/product/product-details/product-details.component';
+import { ChartsComponent } from '../_components/charts/charts.component';
 
 
 export const router: Routes = [
@@ -17,9 +18,10 @@ export const router: Routes = [
   { path: '_c/login', component: LoginComponent },
   { path: '_c/product/new', component: ProductNewComponent },
   { path: '_c/product/details', component: ProductDetailsComponent },
+  { path: '_c/charts', component: ChartsComponent },
 
   { path: '', component: EmptyComponent },
-  { path: 'index', component: EmptyComponent },
+  { path: 'index', component: ChartsComponent },
   { path: 'registry', component: SignupComponent },
   { path: 'login', component: EmptyComponent },
 

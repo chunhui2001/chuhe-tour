@@ -29,9 +29,11 @@
         "assets/css/google-material-resize.css",
         "assets/css/material-iconic-resize.css",
         "assets/css/foundation-resize.css",
+        "assets/css/foundation-fixed.css",
         "assets/css/global-style.css",
         "assets/css/table-resize.css",
-        "assets/css/html-form-resize.css"
+        "assets/css/html-form-resize.css",
+        "assets/css/charts-d3-resize.css"
       ],
       "scripts": [],
       "environmentSource": "environments/environment.ts",
