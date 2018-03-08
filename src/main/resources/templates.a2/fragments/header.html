@@ -3,6 +3,7 @@
   .top-menu {
     padding-top: 0;
     padding-bottom: 0;
+    border-top: solid 2px lightseagreen;
   }
 
   .top-menu .left {
@@ -78,7 +79,41 @@
   }
 </style>
 
-<div class="header top-menu">
+<style type="text/css">
+  .loader {
+    height: 2px;
+    position: relative;
+    overflow: hidden;
+    background-color: #ddd;
+    margin-bottom: -2px;
+
+
+  }
+  .loader:before{
+    display: block;
+    position: absolute;
+    content: "";
+    left: -200px;
+    width: 200px;
+    height: 4px;
+    background-color: #2980b9;
+    animation: loading 2s linear infinite;
+  }
+
+  @keyframes loading {
+    from {left: -200px; width: 30%;}
+    50% {width: 30%;}
+    70% {width: 70%;}
+    80% { left: 50%;}
+    95% {left: 120%;}
+    to {left: 100%;}
+  }
+</style>
+
+<div class="loader wd" id="loader"></div>
+
+<div class="header top-menu wd">
+
   <ul class="left">
     <li><a href="/">首页</a></li>
     <li><a href="/mans/products">商品管理</a></li>

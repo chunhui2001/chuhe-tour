@@ -28,11 +28,13 @@ textarea {
   resize: none;
 }
 
+.wd {
+  max-width:1024px;
+  width: 90%;
+  margin:auto;
+}
 
 .header {
-  width: 90%;
-  max-width: 1024px;
-  margin: auto;
   background-color: darkslateblue;
   color: white;
   padding: .5em .625em;
@@ -43,10 +45,7 @@ textarea {
 }
 
 .main-content {
-  width: 90%;
-  max-width: 1024px;
   background-color: #ECEFF1;
-  margin: auto;
   min-height: 650px;
   padding: .925em;
   position: relative;
