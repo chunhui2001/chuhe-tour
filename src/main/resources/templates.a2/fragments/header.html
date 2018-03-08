@@ -1,10 +1,126 @@
 
-<div class="header">
-  <a href="/">首页</a>
-  {{#if viewUser.isAuthenticated }}
-  <a href="/signout">退出({{viewUser.username}})</a>
-  {{else}}
-  <a href="/login">登录</a>
-  <a href="/registry">用户注册</a>
-  {{/if}}
+<style type="text/css">
+  .top-menu {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  .top-menu .left {
+    float:left;
+  }
+
+  .top-menu .right {
+    float:right;
+  }
+
+  .top-menu>ul>li {
+    float: left;
+  }
+
+  .top-menu, .top-menu>ul>li {
+    background: linear-gradient(#7b72b1, #483d8b) !important;
+  }
+
+  .top-menu>ul>li {
+    background: #483d8b;
+  }
+
+  .top-menu>ul>li:hover {
+    background: #483d8b !important;
+  }
+
+  .top-menu li>ul {
+    display: none;
+    margin: 0;
+    position: absolute;
+    z-index: 99;
+    /*opacity: .75;*/
+    padding-top: .3em;
+    padding-bottom: .3em;
+    background: rgba(5, 43, 109, .65);
+  }
+
+
+  .top-menu ul li li {
+    /*background: rgba(5, 43, 109, 1);*/
+  }
+
+
+  .top-menu>ul>li>a {
+    border-left: solid 1px rgba(255,255,255,.2);
+  }
+
+  .top-menu ul li:first-child > a {
+    border-left: none;
+  }
+
+  .top-menu ul>li>a {
+    padding: .6em 1em;
+    display: inline-block;
+  }
+
+  .top-menu ul>li li>a {
+    padding: 0 1em;
+  }
+
+  .top-menu ul>li:hover {
+    background: #8ec5fc !important;
+  }
+
+
+  .top-menu>ul>li>ul>li>ul {
+    margin-left:100%;
+    margin-top:-30px;
+  }
+
+  .top-menu ul>li:hover > ul{
+    display: block;
+  }
+</style>
+
+<div class="header top-menu">
+  <ul class="left">
+    <li><a href="/">首页</a></li>
+    <li><a href="/mans/products">商品管理</a></li>
+    <li><a href="/mans/orders">进销存</a>
+      <ul>
+        <li><a href="/mans/orders/replenish">进货管理</a></li>
+        <li><a href="/mans/orders/sales">销售管理</a></li>
+        <li><a href="/mans/stock">库存管理</a></li>
+        <div class="clearFixed"></div>
+      </ul>
+    </li>
+    <li><a href="/mans/dealer">经销商</a></li>
+    <li><a href="/mans/customer">客户</a></li>
+    <li><a href="/mans/priv">应用权限</a></li>
+    <li><a>Developers</a>
+      <ul>
+        <li><a href="/ping">Ping (POST)</a></li>
+        <li><a href="/catalogue/products/电子/16075">Catalogue (GET)</a></li>
+        <li><a href="/articles/channel/big-data/vagrant.html">Articles (GET, .json, .xml, .html)</a></li>
+        <li><a href="/error" style="color:red;">Error Page (Illegal Access)</a></li>
+        <li><a href="/throw">Throw an exception purpose</a></li>
+        <li><a href="/dashboard">Dashboard</a></li>
+        <li><a href="/chat-room">Chat Room</a></li>
+        <li><a href="/wiki-page">Wiki Pages</a></li>
+        <li><a href="/access_token">Access Token (POST)</a></li>
+      </ul>
+    </li>
+    <div class="clearFixed"></div>
+  </ul>
+  <ul class="right">
+    {{#if viewUser.isAuthenticated }}
+    <li><a href="/signout">{{viewUser.username}}</a>
+      <ul>
+        <li><a href="/signout">退出</a></li>
+        <li><a href="/settings">个人设置</a></li>
+        <li><a href="/settings">系统设置</a></li>
+      </ul>
+    </li>
+    {{else}}
+    <li><a href="/login">登录</a></li>
+    <li><a href="/registry">注册</a></li>
+    {{/if}}
+  </ul>
+  <div class="clearFixed"></div>
 </div>
