@@ -9,7 +9,8 @@ import { LoginComponent } from '../_components/login/login.component';
 
 import { ProductNewComponent } from '../_components/product/product-new/product-new.component';
 import { ProductDetailsComponent } from '../_components/product/product-details/product-details.component';
-import { ChartsComponent } from '../_components/charts/charts.component';
+
+import { ChartsPageComponent } from '../_components/charts/charts-page/charts-page.component';
 
 
 export const router: Routes = [
@@ -18,10 +19,10 @@ export const router: Routes = [
   { path: '_c/login', component: LoginComponent },
   { path: '_c/product/new', component: ProductNewComponent },
   { path: '_c/product/details', component: ProductDetailsComponent },
-  { path: '_c/charts', component: ChartsComponent },
+  { path: '_c/charts', component: ChartsPageComponent },
 
-  { path: '', component: EmptyComponent },
-  { path: 'index', component: ChartsComponent },
+  { path: '', component: ChartsPageComponent },
+  { path: 'index', component: ChartsPageComponent },
   { path: 'registry', component: SignupComponent },
   { path: 'login', component: EmptyComponent },
 
@@ -49,6 +50,6 @@ export const router: Routes = [
   { path: 'mans/priv', component: EmptyComponent },
   { path: 'mans/stock', component: EmptyComponent }
 
-]
+];
 
 export const routers: ModuleWithProviders = RouterModule.forRoot(router);

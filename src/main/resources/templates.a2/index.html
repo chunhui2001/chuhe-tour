@@ -2,36 +2,21 @@
 <title>Vert.x Index Page</title>
 {{/partial}}
 
+
+{{#partial "blocks/styles"}}
+<style type="text/css">
+    .main-content {
+        padding-top: 1.5em;
+    }
+</style>
+{{/partial}}
+
 {{#partial "content" }}
 
-<div>
-    <app-root>
-        {{#spinner 'theme1' }}{{/spinner}}
-    </app-root>
-</div>
+<app-root>
+    {{#spinner 'theme1' }}{{/spinner}}
+</app-root>
 
-<div>
-    <h3 style="margin: 0;">&ensp;</h3>
-
-    <a href='/index'>首页</a> <br />
-    <a href='/mans/products'>商品管理</a> <br />
-    <a href='/mans/orders'>进销存管理</a> <br />
-    <a href='/mans/dealer'>经销商管理</a> <br />
-    <a href='/mans/customer'>客户管理</a> <br />
-    <a href='/mans/priv'>应用权限管理</a> <br />
-
-    <br />
-    <br />
-    <a href='/ping'>Ping (POST)</a> <br />
-    <a href='/catalogue/products/电子/16075'>Catalogue (GET)</a> <br />
-    <a href='/articles/channel/big-data/vagrant.html'>Articles (GET, .json, .xml, .html)</a> <br />
-    <a href='/error' style="color:red;">Error Page (Illegal Access)</a> <br />
-    <a href='/throw'>Throw an exception purpose</a> <br />
-    <a href='/dashboard'>Dashboard</a> <br />
-    <a href='/chat-room'>Chat Room</a> <br />
-    <a href='/wiki-page'>Wiki Pages</a> <br />
-    <a href='/access_token'>Access Token (POST)</a> <br />
-</div>
 {{/partial}}
 
 

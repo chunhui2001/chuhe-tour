@@ -1,0 +1,21 @@
+
+<div class="chart-border">
+  <ngx-charts-line-chart
+    [view]="chartView"
+    [scheme]="colorScheme"
+    [results]="chartData"
+    [gradient]="gradient"
+    [xAxis]="showXAxis"
+    [yAxis]="showYAxis"
+    [legend]="showLegend"
+    [showXAxisLabel]="showXAxisLabel"
+    [showYAxisLabel]="showYAxisLabel"
+    [xAxisLabel]="xAxisLabel"
+    [yAxisLabel]="yAxisLabel"
+    [autoScale]="autoScale"
+    (select)="onSelect($event)">
+  </ngx-charts-line-chart>
+</div>
+<div class="clearFixed"></div>
+
+<!--<button mat-raised-button (click)="saveEntry()">saveEntry</button>-->

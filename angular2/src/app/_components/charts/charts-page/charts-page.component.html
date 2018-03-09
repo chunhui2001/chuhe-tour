@@ -1,0 +1,27 @@
+<div class="charts-page-component">
+
+  <!--<div class="heat-map-chart">-->
+    <!--<app-heat-map-chart [chartView]="[905, 220]"></app-heat-map-chart>-->
+  <!--</div>-->
+
+  <div class="google-map-section">
+    <div #gmap1 style="width:100%;height:200px;"></div>
+  </div>
+
+  <div class="chart-page-left">
+    <div #gmap3 style="width:100%;height:230px;margin-bottom: 1em;border: solid 1px gray;"></div>
+    <div #gmap2 style="width:100%;height:400px;border: solid 1px gray;"></div>
+  </div>
+
+  <div class="chart-page-right">
+    <div>
+      <app-line-chart [chartView]="[680, 280]"></app-line-chart>
+    </div>
+
+
+  </div>
+
+  <div class="clearFixed"></div>
+
+</div>
+

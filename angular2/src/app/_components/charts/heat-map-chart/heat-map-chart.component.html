@@ -1,0 +1,18 @@
+
+<div class="chart-border">
+  <ngx-charts-heat-map
+    [view]="chartView"
+    [scheme]="colorScheme"
+    [results]="chartData"
+    [legend]="showLegend"
+    [gradient]="gradient"
+    [xAxis]="showXAxis"
+    [yAxis]="showYAxis"
+    [showXAxisLabel]="showXAxisLabel"
+    [showYAxisLabel]="showYAxisLabel"
+    [xAxisLabel]="xAxisLabel"
+    [yAxisLabel]="yAxisLabel"
+    (select)="onSelect($event)">
+  </ngx-charts-heat-map>
+</div>
+<div class="clearFixed"></div>

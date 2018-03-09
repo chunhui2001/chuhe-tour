@@ -32,6 +32,9 @@ import { SlickModule } from 'ngx-slick';
 // Ngx-Charts
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 
+// perfect scroll bar
+import { PerfectScrollbarModule, PERFECT_SCROLLBAR_CONFIG, PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
+
 import { HttpIntercepor } from './_interceptor/http.interceptor';
 import { routers } from './routers/app.router';
 
@@ -40,6 +43,8 @@ import { VoteService } from './_services/vote/vote.service';
 
 // _components
 import { BasicComponent } from './_components/basic.component';
+import { BasicChartComponent } from './_components/basic.chart.component';
+
 import { AppComponent } from './_components/app/app.component';
 import { SignupComponent } from './_components/signup/signup.component';
 import { EmptyComponent } from './_components/empty/empty.component';
@@ -48,22 +53,6 @@ import { ProductNewComponent } from './_components/product/product-new/product-n
 import { MediaUploadComponent } from './component/media-upload/media-upload.component';
 import { ProductDetailsComponent } from './_components/product/product-details/product-details.component';
 import { SlickCarouselComponent } from './component/slick-carousel/slick-carousel.component';
-
-import { PerfectScrollbarModule, PERFECT_SCROLLBAR_CONFIG, PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
-import { ChartsComponent } from './_components/charts/charts.component';
-
-const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
-  suppressScrollX: true
-};
-
-@NgModule({
-  exports: [
-    MatIconModule, MatToolbarModule, MatMenuModule, MatCardModule,
-    MatButtonModule, MatCheckboxModule, MatSelectModule,
-    MatChipsModule, MatProgressBarModule, MatTabsModule
-  ]
-})
-export class GoogleMaterialModule {}
 
 
 // doc: https://swimlane.gitbooks.io/ngx-charts/content/intro/installing.html
@@ -79,6 +68,30 @@ export class GoogleMaterialModule {}
 // export class ChartsModule {}
 
 
+import { ChartsPageComponent } from './_components/charts/charts-page/charts-page.component';
+import { LineChartComponent } from './_components/charts/line-chart/line-chart.component';
+import { HeatMapChartComponent } from './_components/charts/heat-map-chart/heat-map-chart.component';
+
+// https://blog.cloudboost.io/integrating-google-maps-in-angular-5-ca5f68009f29
+// https://angular-maps.com/
+import { GoogleMapsComponent } from './_components/maps/google-maps/google-maps.component';
+
+const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
+  suppressScrollX: true
+};
+
+@NgModule({
+  exports: [
+    MatIconModule, MatToolbarModule, MatMenuModule, MatCardModule,
+    MatButtonModule, MatCheckboxModule, MatSelectModule,
+    MatChipsModule, MatProgressBarModule, MatTabsModule
+  ],
+  declarations: [ GoogleMapsComponent]
+})
+export class GoogleMaterialModule {}
+
+
+
 // rxjs: doc
 // https://www.sitepoint.com/ultimate-angular-cli-reference/
 // https://www.learnrxjs.io/operators/filtering/takewhile.html
@@ -86,6 +99,7 @@ export class GoogleMaterialModule {}
 @NgModule({
   declarations: [
     BasicComponent,
+    BasicChartComponent,
     AppComponent,
     SignupComponent,
     EmptyComponent,
@@ -93,7 +107,11 @@ export class GoogleMaterialModule {}
     ProductNewComponent,
     MediaUploadComponent,
     ProductDetailsComponent,
-    SlickCarouselComponent, ChartsComponent
+    SlickCarouselComponent,
+
+    // charts components
+    ChartsPageComponent, LineChartComponent, HeatMapChartComponent
+
   ],
   imports: [
     BrowserModule, BrowserAnimationsModule, NgxChartsModule,
