@@ -5,15 +5,21 @@
   <!--</div>-->
 
   <div class="chart-page-left">
-    <div style="width:100%;height:230px;margin-bottom: 1em;border: solid 1px gray;">
+    <div style="width:100%;height:230px;margin-bottom: .8em;border: solid 1px gray;">
       <app-google-maps mapType="HYBRID" mapId="gmap2" height="100%" mapTypeControl="false"></app-google-maps>
     </div>
-    <div style="width:100%;height:450px;margin-bottom: 1em;border: solid 1px gray;">
+    <div style="width:100%;height:655px;margin-bottom: 1em;border: solid 1px gray;">
       <app-google-maps mapType="ROADMAP" mapId="gmap3" height="100%" mapTypeControl="false"></app-google-maps>
     </div>
   </div>
 
   <div class="chart-page-right">
+    <div style="margin-bottom: .8em;">
+      <app-gauge-chart [chartView]="[680, 280]"></app-gauge-chart>
+    </div>
+    <div style="margin-bottom: .8em;">
+      <app-pie-grid-chart [chartView]="[680, 280]"></app-pie-grid-chart>
+    </div>
     <div>
       <app-line-chart [chartView]="[680, 280]"></app-line-chart>
     </div>

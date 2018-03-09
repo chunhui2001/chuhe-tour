@@ -74,6 +74,8 @@ import { SlickCarouselComponent } from './component/slick-carousel/slick-carouse
 import { ChartsPageComponent } from './_components/charts/charts-page/charts-page.component';
 import { LineChartComponent } from './_components/charts/line-chart/line-chart.component';
 import { HeatMapChartComponent } from './_components/charts/heat-map-chart/heat-map-chart.component';
+import { PieGridChartComponent } from './_components/charts/pie-grid-chart/pie-grid-chart.component';
+import { GaugeChartComponent } from './_components/charts/gauge-chart/gauge-chart.component';
 
 // https://blog.cloudboost.io/integrating-google-maps-in-angular-5-ca5f68009f29
 // https://angular-maps.com/
@@ -114,6 +116,7 @@ export class GoogleMaterialModule {}
 
     // charts components
     ChartsPageComponent, LineChartComponent, HeatMapChartComponent,
+    PieGridChartComponent, GaugeChartComponent,
 
     // pages components
     IndexPageComponent,

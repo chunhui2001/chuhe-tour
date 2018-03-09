@@ -1,0 +1,18 @@
+
+<div class="chart-border" style="border:none;background-color: transparent;">
+  <ngx-charts-gauge
+    [view]="chartView"
+    [scheme]="colorScheme"
+    [results]="chartData"
+    [min]="0"
+    [max]="100"
+    [angleSpan]="240"
+    [startAngle]="-120"
+    [units]="'alerts'"
+    [bigSegments]="10"
+    [smallSegments]="5"
+    (select)="onSelect($event)">
+  </ngx-charts-gauge>
+</div>
+
+<div class="clearFixed"></div>
