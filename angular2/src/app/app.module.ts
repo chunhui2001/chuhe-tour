@@ -45,6 +45,9 @@ import { VoteService } from './_services/vote/vote.service';
 import { BasicComponent } from './_components/basic.component';
 import { BasicChartComponent } from './_components/basic.chart.component';
 
+
+import { IndexPageComponent } from './_components/pages/index-page/index-page.component';
+
 import { AppComponent } from './_components/app/app.component';
 import { SignupComponent } from './_components/signup/signup.component';
 import { EmptyComponent } from './_components/empty/empty.component';
@@ -86,7 +89,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     MatButtonModule, MatCheckboxModule, MatSelectModule,
     MatChipsModule, MatProgressBarModule, MatTabsModule
   ],
-  declarations: [ GoogleMapsComponent]
+  declarations: [ ]
 })
 export class GoogleMaterialModule {}
 
@@ -110,7 +113,12 @@ export class GoogleMaterialModule {}
     SlickCarouselComponent,
 
     // charts components
-    ChartsPageComponent, LineChartComponent, HeatMapChartComponent
+    ChartsPageComponent, LineChartComponent, HeatMapChartComponent,
+
+    // pages components
+    IndexPageComponent,
+
+    GoogleMapsComponent
 
   ],
   imports: [

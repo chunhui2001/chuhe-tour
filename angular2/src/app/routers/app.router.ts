@@ -12,6 +12,8 @@ import { ProductDetailsComponent } from '../_components/product/product-details/
 
 import { ChartsPageComponent } from '../_components/charts/charts-page/charts-page.component';
 
+import { IndexPageComponent } from '../_components/pages/index-page/index-page.component';
+
 
 export const router: Routes = [
 
@@ -21,8 +23,8 @@ export const router: Routes = [
   { path: '_c/product/details', component: ProductDetailsComponent },
   { path: '_c/charts', component: ChartsPageComponent },
 
-  { path: '', component: ChartsPageComponent },
-  { path: 'index', component: ChartsPageComponent },
+  { path: '', component: IndexPageComponent },
+  { path: 'index', component: IndexPageComponent },
   { path: 'registry', component: SignupComponent },
   { path: 'login', component: EmptyComponent },
 

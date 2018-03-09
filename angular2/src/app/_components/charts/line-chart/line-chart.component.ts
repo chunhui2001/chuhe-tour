@@ -59,6 +59,6 @@ export class LineChartComponent extends BasicChartComponent implements OnInit {
   }
 
   processData(entries) {
-    console.log(entries, 'entries');
+    // console.log(entries, 'entries');
   }
 }
