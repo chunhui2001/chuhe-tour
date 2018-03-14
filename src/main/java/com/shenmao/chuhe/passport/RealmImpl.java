@@ -16,6 +16,8 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.SubjectContext;
 import org.apache.shiro.subject.support.DefaultSubjectContext;
 
+import java.sql.*;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -43,15 +45,23 @@ public class RealmImpl extends AuthorizingRealm {
     SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
 
     Set<String> roles = new HashSet<>();
+    Set<String> perms = new HashSet<>();
 
-    // 根据用户标识取得权限
-    /*
-    roles.add(UserRoles.EDITER.toString());
+    //perms.add("create");
+
+    // role_user,role_dealer,role_admin
+    String userRoles = "role_user,role_dealer,role_admin";
+
+    Arrays.stream(userRoles.split(","))
+            .filter(s -> !s.isEmpty())
+            .map(s -> s.split("_")[1])
+            .forEach(s -> {
+      roles.add(s);
+    });
 
     authorizationInfo.setRoles(roles);
-    authorizationInfo.setStringPermissions(
-      rolePermiss ().get(UserRoles.EDITER).stream().map(p -> p.toString()).collect(Collectors.toSet()));
-    */
+
+    authorizationInfo.setStringPermissions(roles);
 
     return authorizationInfo;
 
@@ -79,21 +89,67 @@ public class RealmImpl extends AuthorizingRealm {
         throw new VertxException(var9);
       } */
 
-    // 验证用户名密码
-    /* this.chuheDbService.validateUser(username, password, reply -> {
-
-    }); */
-
-    if (null != username && null != password
-        && !username.trim().isEmpty()
-        && !password.isEmpty() && username.equals(password)) {
-
-      return new SimpleAuthenticationInfo(username, password, getName());
+    try {
+      if (null != username && null != password
+          && !username.trim().isEmpty()
+          && !password.isEmpty() && validateUser(username, password)) {
+        return new SimpleAuthenticationInfo(username, password, getName());
+      } else {
+        return null;
+      }
+    } catch (SQLException e) {
+      return null;
     }
 
+  }
 
+  private static Connection getJdbcConnection() {
 
-    return null;
+    String driver = "com.mysql.jdbc.Driver";
+    String url = "jdbc:mysql://127.0.0.1:3307/db_chuhe_local";
+    String username = "root";
+    String password = "Cc";
+    Connection conn = null;
+
+    try {
+
+      Class.forName(driver);
+      conn = DriverManager.getConnection(url, username, password);
+
+    } catch (ClassNotFoundException e) {
+      e.printStackTrace();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+
+    return conn;
+
+  }
+
+  private static Boolean validateUser(String username, String passwd) throws SQLException {
+
+    Connection conn = getJdbcConnection();
+    String sql = "select * from users where user_name =? and user_passwd =?";
+    PreparedStatement pstmt;
+
+    try {
+
+      pstmt = conn.prepareStatement(sql);
+
+      pstmt.setString(1, username);
+      pstmt.setString(2, passwd);
+
+      ResultSet rs = pstmt.executeQuery();
+
+      if (rs.next()) return true;
+
+    } catch (SQLException e) {
+      e.printStackTrace();
+    } finally {
+      conn.close();
+    }
+
+    return false;
 
   }
 

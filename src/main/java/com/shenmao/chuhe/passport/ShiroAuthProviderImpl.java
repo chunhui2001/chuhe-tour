@@ -1,12 +1,16 @@
 package com.shenmao.chuhe.passport;
 
+import io.vertx.ext.auth.jdbc.JDBCAuth;
 import io.vertx.ext.auth.shiro.ShiroAuthOptions;
 import io.vertx.ext.auth.shiro.impl.LDAPAuthProvider;
+import io.vertx.ext.jdbc.JDBCClient;
 import io.vertx.rxjava.core.Vertx;
 import io.vertx.rxjava.ext.auth.shiro.ShiroAuth;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.mgt.DefaultSecurityManager;
 import org.apache.shiro.mgt.SecurityManager;
+
+import java.util.Objects;
 
 public class ShiroAuthProviderImpl {
 
@@ -29,6 +33,12 @@ public class ShiroAuthProviderImpl {
       case LDAP:
         realm = (RealmImpl) LDAPAuthProvider.createRealm(options.getConfig());
         break;
+      /* case "JDBC":
+        String dbName = "db_chuhe_local";//json.getString("db-name");
+        Objects.requireNonNull(dbName);
+        JDBCClient client = JDBCClient.createShared(vertx, authProperties, dbName);
+        this.authProvider = JDBCAuth.create(client);
+        break; */
       default:
         throw new IllegalArgumentException("Invalid shiro auth realm type: " + options.getType());
     }

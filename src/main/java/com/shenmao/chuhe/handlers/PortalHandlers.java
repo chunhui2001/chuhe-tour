@@ -74,26 +74,34 @@ public class PortalHandlers extends BaseHandler {
 
     AuthHandlerImpl.getAuthProvider().rxAuthenticate(jsonObject).flatMap(user -> {
 
-      Single<Boolean> createSingle = user.rxIsAuthorised("create");
-      Single<Boolean> updateSingle = user.rxIsAuthorised("update");
-      Single<Boolean> deleteSingle = user.rxIsAuthorised("delete");
+      Single<Boolean> createSingle = user.rxIsAuthorised("user");
+      Single<Boolean> updateSingle = user.rxIsAuthorised("dealer");
+      Single<Boolean> deleteSingle = user.rxIsAuthorised("admin");
 
-      return Single.zip(createSingle,updateSingle, deleteSingle, (canCreate, canUpdate, canDelete) -> {
+      return Single.zip(createSingle,updateSingle, deleteSingle, (isUser, isDealer, isAdmin) -> {
+
+        JsonArray roles = new JsonArray();
+
+        if (isUser) roles.add("user");
+        if (isDealer) roles.add("dealer");
+        if (isAdmin) roles.add("admin");
 
         JsonObject userObject = new JsonObject()
           .put("username", user.principal().getString("username"))
-          .put("canCreate", canCreate)
-          .put("canUpdate", canUpdate)
-          .put("canDelete", canDelete);
+          .put("roles", roles);
+
+        System.out.println(userObject.encode() + "userObject userObject");
 
         JWTOptions jwtOptions = new JWTOptions().setSubject("Wiki API").setIssuer("Vert.x");
 
         return AuthHandlerImpl.getJWTAuthProvider().generateToken(userObject, jwtOptions);
+
       });
 
     }).subscribe(token -> {
 
       ChainSerialization.create(routingContext.getDelegate())
+              .setSerializeType(SerializeType.JSON)
               .putContextData(token)
               .serialize();
 
