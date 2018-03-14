@@ -165,6 +165,9 @@ public class ManageProductsHandlers extends BaseHandler {
         }
 
 
+        System.out.println(result.encode() + " product encode ");
+
+
         return result;
     }
 
@@ -302,6 +305,7 @@ public class ManageProductsHandlers extends BaseHandler {
         Long productId = Long.parseLong(routingContext.pathParam("param0"));
 
         JsonObject product = getProductObject(routingContext);
+
 
         this.chuheDbService.updateProduct(productId, product, reply -> {
 

@@ -43,7 +43,7 @@ public class DatetimeHelper {
                 result = "一" + s;
                 break;
             case 2:
-                result = "二" + s;
+                result = "两" + s;
                 break;
             case 3:
                 result = "三" + s;

@@ -31,11 +31,11 @@ export class MediaUploadComponent implements OnInit {
   ngOnInit() {
 
     const _that = this;
-    const _upload_hand_selector = '.product-new-component .upload_hand';
+    const _upload_hand_selector = '.media-upload-component-new .upload_hand';
 
     $(document).on('click', _upload_hand_selector, function (event) {
 
-      const currentComponentInstance = $($(event.target).parents('.product-new-component')[0]);
+      const currentComponentInstance = $($(event.target).parents('.media-upload-component')[0]);
       const currentFileUploadElement = $(currentComponentInstance).find('.upload_holder');
 
       $(currentFileUploadElement).unbind('change').on('change', function (ev) {
