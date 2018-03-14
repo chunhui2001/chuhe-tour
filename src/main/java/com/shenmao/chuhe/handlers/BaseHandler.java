@@ -88,7 +88,12 @@ public class BaseHandler {
         JsonObject jsonData = getJsonData(routingContext);
 
         if (jsonData != null && jsonData.containsKey(key)) {
-            return jsonData.getInteger(key);
+            try {
+                return jsonData.getInteger(key);
+            } catch (Exception e) {
+                return Integer.parseInt(jsonData.getString(key));
+            }
+
         }
 
         MultiMap requestBody = getFormData(routingContext);

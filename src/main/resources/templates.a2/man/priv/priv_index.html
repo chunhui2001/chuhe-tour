@@ -5,7 +5,7 @@
 
 
 {{#partial "content" }}
-<h1>应用权限管理</h1>
+<h3>应用权限管理</h3>
 
 {{#if errorTrace }}
 <pre>{{errorTrace}}</pre>
@@ -89,7 +89,8 @@
             if (user.userRoles == roles) {
                 return;
             }
-            grantRoleToUser(user, roles, function () {
+            grantRoleToUser(user, roles, function (error, result) {
+                debugger;
                 $(user.tr).attr(user.trKeyNameForRoles, roles);
                 alert('修改成功');
             });
@@ -98,16 +99,17 @@
     });
 
     function grantRoleToUser(user, roles, done) {
-        $.post({
-            url: "/mans/priv",
-            type: "POST",
-            data: {user_id:user.userId, user_roles: roles},
-            success: function (result) {
-                return done(false, result);
-            },
-            error: function (result) {
-                return done(true, result);
-            }
+
+        fetch("/mans/priv.json", {
+            method: 'POST',
+            credentials: "same-origin",
+            body: JSON.stringify({user_id: user.userId, user_roles: roles})
+        }).then(function(response) {
+            return response.json();
+        }).then(function(result) {
+            return done(result.error, result);
+        }).catch(function(err) {
+
         });
 
     }

@@ -97,7 +97,7 @@
             if (user.userRoles == roles) {
                 return;
             }
-            grantRoleToUser(user, roles, function () {
+            grantRoleToUser(user, roles, function (error, result) {
                 $(user.tr).attr(user.trKeyNameForRoles, roles);
                 alert('修改成功');
             });
