@@ -6,6 +6,7 @@ import com.shenmao.chuhe.exceptions.HbsTemplateParseException;
 import com.shenmao.chuhe.commons.handlebarhelper.CompareHelper;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.RoutingContext;
+import io.vertx.ext.web.Session;
 import io.vertx.ext.web.templ.HandlebarsTemplateEngine;
 import io.vertx.ext.web.templ.TemplateEngine;
 
@@ -36,9 +37,18 @@ public class HtmlSerialization {
 
   public static void serialize(RoutingContext context, SerializeOptions options) {
 
+
+    Session session = context.session();
+
+    JsonObject userDetail = session.data().containsKey("userDetail") ? (JsonObject)session.data().get("userDetail") : null;
+
     JsonObject user = new JsonObject()
       .put("isAuthenticated", context.user() != null)
       .put("username", context.user() != null ? context.user().principal().getString("username") : null);
+
+    if (userDetail != null) {
+      user.put("roles", userDetail.getValue("roles"));
+    }
 
     serialize(context,
       (String)options.config("viewName"),

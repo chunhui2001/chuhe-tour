@@ -1,5 +1,6 @@
 package com.shenmao.chuhe.verticle;
 
+import com.shenmao.chuhe.passport.RealmImpl;
 import com.shenmao.chuhe.routers.ChuheRouter;
 import com.shenmao.chuhe.routers.GlobalRouter;
 import com.shenmao.chuhe.routers.ManageRouter;
@@ -8,7 +9,10 @@ import com.shenmao.chuhe.sessionstore.RedisSessionStore;
 import io.vertx.core.Handler;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerOptions;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.FileUpload;
+import io.vertx.ext.web.Session;
 import io.vertx.rxjava.ext.web.handler.*;
 import io.vertx.rxjava.ext.web.sstore.SessionStore;
 import org.slf4j.Logger;
@@ -20,6 +24,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
 
 import com.shenmao.chuhe.Application;
+import rx.Single;
 
 public class PortalVerticle extends AbstractVerticle {
 
@@ -37,9 +42,9 @@ public class PortalVerticle extends AbstractVerticle {
 
 
 
-//    SessionStore sessionStore = LocalSessionStore.create(vertx, "myapp.sessionmap", 10000);
+    // SessionStore sessionStore = LocalSessionStore.create(vertx, "myapp.sessionmap", 10000);
     SessionStore sessionStore = new SessionStore(RedisSessionStore
-            .create(vertx.getDelegate(), "myapp.sessionmap", 10000)
+            .create(vertx.getDelegate(), "myapp.vertx.sessionmap", 10000)
             .host("127.0.0.1").port(6379));
 
     // Route: consumes and produces
@@ -52,6 +57,7 @@ public class PortalVerticle extends AbstractVerticle {
     // vertxRouter.route().handler(ResponseContentTypeHandler.create());
     router.route().handler(FaviconHandler.create());
     router.route().handler(CookieHandler.create());                      // Cookie cookie = routingContext.getCookie("cookie name here")
+
 
     // file upload and body parameters parser
     router.route()

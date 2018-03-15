@@ -2,6 +2,7 @@ package com.shenmao.chuhe.routers;
 
 import com.shenmao.chuhe.database.chuhe.ChuheDbService;
 import com.shenmao.chuhe.handlers.manage.*;
+import com.shenmao.chuhe.passport.RealmImpl;
 import com.shenmao.chuhe.routers.customer.CustomerRouter;
 import com.shenmao.chuhe.routers.dealer.DealerRouter;
 import com.shenmao.chuhe.routers.priv.PrivRouter;
@@ -9,9 +10,12 @@ import com.shenmao.chuhe.routers.product.ProductRouter;
 import com.shenmao.chuhe.routers.order.OrdersRouter;
 import com.shenmao.chuhe.routers.stock.StockRouter;
 import com.shenmao.chuhe.routers.user.UserRouter;
+import io.vertx.core.json.JsonObject;
+import io.vertx.ext.web.Session;
 import io.vertx.rxjava.core.Vertx;
 import io.vertx.rxjava.ext.web.Router;
 import io.vertx.rxjava.ext.web.handler.AuthHandler;
+import rx.Single;
 
 import static com.shenmao.chuhe.verticle.ChuheDbVerticle.CONFIG_CHUHEDB_QUEUE;
 
@@ -47,6 +51,31 @@ public class ManageRouter implements ChuheRouter {
         this.manageUserHandlers = ManageUserHandlers.create(chuheDbService);
 
         this.router.route("/*").handler(authHandler);
+
+        // set user detail
+        this.router.route("/*").handler(routingContext -> {
+
+            if (routingContext.user() != null) {
+
+                Session session = routingContext.getDelegate().session();
+
+                JsonObject userDetail = (JsonObject)session.data().get("userDetail");
+
+                if (userDetail == null) {
+                    Single<JsonObject> userDetailSingle = RealmImpl.userDetail(routingContext.user());
+                    userDetailSingle.subscribe(user -> {
+                        session.data().put("userDetail", user);
+                        routingContext.next();
+                    });
+                } else {
+                    routingContext.next();
+                }
+
+            } else {
+                routingContext.next();
+            }
+
+        });
 
         ProductRouter.create(this.router, this.manageProductsHandlers).init();
         OrdersRouter.create(this.router, this.manageStoreHandlers).init();

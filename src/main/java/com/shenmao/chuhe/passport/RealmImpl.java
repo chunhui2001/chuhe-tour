@@ -1,10 +1,19 @@
 package com.shenmao.chuhe.passport;
 
 import com.shenmao.chuhe.database.chuhe.ChuheDbService;
+import com.shenmao.chuhe.serialization.ChainSerialization;
+import com.shenmao.chuhe.serialization.SerializeType;
+import io.vertx.core.AsyncResult;
+import io.vertx.core.Handler;
 import io.vertx.core.VertxException;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
+import io.vertx.ext.auth.jwt.JWTOptions;
 import io.vertx.ext.auth.shiro.impl.PropertiesAuthProvider;
 import io.vertx.ext.auth.shiro.impl.ShiroUser;
+import io.vertx.rx.java.RxHelper;
 import io.vertx.rxjava.core.Vertx;
+import io.vertx.rxjava.ext.auth.User;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -15,6 +24,7 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.SubjectContext;
 import org.apache.shiro.subject.support.DefaultSubjectContext;
+import rx.Single;
 
 import java.sql.*;
 import java.util.Arrays;
@@ -62,6 +72,7 @@ public class RealmImpl extends AuthorizingRealm {
     authorizationInfo.setRoles(roles);
 
     authorizationInfo.setStringPermissions(roles);
+
 
     return authorizationInfo;
 
@@ -116,6 +127,7 @@ public class RealmImpl extends AuthorizingRealm {
       Class.forName(driver);
       conn = DriverManager.getConnection(url, username, password);
 
+
     } catch (ClassNotFoundException e) {
       e.printStackTrace();
     } catch (SQLException e) {
@@ -152,5 +164,30 @@ public class RealmImpl extends AuthorizingRealm {
     return false;
 
   }
+
+  public static Single<JsonObject> userDetail(User user) {
+
+    Single<Boolean> createSingle = user.rxIsAuthorised("user");
+    Single<Boolean> updateSingle = user.rxIsAuthorised("dealer");
+    Single<Boolean> deleteSingle = user.rxIsAuthorised("admin");
+
+    return Single.zip(createSingle,updateSingle, deleteSingle, (isUser, isDealer, isAdmin) -> {
+
+      JsonArray roles = new JsonArray();
+
+      if (isUser) roles.add("user");
+      if (isDealer) roles.add("dealer");
+      if (isAdmin) roles.add("admin");
+
+      JsonObject userObject = new JsonObject()
+              .put("username", user.principal().getString("username"))
+              .put("roles", roles);
+
+      return userObject;
+
+    });
+
+  }
+
 
 }

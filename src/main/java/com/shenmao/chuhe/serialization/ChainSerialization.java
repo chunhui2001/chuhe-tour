@@ -59,12 +59,6 @@ public class ChainSerialization {
     return this;
   }
 
-  public ChainSerialization putViewUser(JsonObject user) {
-    SerializeOptions serializeOptions = this._context.get("serializeOptions");
-    serializeOptions.putConfig("viewUser", user);
-    return this;
-  }
-
   public ChainSerialization putContextData(Object contextData) {
     SerializeOptions serializeOptions = this._context.get("serializeOptions");
     serializeOptions.putConfig("contextData", contextData);

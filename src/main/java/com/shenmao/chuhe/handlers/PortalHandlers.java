@@ -2,6 +2,7 @@ package com.shenmao.chuhe.handlers;
 
 import com.shenmao.chuhe.database.chuhe.ChuheDbService;
 import com.shenmao.chuhe.database.wikipage.WikiPageDbService;
+import com.shenmao.chuhe.passport.RealmImpl;
 import com.shenmao.chuhe.serialization.SerializeType;
 import com.shenmao.chuhe.passport.AuthHandlerImpl;
 import com.shenmao.chuhe.serialization.ChainSerialization;
@@ -72,39 +73,15 @@ public class PortalHandlers extends BaseHandler {
       .put("username", username)
       .put("password", password);
 
-    AuthHandlerImpl.getAuthProvider().rxAuthenticate(jsonObject).flatMap(user -> {
-
-      Single<Boolean> createSingle = user.rxIsAuthorised("user");
-      Single<Boolean> updateSingle = user.rxIsAuthorised("dealer");
-      Single<Boolean> deleteSingle = user.rxIsAuthorised("admin");
-
-      return Single.zip(createSingle,updateSingle, deleteSingle, (isUser, isDealer, isAdmin) -> {
-
-        JsonArray roles = new JsonArray();
-
-        if (isUser) roles.add("user");
-        if (isDealer) roles.add("dealer");
-        if (isAdmin) roles.add("admin");
-
-        JsonObject userObject = new JsonObject()
-          .put("username", user.principal().getString("username"))
-          .put("roles", roles);
-
-        System.out.println(userObject.encode() + "userObject userObject");
-
-        JWTOptions jwtOptions = new JWTOptions().setSubject("Wiki API").setIssuer("Vert.x");
-
-        return AuthHandlerImpl.getJWTAuthProvider().generateToken(userObject, jwtOptions);
-
-      });
-
-    }).subscribe(token -> {
-
+    AuthHandlerImpl.getAuthProvider().rxAuthenticate(jsonObject)
+            .flatMap(user -> RealmImpl.userDetail(user))
+            .subscribe(userObject -> {
+      JWTOptions jwtOptions = new JWTOptions().setSubject("Wiki API").setIssuer("Vert.x");
+      String token = AuthHandlerImpl.getJWTAuthProvider().generateToken(userObject, jwtOptions);
       ChainSerialization.create(routingContext.getDelegate())
               .setSerializeType(SerializeType.JSON)
               .putContextData(token)
               .serialize();
-
     }, err -> routingContext.fail(401));
 
   }
