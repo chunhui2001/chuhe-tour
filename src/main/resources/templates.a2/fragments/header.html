@@ -128,20 +128,25 @@
     <li><a href="/mans/dealer">经销商</a></li>
     <li><a href="/mans/customer">客户</a></li>
     <li><a href="/mans/priv">应用权限</a></li>
-    <li><a href="/mans/priv">{{ viewUser.roles }}</a></li>
-    <li><a>Developers</a>
-      <ul>
-        <li><a href="/ping">Ping (POST)</a></li>
-        <li><a href="/catalogue/products/电子/16075">Catalogue (GET)</a></li>
-        <li><a href="/articles/channel/big-data/vagrant.html">Articles (GET, .json, .xml, .html)</a></li>
-        <li><a href="/error" style="color:red;">Error Page (Illegal Access)</a></li>
-        <li><a href="/throw">Throw an exception purpose</a></li>
-        <li><a href="/dashboard">Dashboard</a></li>
-        <li><a href="/chat-room">Chat Room</a></li>
-        <li><a href="/wiki-page">Wiki Pages</a></li>
-        <li><a href="/access_token">Access Token (POST)</a></li>
-      </ul>
-    </li>
+
+    {{#if viewUser.isAuthenticated }}
+      {{#jsonArrayHas viewUser.roles "developer" }}
+      <li><a>Developers</a>
+        <ul>
+          <li><a href="/ping">Ping (POST)</a></li>
+          <li><a href="/catalogue/products/电子/16075">Catalogue (GET)</a></li>
+          <li><a href="/articles/channel/big-data/vagrant.html">Articles (GET, .json, .xml, .html)</a></li>
+          <li><a href="/error" style="color:red;">Error Page (Illegal Access)</a></li>
+          <li><a href="/throw">Throw an exception purpose</a></li>
+          <li><a href="/dashboard">Dashboard</a></li>
+          <li><a href="/chat-room">Chat Room</a></li>
+          <li><a href="/wiki-page">Wiki Pages</a></li>
+          <li><a href="/access_token">Access Token (POST)</a></li>
+        </ul>
+      </li>
+      {{/jsonArrayHas}}
+    {{/if}}
+
     <div class="clearFixed"></div>
   </ul>
   <ul class="right">

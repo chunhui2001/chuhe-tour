@@ -72,6 +72,31 @@ public class PortalVerticle extends AbstractVerticle {
     //.setCookieSecureFlag(true));         // Session session = routingContext.session(); session.put("foo", "bar");
     //router.route().handler(CSRFHandler.create("not a good secret"));
 
+    // set user detail
+    router.route("/*").handler(routingContext -> {
+
+      if (routingContext.user() != null) {
+
+        Session session = routingContext.getDelegate().session();
+
+        JsonObject userDetail = (JsonObject)session.get("userDetail");
+
+        if (userDetail == null) {
+          Single<JsonObject> userDetailSingle = RealmImpl.userDetail(routingContext.user());
+          userDetailSingle.subscribe(user -> {
+            session.put("userDetail", user);
+            routingContext.next();
+          });
+        } else {
+          routingContext.next();
+        }
+
+      } else {
+        routingContext.next();
+      }
+
+    });
+
     // Serving static resources
     router.route("/libs/*").handler(StaticHandler.create("static/libs").setCachingEnabled(false).setIncludeHidden(true).setDirectoryListing(true));
     router.route("/venders/*").handler(StaticHandler.create("static/venders").setCachingEnabled(false).setIncludeHidden(true).setDirectoryListing(true));

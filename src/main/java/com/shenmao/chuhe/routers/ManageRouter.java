@@ -52,30 +52,7 @@ public class ManageRouter implements ChuheRouter {
 
         this.router.route("/*").handler(authHandler);
 
-        // set user detail
-        this.router.route("/*").handler(routingContext -> {
 
-            if (routingContext.user() != null) {
-
-                Session session = routingContext.getDelegate().session();
-
-                JsonObject userDetail = (JsonObject)session.data().get("userDetail");
-
-                if (userDetail == null) {
-                    Single<JsonObject> userDetailSingle = RealmImpl.userDetail(routingContext.user());
-                    userDetailSingle.subscribe(user -> {
-                        session.data().put("userDetail", user);
-                        routingContext.next();
-                    });
-                } else {
-                    routingContext.next();
-                }
-
-            } else {
-                routingContext.next();
-            }
-
-        });
 
         ProductRouter.create(this.router, this.manageProductsHandlers).init();
         OrdersRouter.create(this.router, this.manageStoreHandlers).init();

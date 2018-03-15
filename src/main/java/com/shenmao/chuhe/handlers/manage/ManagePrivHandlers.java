@@ -61,6 +61,7 @@ public class ManagePrivHandlers extends BaseHandler {
         //userRoles.put("role_sys_admin", "系统管理员");
         //userRoles.put("role_super_admin", "超级管理员");
         userRoles.put("role_admin", "管理员");
+        userRoles.put("role_developer", "开发");
         return userRoles;
     }
 

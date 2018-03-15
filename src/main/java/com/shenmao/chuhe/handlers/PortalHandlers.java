@@ -141,7 +141,12 @@ public class PortalHandlers extends BaseHandler {
   }
 
   public void logout(RoutingContext routingContext) {
-    if (routingContext.user() != null) routingContext.clearUser();
+
+    if (routingContext.user() != null) {
+      routingContext.clearUser();
+      routingContext.session().remove("userDetail");
+    }
+
     routingContext.response().setStatusCode(302).putHeader("Location", "/").end();
   }
 

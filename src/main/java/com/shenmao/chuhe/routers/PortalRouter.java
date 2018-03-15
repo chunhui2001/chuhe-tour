@@ -146,15 +146,8 @@ public class PortalRouter  implements ChuheRouter {
       .handler(portalHandlers::accessToken);
 
     this.router.routeWithRegex(HttpMethod.POST,"/login-auth" + GlobalHandlers._SUPPORT_EXTS_PATTERN)
-      .handler(routeingContext -> {
-        System.out.println("login compemented 1");
-        routeingContext.next();
-      }).handler(FormLoginHandler.create(AuthHandlerImpl.getAuthProvider(),
-              "username", "password", "return_url", "/"))
-            .handler(routeingContext -> {
-      System.out.println("login compemented 2");
-      routeingContext.next();
-    });
+      .handler(FormLoginHandler.create(AuthHandlerImpl.getAuthProvider(),
+              "username", "password", "return_url", "/"));
 
   }
 

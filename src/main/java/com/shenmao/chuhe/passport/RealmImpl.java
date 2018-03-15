@@ -1,6 +1,8 @@
 package com.shenmao.chuhe.passport;
 
 import com.shenmao.chuhe.database.chuhe.ChuheDbService;
+import com.shenmao.chuhe.database.chuhe.sqlqueries.ChuheSqlQuery;
+import com.shenmao.chuhe.database.chuhe.sqlqueries.DbQueryHelper;
 import com.shenmao.chuhe.serialization.ChainSerialization;
 import com.shenmao.chuhe.serialization.SerializeType;
 import io.vertx.core.AsyncResult;
@@ -60,19 +62,28 @@ public class RealmImpl extends AuthorizingRealm {
     //perms.add("create");
 
     // role_user,role_dealer,role_admin
-    String userRoles = "role_user,role_dealer,role_admin";
+    String userRoles = null;
 
-    Arrays.stream(userRoles.split(","))
-            .filter(s -> !s.isEmpty())
-            .map(s -> s.split("_")[1])
-            .forEach(s -> {
-      roles.add(s);
-    });
+    try {
 
-    authorizationInfo.setRoles(roles);
+      userRoles = getUserRoles(userName);
 
-    authorizationInfo.setStringPermissions(roles);
+      System.out.println(userRoles + ", userRoles");
 
+      Arrays.stream(userRoles.split(","))
+              .filter(s -> !s.isEmpty())
+              .map(s -> s.split("_")[1])
+              .forEach(s -> {
+                roles.add(s);
+              });
+
+      authorizationInfo.setRoles(roles);
+
+      authorizationInfo.setStringPermissions(roles);
+
+    } catch (SQLException e) {
+
+    }
 
     return authorizationInfo;
 
@@ -141,7 +152,7 @@ public class RealmImpl extends AuthorizingRealm {
   private static Boolean validateUser(String username, String passwd) throws SQLException {
 
     Connection conn = getJdbcConnection();
-    String sql = "select * from users where user_name =? and user_passwd =?";
+    String sql = DbQueryHelper.getSqlQueries().get(ChuheSqlQuery.VALIDATE_USER);
     PreparedStatement pstmt;
 
     try {
@@ -165,19 +176,49 @@ public class RealmImpl extends AuthorizingRealm {
 
   }
 
+  private static String getUserRoles(String username) throws SQLException {
+
+    Connection conn = getJdbcConnection();
+    String sql = DbQueryHelper.getSqlQueries().get(ChuheSqlQuery.GET_USER_ROLES);
+    PreparedStatement pstmt;
+
+    try {
+
+      pstmt = conn.prepareStatement(sql);
+
+      pstmt.setString(1, username);
+
+      ResultSet rs = pstmt.executeQuery();
+
+      if (rs.next()) return rs.getString(1);
+
+    } catch (SQLException e) {
+      e.printStackTrace();
+    } finally {
+      conn.close();
+    }
+
+    return null;
+
+  }
+
+
   public static Single<JsonObject> userDetail(User user) {
 
-    Single<Boolean> createSingle = user.rxIsAuthorised("user");
-    Single<Boolean> updateSingle = user.rxIsAuthorised("dealer");
-    Single<Boolean> deleteSingle = user.rxIsAuthorised("admin");
+    Single<Boolean> userRoleSingle = user.rxIsAuthorised("user");
+    Single<Boolean> dealerRoleSingle = user.rxIsAuthorised("dealer");
+    Single<Boolean> adminRoleSingle = user.rxIsAuthorised("admin");
+    Single<Boolean> developRoleSingle = user.rxIsAuthorised("developer");
 
-    return Single.zip(createSingle,updateSingle, deleteSingle, (isUser, isDealer, isAdmin) -> {
+    return Single.zip(userRoleSingle,dealerRoleSingle, adminRoleSingle, developRoleSingle,
+            (isUser, isDealer, isAdmin, isDev) -> {
 
       JsonArray roles = new JsonArray();
 
       if (isUser) roles.add("user");
       if (isDealer) roles.add("dealer");
       if (isAdmin) roles.add("admin");
+      if (isDev) roles.add("developer");
 
       JsonObject userObject = new JsonObject()
               .put("username", user.principal().getString("username"))

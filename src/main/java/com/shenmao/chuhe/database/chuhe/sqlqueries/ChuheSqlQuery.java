@@ -11,7 +11,9 @@ public enum ChuheSqlQuery {
     UPDATE_USER,
     ALL_USERS,
     GET_USER,
+    GET_USER_ROLES,
     UPDATE_USER_ROLES,
+    VALIDATE_USER,
 
     // products
     CREATE_PRODUCTS_TABLE,

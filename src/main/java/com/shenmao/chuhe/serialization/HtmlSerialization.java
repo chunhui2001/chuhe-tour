@@ -1,5 +1,6 @@
 package com.shenmao.chuhe.serialization;
 
+import com.shenmao.chuhe.commons.handlebarhelper.JsonArrayHasHelper;
 import com.shenmao.chuhe.commons.handlebarhelper.EllipsisHelper;
 import com.shenmao.chuhe.commons.handlebarhelper.SpinnerHelper;
 import com.shenmao.chuhe.exceptions.HbsTemplateParseException;
@@ -23,7 +24,8 @@ public class HtmlSerialization {
     handlebarsTemplateEngine.getHandlebars()
       .registerHelper("compare", new CompareHelper())
       .registerHelper("spinner", new SpinnerHelper())
-      .registerHelper("ellipsis", new EllipsisHelper());
+      .registerHelper("ellipsis", new EllipsisHelper())
+      .registerHelper("jsonArrayHas", new JsonArrayHasHelper());
     return handlebarsTemplateEngine;
   }
 
@@ -40,7 +42,7 @@ public class HtmlSerialization {
 
     Session session = context.session();
 
-    JsonObject userDetail = session.data().containsKey("userDetail") ? (JsonObject)session.data().get("userDetail") : null;
+    JsonObject userDetail = session.get("userDetail");
 
     JsonObject user = new JsonObject()
       .put("isAuthenticated", context.user() != null)
