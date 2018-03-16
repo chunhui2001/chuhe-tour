@@ -127,9 +127,9 @@
     </li>
     <li><a href="/mans/dealer">经销商</a></li>
     <li><a href="/mans/customer">客户</a></li>
-    <li><a href="/mans/priv">应用权限</a></li>
+    <li><a href="/mans/priv">应用权限 </a></li>
 
-    {{#if viewUser.isAuthenticated }}
+    {{#if viewUser.roles }}
       {{#jsonArrayHas viewUser.roles "developer" }}
       <li><a>Developers</a>
         <ul>

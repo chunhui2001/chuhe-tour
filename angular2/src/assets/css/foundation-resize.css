@@ -53,7 +53,7 @@ div > .button:first-child {
 
 .button.ssmall {
   margin-bottom: 0;
-  padding: .3rem;
+  padding: .45rem .5rem;
   font-size: .6rem;
 }
 

@@ -13,6 +13,7 @@ import { ProductDetailsComponent } from '../_components/product/product-details/
 import { ChartsPageComponent } from '../_components/charts/charts-page/charts-page.component';
 
 import { IndexPageComponent } from '../_components/pages/index-page/index-page.component';
+import { OrdersReplenishPageComponent } from '../_components/pages/orders-replenish-page/orders-replenish-page.component';
 
 
 export const router: Routes = [
@@ -33,6 +34,7 @@ export const router: Routes = [
   { path: 'store/:storeIdOrName', component: EmptyComponent },
 
   { path: 'mans/orders', component: EmptyComponent },
+  { path: 'mans/orders/replenish', component: OrdersReplenishPageComponent },
   { path: 'mans/orders/:orderType', component: EmptyComponent },
   { path: 'mans/orders/:orderType/:orderId', component: EmptyComponent },
   { path: 'mans/products', component: EmptyComponent },

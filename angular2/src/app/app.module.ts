@@ -22,7 +22,9 @@ import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
 import {
   MatIconModule, MatToolbarModule, MatMenuModule, MatCardModule,
   MatButtonModule, MatCheckboxModule, MatChipInputEvent, MatSelectModule,
-  MatChipsModule, MatProgressBarModule, MAT_LABEL_GLOBAL_OPTIONS, MatTabsModule
+  MatChipsModule, MatProgressBarModule, MAT_LABEL_GLOBAL_OPTIONS, MatTabsModule,
+  MatFormFieldModule, MatAutocompleteModule, MatOptionModule,
+  MatInputModule
 } from '@angular/material';
 
 
@@ -80,6 +82,7 @@ import { GaugeChartComponent } from './_components/charts/gauge-chart/gauge-char
 // https://blog.cloudboost.io/integrating-google-maps-in-angular-5-ca5f68009f29
 // https://angular-maps.com/
 import { GoogleMapsComponent } from './_components/maps/google-maps/google-maps.component';
+import { OrdersReplenishPageComponent } from './_components/pages/orders-replenish-page/orders-replenish-page.component';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -89,7 +92,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   exports: [
     MatIconModule, MatToolbarModule, MatMenuModule, MatCardModule,
     MatButtonModule, MatCheckboxModule, MatSelectModule,
-    MatChipsModule, MatProgressBarModule, MatTabsModule
+    MatChipsModule, MatProgressBarModule, MatTabsModule,
+    MatFormFieldModule, MatAutocompleteModule, MatOptionModule, MatInputModule
   ],
   declarations: [ ]
 })
@@ -120,6 +124,7 @@ export class GoogleMaterialModule {}
 
     // pages components
     IndexPageComponent,
+    OrdersReplenishPageComponent,
 
     GoogleMapsComponent
 

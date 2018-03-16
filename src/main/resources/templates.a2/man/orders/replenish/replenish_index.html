@@ -23,95 +23,11 @@
     {{flashMessage}}
 </div>
 {{/if}}
-<app-root></app-root>
 
 <div style="display: none;" class="orders-new-replenish-order-form">
-    <form class="small-form" id="orders-order-detail-form" action="/mans/orders/replenish" method="POST">
-        <fieldset  style="margin-bottom: 1em;">
-            <legend style="font-weight: bold;color:gray;">新增进货单</legend>
 
-            <div>
-                <label for="order_flow_no">订单流水号：</label>
-                <input type="text" id="order_flow_no" name="order_flow_no" required placeholder="订单流水号"/>&ensp;&ensp;&ensp;
-            </div>
-            <div>
-                <label for="order_person">经办人：</label>
-                <input type="text" id="order_person" name="order_person" required placeholder="请输入经办人" />&ensp;&ensp;&ensp;&ensp;
-            </div>
-            <div>
-                <label for="order_desc">备注：</label>
-                <input type="text" id="order_desc" name="order_desc" placeholder="请输入订单备注" />
-            </div>
+    <app-root></app-root>
 
-        </fieldset>
-
-        <fieldset style="margin-bottom: 1em;">
-            <div style="margin-bottom: -1em; text-align: right">
-                <button style="float:right;padding: 0.4em;" type="button"
-                        id="btn-append-new-order-row" class="ssmall primary button">增加新行</button>
-                <div class="clearFixed"></div>
-            </div>
-            <div style="text-align: left">
-                <legend style="font-weight: bold;color:gray;">进货单详情</legend>
-            </div>
-
-            <div class="order-detail-replenish">
-
-                <table class="table-cells" border="0" cellspacing="0">
-                    <thead>
-                        <tr>
-                            <th>序号</th>
-                            <th>商品编号</th>
-                            <th>商品名称</th>
-                            <th>品牌</th>
-                            <th>规格</th>
-                            <th>进货单价</th>
-                            <th>单位</th>
-                            <th>数量</th>
-                            <th>合计金额</th>
-                            <th>生产厂家</th>
-                            <th>备注</th>
-                            <th>&ensp;</th>
-                        </tr>
-                    </thead>
-                    <tbody class="order-detail-replenish-items">
-                        <tr>
-                            <td style="width: 40px;text-align: center;font-weight: bold;">
-                                <input type="text" autocomplete="off" disabled="disabled" style="text-align: center;" value="1" /></td>
-                            <td style="width: 95px;">
-                                <input type="text" autocomplete="off" id="product_id" /></td>
-                            <td style="width: 185px;">
-                                <input type="text" autocomplete="off" id="product_name" /></td>
-                            <td style="width: 70px;">
-                                <input type="text" autocomplete="off" disabled="disabled" style="text-align: center;" id="product_brand" /></td>
-                            <td style="width: 75px;">
-                                <input type="text" autocomplete="off" disabled="disabled" id="product_spec" /></td>
-                            <td style="width: 75px;">
-                                <input type="text" autocomplete="off" style=" text-align: right;" id="product_price" /></td>
-                            <td style="width: 75px;">
-                                <input type="text" autocomplete="off" disabled="disabled" style="text-align: center;" id="product_unit" /></td>
-                            <td style="width: 75px;">
-                                <input type="text" autocomplete="off" style="text-align: center;" id="product_buy_count" /></td>
-                            <td style="width: 75px;">
-                                <input type="text" autocomplete="off" disabled="disabled" style="text-align: right;" id="product_total_money" /></td>
-                            <td style="width: 75px;">
-                                <input type="text" autocomplete="off" disabled="disabled" id="product_vender" /></td>
-                            <td style="width: 125px;">
-                                <input type="text" autocomplete="off" id="order_item_desc" /></td>
-                            <td style="width: 40px;text-align: center;">
-                                <a title="删除该行" class="remove-order-row" href="javascript:void(this);">&Chi;</a></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div style="text-align: center;margin: 1.5em 0;">
-                <button type="button" id="btn-order-save" class="small primary button">保存</button>
-                <button type="button" id="btn-clean-order-row" class="small clear button">清除空行</button>
-            </div>
-
-        </fieldset>
-    </form>
 </div>
 
 <div style="text-align: right;">

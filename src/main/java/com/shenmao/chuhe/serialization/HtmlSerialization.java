@@ -49,7 +49,7 @@ public class HtmlSerialization {
       .put("username", context.user() != null ? context.user().principal().getString("username") : null);
 
     if (userDetail != null) {
-      user.put("roles", userDetail.getValue("roles"));
+       user.put("roles", userDetail.getValue("roles"));
     }
 
     serialize(context,
