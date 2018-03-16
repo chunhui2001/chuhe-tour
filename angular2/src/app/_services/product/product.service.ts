@@ -13,7 +13,13 @@ export class ProductService {
 
   getProsucts(pName: String): Observable<any> {
 
-    return this.http.get('/mans/products.json?pname=asdf%20asdfa')
+    let endpoint = '/mans/products.json';
+
+    if (pName) {
+      endpoint = endpoint + '?pname=' + pName;
+    }
+
+    return this.http.get(endpoint)
       .map((response: RestResponse) => {
 
         if (response.error) {

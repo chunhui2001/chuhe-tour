@@ -25,7 +25,7 @@ export class OrdersReplenishPageComponent extends BasicComponent implements OnIn
   }
 
   ngOnInit() {
-    this.loadData('');
+    this.loadData(null);
   }
 
   filter(val: any): any[] {
@@ -43,7 +43,7 @@ export class OrdersReplenishPageComponent extends BasicComponent implements OnIn
       return;
     }
 
-    this.loadData('');
+    this.loadData(text);
 
   }
 
@@ -51,9 +51,11 @@ export class OrdersReplenishPageComponent extends BasicComponent implements OnIn
 
     this.productService.getProsucts(pName).subscribe(result => {
 
-      this.options = result.data.map(item => {
+      const restult = result.data.map(item => {
         return {id: item.product_id, name: item.product_name };
       });
+
+      this.options = restult.concat(this.options);
 
       this.filteredOptions = this.myControl.valueChanges.pipe(
         startWith(''),

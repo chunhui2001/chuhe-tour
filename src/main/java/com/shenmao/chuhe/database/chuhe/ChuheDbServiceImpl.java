@@ -230,15 +230,21 @@ public class ChuheDbServiceImpl implements ChuheDbService {
 
 
     @Override
-    public ChuheDbService filterProductsByName(Handler<AsyncResult<List<JsonObject>>> resultHandler) {
+    public ChuheDbService filterProductsByName(String pName, Handler<AsyncResult<List<JsonObject>>> resultHandler) {
 
         String filtrProductsByNameSql = sqlQueries.get(ChuheSqlQuery.FILTER_PRODUCTS_BY_NAME);
         LOGGER.info( filtrProductsByNameSql);
 
+        JsonArray params = new JsonArray();
 
-        this.dbClient.rxQuery(filtrProductsByNameSql)
+        params.add("%" + pName + "%");
+
+        this.dbClient.rxQueryWithParams(filtrProductsByNameSql, params)
                 .flatMapObservable(res -> Observable.from(res.getRows()))
-                .map(product -> this.processProduct(product))
+                .map(product -> {
+                   JsonObject j = this.processProduct(product);
+                   return j;
+                })
                 // .sorted()
                 .collect(ArrayList<JsonObject>::new, List::add)
                 .subscribe(RxHelper.toSubscriber(resultHandler));

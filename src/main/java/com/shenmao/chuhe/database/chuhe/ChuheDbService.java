@@ -30,7 +30,7 @@ public interface ChuheDbService {
     ChuheDbService fetchAllProducts(Handler<AsyncResult<List<JsonObject>>> resultHandler);
 
     @Fluent
-    ChuheDbService filterProductsByName(Handler<AsyncResult<List<JsonObject>>> resultHandler);
+    ChuheDbService filterProductsByName(String pName, Handler<AsyncResult<List<JsonObject>>> resultHandler);
 
     @Fluent
     ChuheDbService createProducts(JsonObject product, Handler<AsyncResult<Long>> resultHandler);

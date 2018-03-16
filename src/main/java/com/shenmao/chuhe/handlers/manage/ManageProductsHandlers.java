@@ -118,8 +118,10 @@ public class ManageProductsHandlers extends BaseHandler {
 
         String pName = getQueryParam(routingContext, "pname");
 
+        System.out.println(pName + ", pName");
+
         if (!pName.isEmpty()) {
-            chuheDbService.filterProductsByName(resultHandler);
+            chuheDbService.filterProductsByName(pName, resultHandler);
             return;
         }
 
