@@ -45,6 +45,7 @@ table.table-basic td {
   padding: 10px 15px;
   position: relative;
   transition: all 300ms;
+  line-height: 1.5em;
 }
 
 
@@ -68,7 +69,7 @@ table.table-basic thead th {
 table.table-basic tbody td {
   /*color: transparent;*/
   /*text-shadow: 0 0 3px #aaa;*/
-  padding: .125rem .625rem;
+  padding: .325rem .625rem;
 }
 
 table.table-basic th input[type="checkbox"],table.table-basic td input[type="checkbox"] {
