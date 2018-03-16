@@ -21,16 +21,11 @@ export class OrdersReplenishPageComponent extends BasicComponent implements OnIn
   filteredOptions: Observable<string[]>;
 
   constructor(protected route: ActivatedRoute, fb: FormBuilder, private productService: ProductService) {
-
     super(route, fb);
-
   }
 
   ngOnInit() {
-    this.filteredOptions = this.myControl.valueChanges.pipe(
-      startWith(''),
-      map(val => this.filter(val))
-    );
+    this.loadData('');
   }
 
   filter(val: any): any[] {
@@ -48,14 +43,24 @@ export class OrdersReplenishPageComponent extends BasicComponent implements OnIn
       return;
     }
 
-    this.productService.getProsucts('').subscribe(result => {
+    this.loadData('');
+
+  }
+
+  loadData(pName: string): void {
+
+    this.productService.getProsucts(pName).subscribe(result => {
 
       this.options = result.data.map(item => {
         return {id: item.product_id, name: item.product_name };
       });
 
-    });
+      this.filteredOptions = this.myControl.valueChanges.pipe(
+        startWith(''),
+        map(val => this.filter(val))
+      );
 
+    });
 
   }
 
