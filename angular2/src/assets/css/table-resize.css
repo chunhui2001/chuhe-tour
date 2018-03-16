@@ -2,9 +2,9 @@
 
 /***** table theme basic *****/
 table.table-basic {
-  background: #f5f5f5;
+  background: white;
   border-collapse: separate;
-  box-shadow: 0px 0px 3px 1px #9a9a9a;
+  /*box-shadow: 0px 0px 3px 1px #9a9a9a;*/
   font-size: 12px;
   line-height: 24px;
   text-align: left;
@@ -12,6 +12,10 @@ table.table-basic {
   margin-bottom: 0;
   border-collapse: separate;
   border-spacing: 0px;
+}
+
+table.table-basic tbody tr:nth-child(even) {
+  background: white;
 }
 
 table.table-basic th {
@@ -54,7 +58,7 @@ table.table-basic tr {
 }
 
 table.table-basic tr:nth-child(odd) td {
-  background: #f1f1f1 ;
+  background: white ;
 }
 table.table-basic thead th {
   padding: .425rem .625rem;
@@ -64,7 +68,7 @@ table.table-basic thead th {
 table.table-basic tbody td {
   /*color: transparent;*/
   /*text-shadow: 0 0 3px #aaa;*/
-  padding: .325rem .625rem;
+  padding: .125rem .625rem;
 }
 
 table.table-basic th input[type="checkbox"],table.table-basic td input[type="checkbox"] {
@@ -84,9 +88,9 @@ table.table-basic tbody:hover tr:hover td {
 /***** table theme cells *****/
 
 table.table-cells {
-  background: #f5f5f5;
+  background: white;
   border-collapse: separate;
-  box-shadow: 0px 0px 3px 1px #9a9a9a;
+  /*box-shadow: 0px 0px 3px 1px #9a9a9a;*/
   font-size: 12px;
   line-height: 24px;
   text-align: left;
@@ -137,7 +141,7 @@ table.table-cells tr {
 }
 
 table.table-cells tr:nth-child(odd) td {
-  background: #f1f1f1 ;
+  background: white ;
 }
 table.table-cells thead th {
   padding: .425rem .625rem;
@@ -203,7 +207,7 @@ table.table-cells th {
 
 table.table-cells td {
   background-color: white;
-  border-left: solid 2px #f1f1f1;
+  border-left: solid 1px #f1f1f1;
 }
 
 table.table-cells td:last-child {
