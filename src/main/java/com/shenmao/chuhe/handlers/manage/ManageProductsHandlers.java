@@ -100,7 +100,7 @@ public class ManageProductsHandlers extends BaseHandler {
                 .putViewName("/man/products/product_index.html")
                 .putMessage("所有产品列表");
 
-        chuheDbService.fetchAllProducts(reply -> {
+        Handler<AsyncResult<List<JsonObject>>> resultHandler = reply -> {
 
             if (!reply.succeeded()) {
                 chainSerialization
@@ -114,7 +114,16 @@ public class ManageProductsHandlers extends BaseHandler {
 
             chainSerialization.putContextData(productList).serialize();
 
-        });
+        };
+
+        String pName = getQueryParam(routingContext, "pname");
+
+        if (!pName.isEmpty()) {
+            chuheDbService.filterProductsByName(resultHandler);
+            return;
+        }
+
+        chuheDbService.fetchAllProducts(resultHandler);
 
     }
 

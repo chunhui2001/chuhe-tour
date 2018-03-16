@@ -25,10 +25,13 @@
         <mat-label>检索产品</mat-label>
         <input type="text" placeholder="输入产品名称关键快速检索产品" aria-label="Number"
                matInput [formControl]="myControl"
+               [(ngModel)]="inputText"
+               (ngModelChange)="inputTextChange($event)"
                [matAutocomplete]="auto">
-        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-          <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-            {{ option }}
+        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete"
+                          (optionSelected)='onOptionSelected($event.option.value)'>
+          <mat-option *ngFor="let option of filteredOptions | async" [value]="option.name">
+            {{ option.name }}
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>

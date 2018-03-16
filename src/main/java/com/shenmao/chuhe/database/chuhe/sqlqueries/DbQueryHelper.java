@@ -76,6 +76,8 @@ public class DbQueryHelper {
         sqlQueries.put(ChuheSqlQuery.LAST_INSERT_ID, queriesProps.getProperty("last_insert_id"));
         sqlQueries.put(ChuheSqlQuery.GET_PRODUCTS_BY_IDLIST, queriesProps.getProperty("get-products-by-id-list"));
 
+        sqlQueries.put(ChuheSqlQuery.FILTER_PRODUCTS_BY_NAME, queriesProps.getProperty("filter-products-by-name"));
+
     }
 
 

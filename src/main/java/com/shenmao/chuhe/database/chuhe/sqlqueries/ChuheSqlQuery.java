@@ -24,6 +24,7 @@ public enum ChuheSqlQuery {
     DELETE_PRODUCT,
     DELETE_PRODUCT_BATCH,
     GET_PRODUCTS_BY_IDLIST,
+    FILTER_PRODUCTS_BY_NAME,
 
     // orders
     CREATE_ORDERS_TABLE,

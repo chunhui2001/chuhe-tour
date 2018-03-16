@@ -13,8 +13,10 @@ import {ActivatedRoute} from '@angular/router';
 })
 export class OrdersReplenishPageComponent extends BasicComponent implements OnInit {
 
+  inputText: String;
+
   myControl: FormControl = new FormControl();
-  options = ['One', 'Two', 'Three'];
+  options: any = [];
   filteredOptions: Observable<string[]>;
 
   constructor(protected route: ActivatedRoute, fb: FormBuilder) {
@@ -30,8 +32,23 @@ export class OrdersReplenishPageComponent extends BasicComponent implements OnIn
     );
   }
 
-  filter(val: string): string[] {
-    return this.options.filter(option => option.toLowerCase().indexOf(val.toLowerCase()) === 0);
+  filter(val: any): any[] {
+    return this.options.filter(item => item.name.toLowerCase().indexOf(val.toLowerCase()) === 0);
+    // return this.options.filter(item => item.id === val);
+  }
+
+  onOptionSelected(val: string): void {
+    const selectedOption = this.filter(val);
+  }
+
+  inputTextChange(text): void {
+
+    if (!text || text.trim().length < 2) {
+      return;
+    }
+
+    this.options  = [{id: 1, name: 'One'}, {id: 2, name: 'Two'}, {id: 3, name: 'Three'}];
+
   }
 
 }

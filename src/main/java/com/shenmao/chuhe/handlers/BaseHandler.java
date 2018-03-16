@@ -27,6 +27,16 @@ public class BaseHandler {
         return null;
     }
 
+    public String getQueryParam(RoutingContext routingContext, String key) {
+
+        if (routingContext.queryParam(key).size() == 0) {
+            return "";
+        }
+
+        return routingContext.queryParam(key).get(0).trim();
+
+    }
+
     public String getString(RoutingContext routingContext, String key) {
 
         JsonObject jsonData = getJsonData(routingContext);
