@@ -5,6 +5,7 @@ import {startWith} from 'rxjs/operators/startWith';
 import {map} from 'rxjs/operators/map';
 import {BasicComponent} from '../../basic.component';
 import {ActivatedRoute} from '@angular/router';
+import {ProductService} from '../../../_services/product/product.service';
 
 @Component({
   selector: 'app-orders-replenish-page',
@@ -19,7 +20,7 @@ export class OrdersReplenishPageComponent extends BasicComponent implements OnIn
   options: any = [];
   filteredOptions: Observable<string[]>;
 
-  constructor(protected route: ActivatedRoute, fb: FormBuilder) {
+  constructor(protected route: ActivatedRoute, fb: FormBuilder, private productService: ProductService) {
 
     super(route, fb);
 
@@ -47,7 +48,14 @@ export class OrdersReplenishPageComponent extends BasicComponent implements OnIn
       return;
     }
 
-    this.options  = [{id: 1, name: 'One'}, {id: 2, name: 'Two'}, {id: 3, name: 'Three'}];
+    this.productService.getProsucts('').subscribe(result => {
+
+      this.options = result.data.map(item => {
+        return {id: item.product_id, name: item.product_name };
+      });
+
+    });
+
 
   }
 

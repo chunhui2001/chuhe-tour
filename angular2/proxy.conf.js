@@ -1,7 +1,8 @@
 const PROXY_CONFIG = [
   {
     context: [
-      "/access_token.json"
+      "/access_token.json",
+      "/mans/products.json"
     ],
     target: "http://localhost:8081",
     secure: false,
@@ -11,7 +12,7 @@ const PROXY_CONFIG = [
         console.log("Skipping proxy for browser request.");
         return "/index.html";
       }
-      
+
       req.headers["X-Custom-Header"] = "yes"; */
 
     }

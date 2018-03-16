@@ -42,6 +42,7 @@ import { routers } from './routers/app.router';
 
 // _service
 import { VoteService } from './_services/vote/vote.service';
+import { ProductService } from './_services/product/product.service';
 
 // _components
 import { BasicComponent } from './_components/basic.component';
@@ -146,7 +147,7 @@ export class GoogleMaterialModule {}
       provide: HTTP_INTERCEPTORS,
       useClass: HttpIntercepor,
       multi: true,
-    }, VoteService
+    }, VoteService, ProductService
   ],
   bootstrap: [AppComponent]
 })
