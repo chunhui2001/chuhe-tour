@@ -9,6 +9,7 @@ import {ProductService} from '../../../_services/product/product.service';
 
 
 import * as _ from 'lodash';
+import * as $ from "jquery";
 
 @Component({
   selector: 'app-orders-replenish-page',
@@ -38,9 +39,10 @@ export class OrdersReplenishPageComponent extends BasicComponent implements OnIn
     // return this.options.filter(item => item.id === val);
   }
 
-  onOptionSelected(val: string): void {
+  onOptionSelected(event, val: string): void {
     const selectedOption = this.filter(val);
     this.newEmptyRow({product_id: selectedOption[0].id, product_name: selectedOption[0].name});
+    // this.tableCellsProduct.txt_input_count.last.nativeElement.focus();
   }
 
   inputTextChange(text): void {

@@ -1,5 +1,5 @@
 
-<form class="small-form" id="orders-order-detail-form" action="/mans/orders/replenish" method="POST">
+<form class="orders-replenish-page-component small-form" id="orders-order-detail-form" action="/mans/orders/replenish" method="POST">
   <fieldset  style="margin-bottom: 1em;">
     <legend style="font-weight: bold;color:gray;">新增进货单</legend>
 
@@ -29,7 +29,7 @@
                (ngModelChange)="inputTextChange($event)"
                [matAutocomplete]="auto">
         <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete"
-                          (optionSelected)='onOptionSelected($event.option.value)'>
+                          (optionSelected)='onOptionSelected($event, $event.option.value)'>
           <mat-option *ngFor="let option of filteredOptions | async" [value]="option.name">
             {{ option.name }}
           </mat-option>
@@ -37,7 +37,7 @@
       </mat-form-field>
     </div>
     <button type="button"
-            id="btn-append-new-order-row" (click)="newEmptyRow()" class="ssmall primary button">增加新行</button>
+            id="btn-append-new-order-row" (click)="newEmptyRow(null)" class="ssmall primary button">增加新行</button>
     <div class="clearFixed"></div>
     <!--<div style="text-align: left">-->
       <!--<legend style="font-weight: bold;color:gray;">进货单详情</legend>-->
@@ -50,7 +50,7 @@
 
     <div style="text-align: center;margin: 1.5em 0;">
       <button type="button" id="btn-order-save" class="small primary button">保存</button>
-      <button type="button" id="btn-clean-order-row" class="small clear button">清除空行</button>
+      <button type="button" (click)="tableCellsProduct.cleanEmptyProductRow()" id="btn-clean-order-row" class="small clear button">清除空行</button>
     </div>
 
   </fieldset>

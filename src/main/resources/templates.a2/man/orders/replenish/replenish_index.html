@@ -24,7 +24,7 @@
 </div>
 {{/if}}
 
-<div style="display: none;" class="orders-new-replenish-order-form">
+<div style="display: block;" class="orders-new-replenish-order-form">
 
     <app-root></app-root>
 
@@ -86,41 +86,7 @@
 
 
 {{#partial "blocks/script"}}
-<script type="text/javascript" src="/assets/scripts/table/table-calculate.js"></script>
-<script type="text/javascript" id="r_1">
 
-
-    var productModelFields = [ 'product_id', 'product_price', 'product_buy_count', 'order_item_desc' ];
-    var calculateTable = new CalculateTable(".order-detail-replenish-items", "product_id", 'product_price', 'product_buy_count', 'product_total_money');
-
-    $(function () {
-
-        calculateTable.init();
-
-        $("#btn-order-save").on("click", function () {
-            calculateTable.appendOrderItemsToForm(productModelFields, "#orders-order-detail-form", "order_item_", "order_item_count");
-            $("#orders-order-detail-form").submit();
-        });
-
-        $("#btn-orders-new-replenish-order").on("click", function () {
-            $(".orders-new-replenish-order-form").show();
-        });
-
-        calculateTable.newOrderRow("#btn-append-new-order-row");
-        calculateTable.removeEmptyOrderDetailItemRow("btn-clean-order-row");
-        calculateTable.removeOrderItemRow(".remove-order-row");
-        calculateTable.enterOrTabToSearch("/mans/products");
-
-        for (var i=0; i<4; i++) {
-            $("#btn-append-new-order-row").click();
-        }
-
-
-
-    });
-
-
-</script>
 {{/partial}}
 
 
