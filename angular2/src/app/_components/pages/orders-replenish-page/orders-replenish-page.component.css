@@ -1,6 +1,4 @@
-[type=text]:focus {
-  border: none;
-}
+
 
 /deep/ .mat-option {
   font-size: 12px;

@@ -62,3 +62,7 @@ div > .button:first-child {
   padding: .55rem;
   font-size: .6rem;
 }
+
+[type=text]:focus {
+  border: 1px solid #b9b9b9;
+}

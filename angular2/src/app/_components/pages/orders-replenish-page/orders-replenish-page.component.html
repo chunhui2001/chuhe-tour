@@ -23,7 +23,7 @@
       <mat-form-field class="example-full-width" [floatLabel]="formGroupOptions.value.floatLabel">
 
         <mat-label>检索产品</mat-label>
-        <input type="text" placeholder="输入产品名称关键快速检索产品" aria-label="Number"
+        <input type="text" placeholder="输入产品名称关键字快速检索产品" aria-label="Number"
                matInput [formControl]="myControl"
                [(ngModel)]="inputText"
                (ngModelChange)="inputTextChange($event)"
@@ -37,7 +37,7 @@
       </mat-form-field>
     </div>
     <button type="button"
-            id="btn-append-new-order-row" class="ssmall primary button">增加新行</button>
+            id="btn-append-new-order-row" (click)="newEmptyRow()" class="ssmall primary button">增加新行</button>
     <div class="clearFixed"></div>
     <!--<div style="text-align: left">-->
       <!--<legend style="font-weight: bold;color:gray;">进货单详情</legend>-->
@@ -45,52 +45,7 @@
 
     <div class="order-detail-replenish">
 
-      <table class="table-cells" border="0" cellspacing="0">
-        <thead>
-        <tr>
-          <th>序号</th>
-          <th>商品编号</th>
-          <th>商品名称</th>
-          <th>品牌</th>
-          <th>规格</th>
-          <th>进货单价</th>
-          <th>单位</th>
-          <th>数量</th>
-          <th>合计金额</th>
-          <th>生产厂家</th>
-          <th>备注</th>
-          <th>&ensp;</th>
-        </tr>
-        </thead>
-        <tbody class="order-detail-replenish-items">
-        <tr>
-          <td style="width: 40px;text-align: center;font-weight: bold;">
-            <input type="text" autocomplete="off" disabled="disabled" style="text-align: center;" value="1" /></td>
-          <td style="width: 95px;">
-            <input type="text" autocomplete="off" id="product_id" /></td>
-          <td style="width: 185px;">
-            <input type="text" autocomplete="off" id="product_name" /></td>
-          <td style="width: 70px;">
-            <input type="text" autocomplete="off" disabled="disabled" style="text-align: center;" id="product_brand" /></td>
-          <td style="width: 75px;">
-            <input type="text" autocomplete="off" disabled="disabled" id="product_spec" /></td>
-          <td style="width: 75px;">
-            <input type="text" autocomplete="off" style=" text-align: right;" id="product_price" /></td>
-          <td style="width: 75px;">
-            <input type="text" autocomplete="off" disabled="disabled" style="text-align: center;" id="product_unit" /></td>
-          <td style="width: 75px;">
-            <input type="text" autocomplete="off" style="text-align: center;" id="product_buy_count" /></td>
-          <td style="width: 75px;">
-            <input type="text" autocomplete="off" disabled="disabled" style="text-align: right;" id="product_total_money" /></td>
-          <td style="width: 75px;">
-            <input type="text" autocomplete="off" disabled="disabled" id="product_vender" /></td>
-          <td style="width: 125px;">
-            <input type="text" autocomplete="off" id="order_item_desc" /></td>
-          <td style="width: 40px;text-align: center;">
-            <a title="删除该行" class="remove-order-row" href="javascript:void(this);">&Chi;</a></td>
-        </tr>
-        </tbody>
-      </table>
+      <app-table-cells #tableCellsProduct></app-table-cells>
     </div>
 
     <div style="text-align: center;margin: 1.5em 0;">

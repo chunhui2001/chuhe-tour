@@ -29,3 +29,7 @@ input.mat-chip-input {
 .mat-tab-body-content {
   height: auto !important;
 }
+
+.mat-input-infix [type=text]:focus {
+  border: none;
+}
