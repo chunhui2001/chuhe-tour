@@ -45,20 +45,6 @@ import { routers } from './routers/app.router';
 import { VoteService } from './_services/vote/vote.service';
 import { ProductService } from './_services/product/product.service';
 
-// _components
-import { BasicComponent } from './_components/basic.component';
-import { BasicChartComponent } from './_components/basic.chart.component';
-
-import { AppComponent } from './_components/app/app.component';
-import { SignupComponent } from './_components/signup/signup.component';
-import { EmptyComponent } from './_components/empty/empty.component';
-import { LoginComponent } from './_components/login/login.component';
-import { ProductNewComponent } from './_components/product/product-new/product-new.component';
-import { MediaUploadComponent } from './component/media-upload/media-upload.component';
-import { ProductDetailsComponent } from './_components/product/product-details/product-details.component';
-import { SlickCarouselComponent } from './component/slick-carousel/slick-carousel.component';
-
-
 // doc: https://swimlane.gitbooks.io/ngx-charts/content/intro/installing.html
 // demo: https://swimlane.github.io/ngx-charts/#/ngx-charts/combo-chart
 // npm install @swimlane/ngx-charts --save
@@ -82,11 +68,17 @@ import { GaugeChartComponent } from './_components/charts/gauge-chart/gauge-char
 // https://angular-maps.com/
 import { GoogleMapsComponent } from './_components/maps/google-maps/google-maps.component';
 
-import { IndexPageComponent, OrdersReplenishPageComponent, OrdersSalesComponent } from './_components/pages/_index';
 
-import { TableCellsComponent } from './_components/table/table-cells/table-cells.component';
-import { FloatInputComponent } from './component/float-input/float-input.component';
-import { BasicOrderComponent } from './_components/pages/orders/basic-order.component';
+// _components
+import {
+  BasicComponent, BasicChartComponent, ProductNewComponent, ProductDetailsComponent, LoginComponent, EmptyComponent, SignupComponent, AppComponent,
+  BasicOrderComponent, IndexPageComponent, OrdersReplenishPageComponent, OrdersSalesComponent, TableCellsComponent
+} from './_components/_index';
+
+// component
+import { FloatInputComponent, MediaUploadComponent, SlickCarouselComponent } from './component/_index';
+
+import { CellInputCrossMoveDirective } from './directive/_index';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -138,7 +130,11 @@ export class GoogleMaterialModule {}
     OrdersReplenishPageComponent,
     OrdersSalesComponent,
 
-    GoogleMapsComponent
+    GoogleMapsComponent,
+
+
+    // directive
+    CellInputCrossMoveDirective
 
   ],
   imports: [

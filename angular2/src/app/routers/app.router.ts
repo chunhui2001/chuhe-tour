@@ -12,7 +12,7 @@ import { ProductDetailsComponent } from '../_components/product/product-details/
 
 import { ChartsPageComponent } from '../_components/charts/charts-page/charts-page.component';
 
-import { IndexPageComponent, OrdersReplenishPageComponent, OrdersSalesComponent } from '../_components/pages/_index';
+import { IndexPageComponent, OrdersReplenishPageComponent, OrdersSalesComponent } from '../_components/_index';
 
 
 export const router: Routes = [
