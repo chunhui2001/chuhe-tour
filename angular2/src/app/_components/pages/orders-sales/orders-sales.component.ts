@@ -27,8 +27,10 @@ export class OrdersSalesComponent extends BasicOrderComponent implements OnInit 
   saveSalesOrder(): void {
 
     const orderItems = this.tableCellsProduct.getTableData().map(item => {
-      return { product_id: item.product_id, product_price: item.product_price, product_sale_count: item.product_sale_count };
+      return { product_id: item.product_id, product_price: item.product_price, product_sale_count: item.product_sale_count, order_item_desc: item.order_item_desc };
     });
+
+    debugger;
 
     for (let i = 0; i < orderItems.length; i++) {
       $('<input type=\'hidden\' name=\'order_item_' + i + '\' value=\'' + JSON.stringify(orderItems[i]) + '\' />')

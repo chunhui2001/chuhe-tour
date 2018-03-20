@@ -32,10 +32,11 @@ export class OrdersReplenishPageComponent extends BasicOrderComponent implements
   saveReplenishOrder(): void {
 
     const orderItems = this.tableCellsProduct.getTableData().map(item => {
-      return { product_id: item.product_id, product_price: item.product_price, product_buy_count: item.product_buy_count };
+      return { product_id: item.product_id, product_price: item.product_price, product_buy_count: item.product_buy_count, order_item_desc: item.order_item_desc };
     });
 
     for (let i = 0; i < orderItems.length; i++) {
+
       $('<input type=\'hidden\' name=\'order_item_' + i + '\' value=\'' + JSON.stringify(orderItems[i]) + '\' />')
         .appendTo($('#orders-order-detail-form'));
     }

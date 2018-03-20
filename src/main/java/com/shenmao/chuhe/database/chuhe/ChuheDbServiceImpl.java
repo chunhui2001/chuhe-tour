@@ -908,23 +908,17 @@ public class ChuheDbServiceImpl implements ChuheDbService {
                     return this.dbClient.rxQueryWithParams(getOrderItemsSql, parsms);
                 })
                 .map(orderItems -> {
-                    System.out.println(1);
                     if (orderItems.getRows().size() == 0) return new ArrayList<JsonObject>();
-                    System.out.println(2);
                     return processOrderItems(orderItems.getRows(), orderType);
                 })
                 .subscribe(orderIems -> {
-                    System.out.println(3);
                     if (orderIems.size() == 0) {
-                        System.out.println(4);
                         resultHandler.handle(Future.succeededFuture(new JsonObject()));
                     } else {
-                        System.out.println(5);
                         returnOrder.getJsonObject(0).put("order_items", orderIems);
                         resultHandler.handle(Future.succeededFuture(returnOrder.getJsonObject(0)));
                     }
                 }, error -> {
-                    System.out.println(6);
                         resultHandler.handle(Future.failedFuture(error.getMessage()));
                 });
 

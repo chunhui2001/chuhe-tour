@@ -52,7 +52,7 @@ export class FloatInputComponent implements OnInit {
   }
 
   onFloatChange(val: string): void {
-    this.model[this.field] = parseFloat(this.model[this.field]).toFixed(2);
+    this.model[this.field] = isNaN(parseFloat(this.model[this.field])) ? '' : parseFloat(this.model[this.field]).toFixed(2);
     this.onInput.emit();
   }
 
