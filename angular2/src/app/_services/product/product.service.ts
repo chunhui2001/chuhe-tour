@@ -32,4 +32,21 @@ export class ProductService {
     // return of([{id: 1, name: 'One'}, {id: 2, name: 'Two'}, {id: 3, name: 'Three'}, {id: 4, name: 'Three 666'}]);
   }
 
+  getProsuctById(pId: any): Observable<any> {
+
+    const endpoint = '/mans/products/' + pId + '.json';
+
+    return this.http.get(endpoint)
+      .map((response: RestResponse) => {
+
+        if (response.error) {
+          return response.message[0];
+        }
+
+        return response;
+      });
+
+    // return of([{id: 1, name: 'One'}, {id: 2, name: 'Two'}, {id: 3, name: 'Three'}, {id: 4, name: 'Three 666'}]);
+  }
+
 }

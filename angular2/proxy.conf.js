@@ -2,7 +2,8 @@ const PROXY_CONFIG = [
   {
     context: [
       "/access_token.json",
-      "/mans/products.json"
+      "/mans/products.json",
+      "/mans/products/30.json"
     ],
     target: "http://localhost:8081",
     secure: false,

@@ -18,6 +18,7 @@ import { AngularFontAwesomeModule } from 'angular-font-awesome';
 // https://www.froala.com/wysiwyg-editor/docs/overview
 import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
 
+
 // google material
 import {
   MatIconModule, MatToolbarModule, MatMenuModule, MatCardModule,
@@ -85,6 +86,7 @@ import { GaugeChartComponent } from './_components/charts/gauge-chart/gauge-char
 import { GoogleMapsComponent } from './_components/maps/google-maps/google-maps.component';
 import { OrdersReplenishPageComponent } from './_components/pages/orders-replenish-page/orders-replenish-page.component';
 import { TableCellsComponent } from './_components/table/table-cells/table-cells.component';
+import { FloatInputComponent } from './component/float-input/float-input.component';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -122,6 +124,9 @@ export class GoogleMaterialModule {}
 
     // table
     TableCellsComponent,
+
+    // input
+    FloatInputComponent,
 
     // charts components
     ChartsPageComponent, LineChartComponent, HeatMapChartComponent,

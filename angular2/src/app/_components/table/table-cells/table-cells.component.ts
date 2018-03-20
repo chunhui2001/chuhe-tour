@@ -41,25 +41,27 @@ export class TableCellsComponent implements OnInit {
 
   appendProductToEmptyRow(data: any): void {
 
-    const result = _.extend(this.newEmptyProduct(), {product_buy_count: 1}, data);
+    const product = _.extend(this.newEmptyProduct(), {product_buy_count: 1}, data);
+
+    this.calculateTotalPrice(product);
+
     const emptyRowIndex = this.getEmptyRowIndex();
 
     if (emptyRowIndex === -1) {
-      this.rowList.push(result);
+      this.rowList.push(product);
     } else {
-      this.rowList[emptyRowIndex] = result;
+      this.rowList[emptyRowIndex] = product;
     }
 
     this.rowList.push(this.newEmptyProduct());
 
     this.txt_input_count.forEach( (input, index) => {
-      console.log(input, 'input');
-      console.log(index, 'index');
-
       if (index === emptyRowIndex) {
         input.nativeElement.focus();
+        // this.cleanEmptyProductRow();
       }
     });
+
 
   }
 
@@ -72,8 +74,22 @@ export class TableCellsComponent implements OnInit {
     return -1;
   }
 
-  trackByFn(index: any, item: any) {
+  trackByFn(index: any, item: any): any {
     return index;
+  }
+
+  onPriceInput(product: any): void {
+
+    if (!product.product_id) {
+      return;
+    }
+
+    this.calculateTotalPrice(product);
+  }
+
+  calculateTotalPrice(product: any): void {
+    product.product_total_money = (product.product_buy_count * (product.product_price ? parseFloat(product.product_price) : 0)).toFixed(2);
+
   }
 
 }

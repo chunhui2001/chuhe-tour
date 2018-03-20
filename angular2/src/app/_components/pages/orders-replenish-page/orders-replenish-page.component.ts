@@ -41,7 +41,16 @@ export class OrdersReplenishPageComponent extends BasicComponent implements OnIn
 
   onOptionSelected(event, val: string): void {
     const selectedOption = this.filter(val);
-    this.newEmptyRow({product_id: selectedOption[0].id, product_name: selectedOption[0].name});
+
+    this.productService.getProsuctById(selectedOption[0].id).subscribe(result => {
+
+      if (result.data) {
+        this.newRow(result.data);
+      }
+
+    });
+
+
     // this.tableCellsProduct.txt_input_count.last.nativeElement.focus();
   }
 
@@ -74,8 +83,8 @@ export class OrdersReplenishPageComponent extends BasicComponent implements OnIn
 
   }
 
-  newEmptyRow(data: any): void {
-    this.tableCellsProduct.appendNewRow(data);
+  newRow(data: any): void {
+     this.tableCellsProduct.appendNewRow(data);
   }
 
 }

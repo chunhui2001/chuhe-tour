@@ -186,6 +186,8 @@ table.table-cells input[type="text"]:hover, table.table-cells input[type="text"]
 
 table.table-cells input[type="text"]:focus {
   border: dashed 1px gray;
+  background-color: burlywood;
+  color: white;
 }
 
 table.table-cells input[type="text"]:active {
