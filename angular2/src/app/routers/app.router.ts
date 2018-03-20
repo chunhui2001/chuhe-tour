@@ -12,8 +12,7 @@ import { ProductDetailsComponent } from '../_components/product/product-details/
 
 import { ChartsPageComponent } from '../_components/charts/charts-page/charts-page.component';
 
-import { IndexPageComponent } from '../_components/pages/index-page/index-page.component';
-import { OrdersReplenishPageComponent } from '../_components/pages/orders-replenish-page/orders-replenish-page.component';
+import { IndexPageComponent, OrdersReplenishPageComponent, OrdersSalesComponent } from '../_components/pages/_index';
 
 
 export const router: Routes = [
@@ -35,6 +34,7 @@ export const router: Routes = [
 
   { path: 'mans/orders', component: EmptyComponent },
   { path: 'mans/orders/replenish', component: OrdersReplenishPageComponent },
+  { path: 'mans/orders/sales', component: OrdersSalesComponent },
   { path: 'mans/orders/:orderType', component: EmptyComponent },
   { path: 'mans/orders/:orderType/:orderId', component: EmptyComponent },
   { path: 'mans/products', component: EmptyComponent },

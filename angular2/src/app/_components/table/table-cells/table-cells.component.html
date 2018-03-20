@@ -35,8 +35,7 @@
       <td style="width: 75px;">
         <input type="text" autocomplete="off" disabled="disabled" style="text-align: center;" id="product_unit" [(ngModel)]="p.product_unit" /></td>
       <td style="width: 75px;">
-        <!--<app-float-input #txt_input_count [model]="p" (onInput)="onCountInput(p)" [field]="'product_buy_count'"></app-float-input>-->
-        <input type="text" autocomplete="off" #txt_input_count style="text-align: center;" id="product_buy_count" [(ngModel)]="p.product_buy_count" /></td>
+        <app-float-input #txt_input_count [model]="p" (onInput)="onPriceInput(p)" [field]="input_count_field"></app-float-input></td>
       <td style="width: 75px;">
         <input type="text" autocomplete="off" disabled="disabled" style="text-align: right;" id="product_total_money" [(ngModel)]="p.product_total_money" /></td>
       <td style="width: 75px;">

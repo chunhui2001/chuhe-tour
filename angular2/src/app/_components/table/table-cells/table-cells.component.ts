@@ -1,7 +1,8 @@
-import {Component, OnInit, QueryList, ViewChildren} from '@angular/core';
+import {Component, Input, OnInit, QueryList, ViewChildren} from '@angular/core';
 
 
 import * as _ from 'lodash';
+// import {FloatInputComponent} from "../../../component/float-input/float-input.component";
 
 @Component({
   selector: 'app-table-cells',
@@ -9,6 +10,8 @@ import * as _ from 'lodash';
   styleUrls: ['./table-cells.component.css']
 })
 export class TableCellsComponent implements OnInit {
+
+  @Input() input_count_field: string;
 
   @ViewChildren('txt_input_count') txt_input_count: QueryList<any>;
 
@@ -36,12 +39,23 @@ export class TableCellsComponent implements OnInit {
   }
 
   newEmptyProduct(): any {
-    return {product_id: null, product_name: null, product_brand: null, product_spec: null, product_price: null, product_unit: null, product_buy_count: null, product_total_money: null, product_vender: null, order_item_desc: null};
+    const result = {product_id: null, product_name: null, product_brand: null, product_spec: null, product_price: null, product_unit: null, product_total_money: null, product_vender: null, order_item_desc: null};
+    result[this.input_count_field] = null;
+    return result;
+  }
+
+  getCoundFieldConfig(): any {
+    const result = {};
+    result[this.input_count_field] = 1;
+    return result;
   }
 
   appendProductToEmptyRow(data: any): void {
 
-    const product = _.extend(this.newEmptyProduct(), {product_buy_count: 1}, data);
+    const product = _.extend(this.newEmptyProduct(), this.getCoundFieldConfig(), data);
+
+    product[this.input_count_field] = product[this.input_count_field].toFixed(2);
+    product.product_price = product.product_price.toFixed(2);
 
     this.calculateTotalPrice(product);
 
@@ -57,8 +71,7 @@ export class TableCellsComponent implements OnInit {
 
     this.txt_input_count.forEach( (input, index) => {
       if (index === emptyRowIndex) {
-        input.nativeElement.focus();
-        // this.cleanEmptyProductRow();
+        input.focused();
       }
     });
 
@@ -88,8 +101,13 @@ export class TableCellsComponent implements OnInit {
   }
 
   calculateTotalPrice(product: any): void {
-    product.product_total_money = (product.product_buy_count * (product.product_price ? parseFloat(product.product_price) : 0)).toFixed(2);
+    product.product_total_money = (parseFloat(product[this.input_count_field]) * (product.product_price ? parseFloat(product.product_price) : 0)).toFixed(2);
+  }
 
+  getTableData(): any {
+    return this.rowList.filter(item => {
+      return item.product_id;
+    });
   }
 
 }

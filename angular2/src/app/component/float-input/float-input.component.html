@@ -1,1 +1,1 @@
-<input type="text" (keyup)="onPriceChange($event)" (keydown)="onKeydown($event)" autocomplete="off" style=" text-align: right;" id="{{field}}" [(ngModel)]="model[field]" />
+<input type="text" #input_float (keyup)="onFloatChange($event)" (keydown)="onKeydown($event)" autocomplete="off" style=" text-align: right;" id="{{field}}" [(ngModel)]="model[field]" />

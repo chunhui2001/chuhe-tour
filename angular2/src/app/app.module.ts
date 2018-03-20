@@ -49,9 +49,6 @@ import { ProductService } from './_services/product/product.service';
 import { BasicComponent } from './_components/basic.component';
 import { BasicChartComponent } from './_components/basic.chart.component';
 
-
-import { IndexPageComponent } from './_components/pages/index-page/index-page.component';
-
 import { AppComponent } from './_components/app/app.component';
 import { SignupComponent } from './_components/signup/signup.component';
 import { EmptyComponent } from './_components/empty/empty.component';
@@ -84,9 +81,12 @@ import { GaugeChartComponent } from './_components/charts/gauge-chart/gauge-char
 // https://blog.cloudboost.io/integrating-google-maps-in-angular-5-ca5f68009f29
 // https://angular-maps.com/
 import { GoogleMapsComponent } from './_components/maps/google-maps/google-maps.component';
-import { OrdersReplenishPageComponent } from './_components/pages/orders-replenish-page/orders-replenish-page.component';
+
+import { IndexPageComponent, OrdersReplenishPageComponent, OrdersSalesComponent } from './_components/pages/_index';
+
 import { TableCellsComponent } from './_components/table/table-cells/table-cells.component';
 import { FloatInputComponent } from './component/float-input/float-input.component';
+import { BasicOrderComponent } from './_components/pages/orders/basic-order.component';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -112,6 +112,7 @@ export class GoogleMaterialModule {}
 @NgModule({
   declarations: [
     BasicComponent,
+    BasicOrderComponent,
     BasicChartComponent,
     AppComponent,
     SignupComponent,
@@ -135,6 +136,7 @@ export class GoogleMaterialModule {}
     // pages components
     IndexPageComponent,
     OrdersReplenishPageComponent,
+    OrdersSalesComponent,
 
     GoogleMapsComponent
 

@@ -9,82 +9,43 @@ import {ProductService} from '../../../_services/product/product.service';
 
 
 import * as _ from 'lodash';
-import * as $ from "jquery";
+import * as $ from 'jquery';
+import {BasicOrderComponent} from '../orders/basic-order.component';
 
 @Component({
   selector: 'app-orders-replenish-page',
   templateUrl: './orders-replenish-page.component.html',
   styleUrls: ['./orders-replenish-page.component.css']
 })
-export class OrdersReplenishPageComponent extends BasicComponent implements OnInit {
+export class OrdersReplenishPageComponent extends BasicOrderComponent implements OnInit {
 
-  @ViewChild('tableCellsProduct') tableCellsProduct;
 
-  inputText: String;
-
-  myControl: FormControl = new FormControl();
-  options: any = [];
-  filteredOptions: Observable<string[]>;
-
-  constructor(protected route: ActivatedRoute, fb: FormBuilder, private productService: ProductService) {
-    super(route, fb);
+  constructor(protected route: ActivatedRoute, fb: FormBuilder, protected productService: ProductService) {
+    super(route, fb, productService);
   }
 
   ngOnInit() {
     this.loadData(null);
   }
 
-  filter(val: any): any[] {
-    return this.options.filter(item => item.name.toLowerCase().indexOf(val.toLowerCase()) === 0);
-    // return this.options.filter(item => item.id === val);
-  }
 
-  onOptionSelected(event, val: string): void {
-    const selectedOption = this.filter(val);
+  saveReplenishOrder(): void {
 
-    this.productService.getProsuctById(selectedOption[0].id).subscribe(result => {
-
-      if (result.data) {
-        this.newRow(result.data);
-      }
-
+    const orderItems = this.tableCellsProduct.getTableData().map(item => {
+      return { product_id: item.product_id, product_price: item.product_price, product_buy_count: item.product_buy_count };
     });
 
-
-    // this.tableCellsProduct.txt_input_count.last.nativeElement.focus();
-  }
-
-  inputTextChange(text): void {
-
-    if (!text || text.trim().length < 2) {
-      return;
+    for (let i = 0; i < orderItems.length; i++) {
+      $('<input type=\'hidden\' name=\'order_item_' + i + '\' value=\'' + JSON.stringify(orderItems[i]) + '\' />')
+        .appendTo($('#orders-order-detail-form'));
     }
 
-    this.loadData(text);
+    $('<input type=\'hidden\' name=\'order_item_count\' value=\'' + orderItems.length + '\' />')
+        .appendTo($($('#orders-order-detail-form')));
+
+    $('form#orders-order-detail-form').submit();
 
   }
 
-  loadData(pName: string): void {
-
-    this.productService.getProsucts(pName).subscribe(result => {
-
-      const restult = result.data.map(item => {
-        return {id: item.product_id, name: item.product_name };
-      });
-
-      this.options = _.uniqBy(restult.concat(this.options), 'name');
-
-      this.filteredOptions = this.myControl.valueChanges.pipe(
-        startWith(''),
-        map(val => this.filter(val))
-      );
-
-    });
-
-  }
-
-  newRow(data: any): void {
-     this.tableCellsProduct.appendNewRow(data);
-  }
 
 }
