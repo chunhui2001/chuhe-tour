@@ -8,8 +8,13 @@
   color: white;
 }
 
+.upload_preview {
+  border: solid 1px transparent;
+  border-top: none;
+}
+
 .upload_preview, .media_preview {
-  margin-right: .325em;
+  margin-right: .125em;
   font-size: 2em;
   color: cadetblue;
 }
@@ -41,3 +46,35 @@
   top:0;
   left: 0;
 }
+
+.media_preview.thumbnail {
+  cursor: pointer;
+  margin-right: .325em !important;
+}
+
+
+
+/** ngx dnd **/
+/deep/ .ngx-dnd-item, /deep/ .ngx-dnd-container {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/deep/ .ngx-dnd-container:after{
+  content:".";
+  clear:both;
+  display:block;
+  height:0;
+  overflow:hidden;
+  visibility:hidden;
+}
+
+/deep/ .ngx-dnd-container, /deep/ .ngx-dnd-item {
+  border:none !important;
+  background-color: transparent !important;
+}
+
+/deep/ .ngx-dnd-container, /deep/ .ngx-dnd-item {
+  float: left;
+}
+
