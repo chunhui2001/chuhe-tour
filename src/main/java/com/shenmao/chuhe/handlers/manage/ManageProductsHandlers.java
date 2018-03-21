@@ -182,14 +182,7 @@ public class ManageProductsHandlers extends BaseHandler {
         return result;
     }
 
-
-    /**
-     * 保存一个产品,
-     * @param routingContext
-     */
-    public void productsSave(RoutingContext routingContext) {
-
-        JsonObject product = getProductObject(routingContext);
+    private String getProductMedias(RoutingContext routingContext) {
 
         List<String> uploadedFilePaths = Application.moveUpload(
                 routingContext.getDelegate().vertx(), routingContext.getDelegate().fileUploads()
@@ -200,7 +193,20 @@ public class ManageProductsHandlers extends BaseHandler {
         }
 
         if (uploadedFilePaths.size() > 0)
-            product.put("product_medias", String.join(",", uploadedFilePaths));
+            return String.join(",", uploadedFilePaths);
+
+        return null;
+    }
+
+    /**
+     * 保存一个产品,
+     * @param routingContext
+     */
+    public void productsSave(RoutingContext routingContext) {
+
+        JsonObject product = getProductObject(routingContext);
+
+        product.put("product_medias", getProductMedias(routingContext));
 
         chuheDbService.createProducts(product, reply -> {
 
@@ -317,6 +323,12 @@ public class ManageProductsHandlers extends BaseHandler {
 
         JsonObject product = getProductObject(routingContext);
 
+        String product_medias_field = getString(routingContext,"product_medias_field");
+
+        System.out.println( product_medias_field + ", product_medias_field");
+
+        product.put("product_medias", getProductMedias(routingContext));
+        product.put("product_medias_field", product_medias_field);
 
         this.chuheDbService.updateProduct(productId, product, reply -> {
 

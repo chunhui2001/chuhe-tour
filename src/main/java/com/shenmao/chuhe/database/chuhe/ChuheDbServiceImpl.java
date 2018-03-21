@@ -191,7 +191,7 @@ public class ChuheDbServiceImpl implements ChuheDbService {
                 || productMedias == null || (new String(productMedias)).trim().isEmpty()) {
              // product.put("product_medias", "无");
         } else {
-            product.put("product_medias", new String(productMedias) + "667");
+            product.put("product_medias", new String(productMedias));
         }
 
         if (!product.containsKey("product_desc")
@@ -351,12 +351,23 @@ public class ChuheDbServiceImpl implements ChuheDbService {
             sqlParams.add(product.getValue("product_unit"));
             sqlParams.add(product.getValue("product_price"));
 
+            String productMediasField = product.containsKey("product_medias_field") ? product.getString("product_medias_field") : null;
             String productMedias = product.containsKey("product_medias") ? product.getString("product_medias") : null;
+
+            if (productMediasField == null || productMediasField.trim().isEmpty()) {
+                productMediasField = null;
+            }
 
             if (productMedias == null || productMedias.trim().isEmpty()) {
                 sqlParams.addNull();
             } else {
-                sqlParams.add(productMedias);
+
+                if (productMediasField != null) {
+                    sqlParams.add(productMediasField + "," + productMedias);
+                } else {
+                    sqlParams.add(productMedias);
+                }
+
             }
 
             if (productSpecStr != null) {

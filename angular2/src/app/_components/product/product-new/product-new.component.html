@@ -1,7 +1,7 @@
 
 <div class="form-container product-new-form product-new-component">
 
-  <!--<input type="hidden" id="hid_product_model_json" value="{&quot;product_id&quot;:5,&quot;product_name&quot;:&quot;9&quot;,&quot;product_type&quot;:&quot;9&quot;,&quot;product_unit&quot;:&quot;9&quot;,&quot;product_price&quot;:9.0,&quot;product_spec&quot;:&quot;99&quot;,&quot;product_desc&quot;:&quot;<p>9</p>&quot;,&quot;created_at&quot;:&quot;2018年03月01日 16时28分&quot;,&quot;last_updated&quot;:&quot;2018年03月01日 16时28分&quot;}">-->
+  <input type="hidden" id="hid_product_model_json" value="{&quot;product_id&quot;:33,&quot;product_name&quot;:&quot;8&quot;,&quot;product_type&quot;:&quot;无&quot;,&quot;product_unit&quot;:&quot;8&quot;,&quot;product_price&quot;:8.0,&quot;product_medias&quot;:null,&quot;product_spec&quot;:&quot;无&quot;,&quot;product_desc&quot;:&quot;<p>无</p>&quot;,&quot;created_at&quot;:&quot;2018年03月21日 14时38分&quot;,&quot;last_updated&quot;:&quot;2018年03月21日 15时19分&quot;,&quot;last_updated_friendly&quot;:&quot;九分钟前, 15:19&quot;}">
 
   <form class="small-form" id="product-new-form" #formData="ngForm"
         enctype="multipart/form-data" action="{{the_action}}" method="POST">
@@ -54,10 +54,10 @@
     </div>
     <div class="input-group">
       <span class="field-label">产品图片：</span>
-      <app-media-upload [editOrNew]="editOrNew"
-                        [srcs]="product_medias"
+      <app-media-upload [medias]="product_medias"
+                        [mediasHiddenField]="'product_medias_field'"
                         (onReupload)="onReupload()"
-                        uploadFieldName="product_media"></app-media-upload>
+                        [uploadFieldName]="'product_media'"></app-media-upload>
 
     </div>
     <div class="input-group">

@@ -1,4 +1,4 @@
-import {Component, Input, Output, OnInit, EventEmitter} from '@angular/core';
+import {Component, Input, Output, OnInit, EventEmitter, AfterViewInit} from '@angular/core';
 import * as $ from 'jquery';
 
 
@@ -8,30 +8,31 @@ import * as $ from 'jquery';
   templateUrl: './media-upload.component.html',
   styleUrls: ['./media-upload.component.css']
 })
-export class MediaUploadComponent implements OnInit {
+export class MediaUploadComponent implements OnInit, AfterViewInit {
 
   @Input()
   uploadFieldName: String;
 
   @Input()
-  editOrNew: String;
+  mediasHiddenField: String;
 
   @Input()
-  srcs: any = [];
+  medias: any = [];
 
   @Output()
   onReupload: EventEmitter<any> = new EventEmitter();
 
+  medias_field: String;
   uploadFiles: any = [];
 
   constructor() {
 
   }
 
-  ngOnInit() {
 
+  ngAfterViewInit() {
     const _that = this;
-    const _upload_hand_selector = '.media-upload-component-new .upload_hand';
+    const _upload_hand_selector = '.media-upload-component .upload_hand';
 
     $(document).on('click', _upload_hand_selector, function (event) {
 
@@ -46,6 +47,11 @@ export class MediaUploadComponent implements OnInit {
       $(currentFileUploadElement).click();
 
     });
+  }
+
+  ngOnInit() {
+
+    this.medias_field = this.medias.join(',');
 
   }
 
