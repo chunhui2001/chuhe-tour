@@ -758,11 +758,8 @@ public class ChuheDbServiceImpl implements ChuheDbService {
             params.add(item.getValue("product_price"));
             params.add(item.getValue("product_buy_count"));
 
-            if (!item.containsKey("order_item_desc") || item.getString("order_item_desc").trim().length() == 0) {
-                params.addNull();
-            } else {
-                params.add(item.getValue("order_item_desc"));
-            }
+            addedParams(params, item, "order_item_desc");
+
         }
 
         Single<UpdateResult> saveOrderItemsSingle = this.dbClient.rxUpdateWithParams(allOrdersReplenishSql, params);
@@ -770,6 +767,7 @@ public class ChuheDbServiceImpl implements ChuheDbService {
         return saveOrderItemsSingle;
 
     }
+
 
 
     public Single<UpdateResult> saveStocks(JsonObject order, List<JsonObject> productList, List<JsonObject> orderDetailItemList) {
@@ -1095,6 +1093,14 @@ public class ChuheDbServiceImpl implements ChuheDbService {
     }
 
 
+    private void addedParams(JsonArray params, JsonObject model, String field) {
+        if (!model.containsKey(field) || model.getValue(field) == null || model.getValue(field).toString().trim().length() == 0
+                || model.getValue(field).toString().toLowerCase().trim().equals("null")) {
+            params.addNull();
+        } else {
+            params.add(model.getValue(field));
+        }
+    }
 
     public JsonArray addParams(JsonObject data, JsonArray params, String key) {
         return addParams(data, params, key, false);

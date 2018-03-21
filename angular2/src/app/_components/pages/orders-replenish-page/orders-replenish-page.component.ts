@@ -36,7 +36,6 @@ export class OrdersReplenishPageComponent extends BasicOrderComponent implements
     });
 
     for (let i = 0; i < orderItems.length; i++) {
-
       $('<input type=\'hidden\' name=\'order_item_' + i + '\' value=\'' + JSON.stringify(orderItems[i]) + '\' />')
         .appendTo($('#orders-order-detail-form'));
     }
