@@ -26,7 +26,8 @@ export class CellInputCrossMoveDirective implements OnInit {
         $(currentTr).prev('tr').find('td:eq(' + currentTdIndex + ')').find('input:text').focus();
       } else if (code === 40) {
         // down
-        $(currentTr).next('tr').find('td:eq(' + currentTdIndex + ')').find('input:text').focus();
+        const textEle = $(currentTr).next('tr').find('td:eq(' + currentTdIndex + ')').find('input:text');
+        $(textEle).focus();
       }
 
     });

@@ -78,7 +78,7 @@ import {
 // component
 import { FloatInputComponent, MediaUploadComponent, SlickCarouselComponent } from './component/_index';
 
-import { CellInputCrossMoveDirective } from './directive/_index';
+import { CellInputCrossMoveDirective, SelectTextOnFocusDirective } from './directive/_index';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -134,7 +134,7 @@ export class GoogleMaterialModule {}
 
 
     // directive
-    CellInputCrossMoveDirective
+    CellInputCrossMoveDirective, SelectTextOnFocusDirective
 
   ],
   imports: [
