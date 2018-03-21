@@ -1,1 +1,1 @@
-<input type="text" appCellInputCrossMove appSelectTextOnFocus #input_float (keyup)="onFloatChange($event)" (keydown)="onKeydown($event)" autocomplete="off" style=" text-align: right;" id="{{field}}" [(ngModel)]="model[field]" />
+<input type="text" appCellInputCrossMove appSelectTextOnFocus #input_float (blur)="onlive($event)" (keyup)="onFloatChange($event)" (keydown)="onKeydown($event)" autocomplete="off" style=" text-align: right;" id="{{field}}" [(ngModel)]="model[field]" />

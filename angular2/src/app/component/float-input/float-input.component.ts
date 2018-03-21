@@ -44,15 +44,12 @@ export class FloatInputComponent implements OnInit {
 
   }
 
-  focused(): void {
-    this.input_float.nativeElement.focus();
-    // const inputElem = <HTMLInputElement>this.input_float.nativeElement;
-    // inputElem.select();
-    // inputElem.setSelectionRange(0, 4);
+  onlive(event): void {
+    this.model[this.field] = isNaN(parseFloat(this.model[this.field])) ? 0 : parseFloat(this.model[this.field]).toFixed(2);
+    this.onInput.emit();
   }
 
   onFloatChange(val: string): void {
-    this.model[this.field] = isNaN(parseFloat(this.model[this.field])) ? '' : parseFloat(this.model[this.field]).toFixed(2);
     this.onInput.emit();
   }
 
