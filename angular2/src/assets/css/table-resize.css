@@ -29,7 +29,7 @@ table.table-basic th {
   font-weight: bold;
   padding: 10px 15px;
   position: relative;
-  text-shadow: 0 1px 0 #000;
+  /*text-shadow: 0 1px 0 #000;*/
 }
 
 
@@ -74,13 +74,13 @@ table.table-basic tbody td {
 
 table.table-basic th input[type="checkbox"],table.table-basic td input[type="checkbox"] {
   margin: 0 auto;
-  transform: scale(1.55);
+  transform: scale(1.25);
 }
 
 
 table.table-basic tbody:hover tr:hover td {
   /*color: #444;*/
-  text-shadow: 1px 1px 1px #b7b7b7;
+  /*text-shadow: 1px 1px 1px #b7b7b7;*/
 }
 /***** table theme basic end *****/
 
@@ -112,7 +112,7 @@ table.table-cells th {
   font-weight: bold;
   padding: 10px 15px;
   position: relative;
-  text-shadow: 0 1px 0 #000;
+  /*text-shadow: 0 1px 0 #000;*/
   line-height: 1.2rem;
 }
 
@@ -155,13 +155,13 @@ table.table-cells tbody td {
 
 table.table-cells th input[type="checkbox"],table.table-cells td input[type="checkbox"] {
   margin: 0 auto;
-  transform: scale(1.55);
+  transform: scale(1.25);
 }
 
 
 table.table-cells tbody:hover tr:hover td {
   /*color: #444;*/
-  text-shadow: 1px 1px 1px #b7b7b7;
+  /*text-shadow: 1px 1px 1px #b7b7b7;*/
 }
 
 table.table-cells {

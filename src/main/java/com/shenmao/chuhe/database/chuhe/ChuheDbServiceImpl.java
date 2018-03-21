@@ -178,26 +178,20 @@ public class ChuheDbServiceImpl implements ChuheDbService {
         byte[] productDesc = product.getBinary("product_desc");
         byte[] productMedias = product.getBinary("product_medias");
 
-        product.fieldNames().stream().forEach(p -> {
-
+        product.fieldNames().stream().filter(p -> {
+            return !p.equals("product_medias") && !p.equals("product_desc");
+        }).forEach(p -> {
             Object val = product.getValue(p);
-
-            if (val == null) {
+            if (val == null || ((val instanceof String) && ((String)val).trim().isEmpty())) {
                 product.put(p, "无");
-            }
-
-            if (val instanceof String) {
-                if (((String)val).trim().isEmpty()) {
-                    product.put(p, "无");
-                }
             }
         });
 
         if (!product.containsKey("product_medias")
                 || productMedias == null || (new String(productMedias)).trim().isEmpty()) {
-            product.put("product_medias", "无");
+             // product.put("product_medias", "无");
         } else {
-            product.put("product_medias", new String(productMedias));
+            product.put("product_medias", new String(productMedias) + "667");
         }
 
         if (!product.containsKey("product_desc")
@@ -324,7 +318,14 @@ public class ChuheDbServiceImpl implements ChuheDbService {
             }
 
             newProduct.fieldNames().forEach(f -> {
-                oldProduct.put(f, newProduct.getValue(f));
+                if (newProduct.getValue(f) == null
+                        || newProduct.getValue(f).toString().trim().length() == 0) {
+                    Object objNull = null;
+                    oldProduct.put(f, objNull);
+                } else {
+                    oldProduct.put(f, newProduct.getValue(f));
+                }
+
             });
 
             product = oldProduct;
@@ -341,7 +342,7 @@ public class ChuheDbServiceImpl implements ChuheDbService {
 
             sqlParams.add(product.getValue("product_name"));
 
-            if (productType != null && !productType.trim().equals("无")) {
+            if (productType != null) {
                 sqlParams.add(product.getString("product_type"));
             } else {
                 sqlParams.addNull();
@@ -350,19 +351,21 @@ public class ChuheDbServiceImpl implements ChuheDbService {
             sqlParams.add(product.getValue("product_unit"));
             sqlParams.add(product.getValue("product_price"));
 
-            if (Strings.emptyToNull(product.getString("product_medias")) != null) {
-                sqlParams.add(product.getString("product_medias"));
-            } else {
+            String productMedias = product.containsKey("product_medias") ? product.getString("product_medias") : null;
+
+            if (productMedias == null || productMedias.trim().isEmpty()) {
                 sqlParams.addNull();
+            } else {
+                sqlParams.add(productMedias);
             }
 
-            if (productSpecStr != null && !productSpecStr.trim().equals("无")) {
+            if (productSpecStr != null) {
                 sqlParams.add(product.getString("product_spec"));
             } else {
                 sqlParams.addNull();
             }
 
-            if ( productDescStr != null && !productDescStr.trim().equals("无")) {
+            if ( productDescStr != null) {
                 sqlParams.add(product.getString("product_desc"));
             } else {
                 sqlParams.addNull();

@@ -49,6 +49,10 @@ export class FloatInputComponent implements OnInit {
     this.onInput.emit();
   }
 
+  focused(): void {
+    this.input_float.nativeElement.focus();
+  }
+
   onFloatChange(val: string): void {
     this.onInput.emit();
   }
