@@ -17,6 +17,9 @@ import java.net.URLDecoder;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 import java.util.stream.Collectors;
 
 public class Application {
@@ -157,11 +160,25 @@ public class Application {
 
         try {
             fileName = URLDecoder.decode(uploadFilename, "UTF-8");
+
+            // fileName
+
         } catch (UnsupportedEncodingException e) {
             throw new PurposeException(e.getMessage());
         }
 
-        return fileName;
+        return filterString(fileName);
+    }
+
+    public static String filterString(String   str)   throws PatternSyntaxException {
+        String regEx= "[`~!@#$%^&* \\-()+=|{}':;',\\[\\]<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？\\\\]{1,}";
+        Pattern p   =   Pattern.compile(regEx);
+        Matcher m   =   p.matcher(str);
+
+        String result = m.replaceAll("_").trim();
+
+//        return  Pattern.compile("[_][2,]").matcher(result).replaceAll("_");
+        return result;
     }
 
     private static String getUploadPath(String username, UploadType type) {

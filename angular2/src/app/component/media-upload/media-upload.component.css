@@ -13,8 +13,8 @@
 }
 
 .upload_preview {
-  border: solid 1px transparent;
-  border-top: none;
+  /*border: solid 1px transparent;*/
+  /*border-top: none;*/
 }
 
 .upload_preview, .media_preview {

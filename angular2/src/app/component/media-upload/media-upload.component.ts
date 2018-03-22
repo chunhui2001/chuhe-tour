@@ -1,7 +1,7 @@
-import {Component, Input, Output, OnInit, EventEmitter, AfterViewInit} from '@angular/core';
+import {Component, Input, Output, OnInit, EventEmitter, AfterViewInit, ElementRef} from '@angular/core';
 import * as $ from 'jquery';
 
-
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-media-upload',
@@ -33,7 +33,7 @@ export class MediaUploadComponent implements OnInit, AfterViewInit {
   medias_field: String;
   uploadFiles: any = [];
 
-  constructor() {
+  constructor(private myElement: ElementRef) {
 
   }
 
@@ -44,7 +44,7 @@ export class MediaUploadComponent implements OnInit, AfterViewInit {
 
     $(document).on('click', _upload_hand_selector, function (event) {
 
-      const currentComponentInstance = $($(event.target).parents('.media-upload-component')[0]);
+      const currentComponentInstance = $(_that.myElement.nativeElement);
       const currentFileUploadElement = $(currentComponentInstance).find('.upload_holder');
 
       $(currentFileUploadElement).unbind('change').on('change', function (ev) {
@@ -98,17 +98,36 @@ export class MediaUploadComponent implements OnInit, AfterViewInit {
 
   builderDrop(event): void {
 
-    this.medias_field = $($(event.el).parents('.media-upload-component')[0])
-      .find('.media_preview.thumbnail').map(function (){
-      return '/' + $(this).css('background-image')
-            .replace(/^url\(['"](.+)['"]\)/, '$1')
-            .replace (/^[a-z]{4,5}\:\/{2}[a-z]{1,}\:[0-9]{1,5}.(.*)/, '$1');
+    const _that = this;
+
+    this.medias_field = $(this.myElement.nativeElement)
+      .find('.media_preview.thumbnail')
+      .map(function (){
+        return _that.getBackgroundImageUrl(this);
     }).get().join(',');
 
   }
 
-  removeProductMedia(url: String): void {
-    debugger;
+  removeProductMedia(event, url: String): void {
+
+    const _that = this;
+debugger;
+    const result = $(this.myElement.nativeElement)
+      .find('.media_preview.thumbnail').filter(function () {
+      return _that.getBackgroundImageUrl(this) === url;
+    });
+
+    this.medias_field = _.trimEnd(_.trimStart((',' + this.medias_field + ',')
+                        .replace(',' + url + ',', ',').trim(), ','), ',');
+
+    $(result).remove();
+
+  }
+
+  getBackgroundImageUrl(element: any): String {
+    return $(element).attr('data-url');
+    // return '/' + $(element).css('background-image').replace(/^url\(['"](.+)['"]\)/, '$1')
+    //  .replace (/^[a-z]{4,5}\:\/{2}[a-zA-Z.]{1,}(\:[0-9]{1,5})?.(.*)/, '$2');
   }
 
 }

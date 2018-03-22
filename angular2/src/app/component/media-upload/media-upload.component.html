@@ -8,7 +8,8 @@
 
   <div class="ngx-dnd-container" ngxDroppable
        (drop)="builderDrop($event)">
-    <div (dblclick)="removeProductMedia(s);"
+    <div (dblclick)="removeProductMedia($event, s);"
+         [attr.data-url]="s"
       class="ngx-dnd-item media_preview thumbnail"
       ngxDraggable
       *ngFor="let s of medias"
@@ -25,7 +26,7 @@
 
   <div *ngIf="!uploadFiles || uploadFiles.length === 0" class="upload_preview box" style="float:left;">
     <img src="/assets/images/chuhe-logo.png" />
-    <span (click)="removeProductMedia(777);" style="font-size: .5em;">未上传</span>
+    <span style="font-size: .5em;">未上传</span>
   </div>
 
   <div class="upload_hand" style="float:left;margin-left: .3em;">
