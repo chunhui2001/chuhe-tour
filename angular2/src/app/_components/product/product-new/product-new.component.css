@@ -1,0 +1,17 @@
+
+/deep/ .fr-popup .fr-command.fr-btn, /deep/ .fr-toolbar .fr-command.fr-btn {
+  color:dimgray;
+}
+
+/deep/ .fr-toolbar .fr-command.fr-btn.fr-dropdown::after, /deep/ .fr-popup .fr-command.fr-btn.fr-dropdown::after {
+  border-top-color: gray;
+}
+
+/deep/ .fr-popup .fr-command.fr-btn:hover, /deep/ .fr-toolbar .fr-command.fr-btn:hover {
+  color:black;
+}
+
+
+/deep/ .fr-toolbar .fr-command.fr-btn:hover.fr-dropdown::after, /deep/ .fr-popup .fr-command.fr-btn:hover.fr-dropdown::after {
+  color:black;
+}
