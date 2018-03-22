@@ -300,7 +300,7 @@ public class ChuheDbServiceImpl implements ChuheDbService {
 
 
     @Override
-    public ChuheDbService updateProduct(Long productId, JsonObject newProduct, Handler<AsyncResult<Integer>> resultHandler) {
+    public ChuheDbService updateProduct(Long productId, JsonObject product, Handler<AsyncResult<Integer>> resultHandler) {
 
         this.fetchProductById(productId, ar -> {
 
@@ -309,7 +309,7 @@ public class ChuheDbServiceImpl implements ChuheDbService {
                 return;
             }
 
-            JsonObject product;
+            JsonObject newProduct;
             JsonObject oldProduct = ar.result();
 
             if (oldProduct.fieldNames().size() == 0) {
@@ -317,67 +317,74 @@ public class ChuheDbServiceImpl implements ChuheDbService {
                 return;
             }
 
-            newProduct.fieldNames().forEach(f -> {
-                if (newProduct.getValue(f) == null
-                        || newProduct.getValue(f).toString().trim().length() == 0) {
+            product.fieldNames().forEach(f -> {
+                if (product.getValue(f) == null
+                        || product.getValue(f).toString().trim().length() == 0) {
                     Object objNull = null;
                     oldProduct.put(f, objNull);
                 } else {
-                    oldProduct.put(f, newProduct.getValue(f));
+                    oldProduct.put(f, product.getValue(f));
                 }
 
             });
 
-            product = oldProduct;
+            newProduct = oldProduct;
 
             String updateProductSql = sqlQueries.get(ChuheSqlQuery.SAVE_PRODUCT);
             LOGGER.info(updateProductSql);
 
 
-            String productType = Strings.emptyToNull(product.getString("product_type"));
-            String productSpecStr = Strings.emptyToNull(product.getString("product_spec"));
-            String productDescStr = Strings.emptyToNull(product.getString("product_desc"));
+            String productType = Strings.emptyToNull(newProduct.getString("product_type"));
+            String productSpecStr = Strings.emptyToNull(newProduct.getString("product_spec"));
+            String productDescStr = Strings.emptyToNull(newProduct.getString("product_desc"));
 
             JsonArray sqlParams = new JsonArray();
 
-            sqlParams.add(product.getValue("product_name"));
+            sqlParams.add(newProduct.getValue("product_name"));
 
             if (productType != null) {
-                sqlParams.add(product.getString("product_type"));
+                sqlParams.add(newProduct.getString("product_type"));
             } else {
                 sqlParams.addNull();
             }
 
-            sqlParams.add(product.getValue("product_unit"));
-            sqlParams.add(product.getValue("product_price"));
+            sqlParams.add(newProduct.getValue("product_unit"));
+            sqlParams.add(newProduct.getValue("product_price"));
 
-            String productMediasField = product.containsKey("product_medias_field") ? product.getString("product_medias_field") : null;
-            String productMedias = product.containsKey("product_medias") ? product.getString("product_medias") : null;
+            String productMediasField = newProduct.containsKey("product_medias_field") ? newProduct.getString("product_medias_field") : null;
+            String productMedias = newProduct.containsKey("product_medias") ? newProduct.getString("product_medias") : null;
 
             if (productMediasField == null || productMediasField.trim().isEmpty()) {
                 productMediasField = null;
             }
 
-            if (productMedias == null || productMedias.trim().isEmpty()) {
+            if ((productMedias == null || productMedias.trim().isEmpty()) && productMediasField == null) {
                 sqlParams.addNull();
             } else {
 
-                if (productMediasField != null) {
-                    sqlParams.add(productMediasField + "," + productMedias);
-                } else {
-                    sqlParams.add(productMedias);
+                String productMediasValue = "";
+
+                if (productMediasField != null && productMedias != null) {
+                    productMediasValue = productMediasField + "," + productMedias;
+                } else if (productMediasField != null) {
+                    productMediasValue = productMediasField;
+                } else if (productMedias != null) {
+                    productMediasValue = productMedias;
                 }
 
+                sqlParams.add(productMediasValue);
             }
 
+
+
             if (productSpecStr != null) {
-                sqlParams.add(product.getString("product_spec"));
+                sqlParams.add(newProduct.getString("product_spec"));
             } else {
                 sqlParams.addNull();
             }
 
             if ( productDescStr != null) {
-                sqlParams.add(product.getString("product_desc"));
+                sqlParams.add(newProduct.getString("product_desc"));
             } else {
                 sqlParams.addNull();
             }

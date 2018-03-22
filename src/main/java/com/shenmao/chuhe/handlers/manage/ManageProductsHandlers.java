@@ -118,8 +118,6 @@ public class ManageProductsHandlers extends BaseHandler {
 
         String pName = getQueryParam(routingContext, "pname");
 
-        System.out.println(pName + ", pName");
-
         if (!pName.isEmpty()) {
             chuheDbService.filterProductsByName(pName, resultHandler);
             return;
@@ -324,8 +322,6 @@ public class ManageProductsHandlers extends BaseHandler {
         JsonObject product = getProductObject(routingContext);
 
         String product_medias_field = getString(routingContext,"product_medias_field");
-
-        System.out.println( product_medias_field + ", product_medias_field");
 
         product.put("product_medias", getProductMedias(routingContext));
         product.put("product_medias_field", product_medias_field);
