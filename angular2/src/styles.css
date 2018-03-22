@@ -4,7 +4,11 @@
 @import '~@angular/material/prebuilt-themes/indigo-pink.css';
 @import '~@swimlane/ngx-dnd/release/index.css';
 
-
+/*.md-virtual-repeat-container.md-autocomplete-suggestions-container {*/
+  /*height: 24vh;*/
+  /*min-height: 12vh;*/
+  /*max-height: 24vh !important;*/
+/*}*/
 
 .fa-photo:before, .fa-image:before, .fa-picture-o:before {
   content: "\f013" !important;

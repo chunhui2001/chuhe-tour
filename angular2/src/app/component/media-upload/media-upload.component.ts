@@ -96,4 +96,15 @@ export class MediaUploadComponent implements OnInit, AfterViewInit {
     this.onReupload.emit();
   }
 
+  builderDrop(event): void {
+
+    this.medias_field = $($(event.el).parents('.media-upload-component')[0])
+      .find('.media_preview.thumbnail').map(function (){
+      return '/' + $(this).css('background-image')
+            .replace(/^url\(['"](.+)['"]\)/, '$1')
+            .replace (/^[a-z]{4,5}\:\/{2}[a-z]{1,}\:[0-9]{1,5}.(.*)/, '$1');
+    }).get().join(',');
+
+  }
+
 }

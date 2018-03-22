@@ -5,7 +5,8 @@
   <input style="display: none;" type="file" multiple="multiple" class="upload_holder" name="upload_holder" />
   <input type="hidden" class="_medias" id="{{mediasHiddenField}}" name="{{mediasHiddenField}}" value="{{medias_field}}" />
 
-  <div class="ngx-dnd-container" ngxDroppable>
+  <div class="ngx-dnd-container" ngxDroppable
+       (drop)="builderDrop($event)">
     <div
       class="ngx-dnd-item media_preview thumbnail"
       ngxDraggable
@@ -19,7 +20,6 @@
     <img src="/assets/images/chuhe-logo.png" />
     <span>{{name}}</span>
   </div>
-
 
   <div *ngIf="!uploadFiles || uploadFiles.length === 0" class="upload_preview box" style="float:left;">
     <img src="/assets/images/chuhe-logo.png" />

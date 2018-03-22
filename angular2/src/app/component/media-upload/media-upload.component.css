@@ -1,3 +1,6 @@
+.thumbnail {
+  box-shadow: none;
+}
 
 .upload_hand img {
   opacity: .85;
@@ -50,9 +53,26 @@
 .media_preview.thumbnail {
   cursor: pointer;
   margin-right: .325em !important;
+  margin-bottom: .325em !important;
 }
 
+.media_preview.thumbnail:last-child {
+  cursor: pointer;
+  margin-right: .625em !important;
+}
 
+.media_preview.thumbnail {
+  border: solid 1px transparent;
+}
+
+.ngx-dnd-container:hover .media_preview.thumbnail {
+  /*border-style: dashed !important;*/
+  border: dashed 1px cadetblue;
+}
+
+.media_preview.thumbnail:hover {
+  border: solid 1px green !important;
+}
 
 /** ngx dnd **/
 /deep/ .ngx-dnd-item, /deep/ .ngx-dnd-container {
@@ -70,7 +90,7 @@
 }
 
 /deep/ .ngx-dnd-container, /deep/ .ngx-dnd-item {
-  border:none !important;
+  /*border:none !important;*/
   background-color: transparent !important;
 }
 
