@@ -107,4 +107,8 @@ export class MediaUploadComponent implements OnInit, AfterViewInit {
 
   }
 
+  removeProductMedia(url: String): void {
+    debugger;
+  }
+
 }
