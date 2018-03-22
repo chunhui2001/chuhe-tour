@@ -10,14 +10,6 @@ import * as $ from 'jquery';
 })
 export class MediaUploadComponent implements OnInit, AfterViewInit {
 
-
-  orderableLists = [
-    "Item 1a",
-    "Item 2a",
-    "Item 3a"
-  ]
-
-
   @Input()
   uploadFieldName: String;
 

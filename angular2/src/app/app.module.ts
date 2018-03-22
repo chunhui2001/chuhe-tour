@@ -31,7 +31,6 @@ import {
 
 // Import your library
 import { SlickModule } from 'ngx-slick';
-import { NgxDnDModule } from '@swimlane/ngx-dnd';
 
 // Ngx-Charts
 import { NgxChartsModule } from '@swimlane/ngx-charts';
@@ -139,7 +138,7 @@ export class GoogleMaterialModule {}
 
   ],
   imports: [
-    BrowserModule, BrowserAnimationsModule, NgxChartsModule, NgxDnDModule,
+    BrowserModule, BrowserAnimationsModule, NgxChartsModule,
     HttpClientModule, FormsModule, ReactiveFormsModule,
     FroalaEditorModule.forRoot(), FroalaViewModule.forRoot(),
     GoogleMaterialModule, PerfectScrollbarModule,
