@@ -4,7 +4,7 @@
      "secure": false,
      "logLevel": "debug"
   },
-  "/p/*" : {
+  "/p/*.josn|/store/p/*.json" : {
     "target": "http://localhost:8081",
     "secure": false,
     "logLevel": "debug"

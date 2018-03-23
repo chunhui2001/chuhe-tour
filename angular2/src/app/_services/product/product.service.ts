@@ -34,7 +34,7 @@ export class ProductService {
 
   getProsuctById(pId: any): Observable<any> {
 
-    const endpoint = '/mans/products/' + pId + '.json';
+    const endpoint = '/store/p/' + pId + '.json';
 
     return this.http.get(endpoint)
       .map((response: RestResponse) => {

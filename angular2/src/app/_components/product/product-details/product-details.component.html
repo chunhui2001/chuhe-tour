@@ -166,15 +166,8 @@
                           [ngClass]="{'skuChoosed': sku.selected === true }"
                           disableRipple="true">{{sku.name}}</mat-checkbox>
             <span style="float:right;color:darkorange;font-size: 1.2em;"><b>￥{{sku.price}}</b>
-              <mat-icon _ngcontent-c1=""
-                        [style.font-size]="'.7em'"
-                        [style.color]="'gray'"
-                        [style.width]="'14px'"
-                        [style.height]="'14px'"
-                      class="mat-icon mat-chip-remove material-icons ng-star-inserted"
-                      matchipremove="" role="img" aria-hidden="true">help</mat-icon>
+              <fa name="question-circle" [style.font-size]="'.7em'" [style.color]="'gray'"></fa>
             </span>
-
           </li>
         </ul>
 
@@ -185,8 +178,9 @@
                   [style.font-size]="'1.2em'"
                   [style.line-height]="'1.5em'"
                   class="small primary button">
-            <mat-icon>add_shopping_cart</mat-icon>
-            加入购物车</button>
+            <fa name="cart-arrow-down"></fa>
+            加入购物车
+          </button>
         </div>
 
       </div>

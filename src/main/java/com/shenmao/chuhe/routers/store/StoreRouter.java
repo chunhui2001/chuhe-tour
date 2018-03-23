@@ -23,7 +23,7 @@ public class StoreRouter {
 
     public void init() {
 
-        this.router.routeWithRegex(GET, "/store/p/(?<pid>[^\\/.]+)")
+        this.router.routeWithRegex(GET, "/store/p/(?<pid>[^\\/.]+)"  + GlobalRouter.getRouter(null))
                 .handler(storeHandlers::productDetailHandler);
 
         this.router.routeWithRegex(GET, "/store/(?<storeIdOrName>[^\\/.]+)")

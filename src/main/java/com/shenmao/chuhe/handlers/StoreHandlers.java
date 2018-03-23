@@ -55,7 +55,7 @@ public class StoreHandlers {
             }
 
             chainSerialization
-                    .putContextData(null)
+                    .putContextData(reply.result())
                     .serialize();
 
         });
