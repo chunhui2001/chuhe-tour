@@ -4,6 +4,11 @@
      "secure": false,
      "logLevel": "debug"
   },
+  "/p/*" : {
+    "target": "http://localhost:8081",
+    "secure": false,
+    "logLevel": "debug"
+  },
   "/mans/products.json|/mans/products/*.json": {
     "target": "http://localhost:8081",
     "secure": false,

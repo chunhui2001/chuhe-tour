@@ -29,10 +29,38 @@ public class StoreHandlers {
 
     public void productDetailHandler(RoutingContext routingContext) {
 
-        ChainSerialization.create(routingContext.getDelegate())
-                .putViewName("/store/product_detail.html")
-                .putContextData(null)
-                .serialize();
+
+        ChainSerialization chainSerialization = ChainSerialization.create(routingContext.getDelegate())
+                .putViewName("/store/product_detail.html");
+
+        Long productId = Long.parseLong(routingContext.request().getParam("param0"));
+//        this.chuheDbService.fetchProductById()
+
+        this.chuheDbService.fetchProductById(productId, reply -> {
+
+            if (!reply.succeeded()) {
+                chainSerialization
+                        .putMessage("未能取得产品详情")
+                        .putException(reply.cause()).serialize();
+                return;
+            }
+
+            if (reply.result().fieldNames().size() == 0) {
+                chainSerialization
+                        .setStatusRealCode(404)
+                        .putFlashMessage("你访问的产品不存在")
+                        .putContextData(null)
+                        .redirect("/not-found", true);
+                return;
+            }
+
+            chainSerialization
+                    .putContextData(null)
+                    .serialize();
+
+        });
+
+
     }
 
 }

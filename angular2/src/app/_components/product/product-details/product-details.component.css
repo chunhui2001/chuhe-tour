@@ -59,7 +59,7 @@ ul.list-item-info li {
 
 
 .product-pillar {
-  min-height: 445px;
+  /*min-height: 445px;*/
   margin-left: 1em;
   background-color: white;
   padding: 1.25em;
@@ -72,6 +72,12 @@ ul.list-item-info li {
   min-height: 400px;
 }
 
+/deep/ .product-skus .mat-checkbox-label {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 
 
 /deep/ .slick-gallery {

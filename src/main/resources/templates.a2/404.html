@@ -4,6 +4,14 @@
 
 {{#partial "content" }}
 <h1>404 -- Page not found</h1>
+
+
+{{#if flashMessage}}
+<div class="flash-message">
+    {{flashMessage}}
+</div>
+{{/if}}
+
 {{/partial}}
 
 {{> layouts/layout_default}}

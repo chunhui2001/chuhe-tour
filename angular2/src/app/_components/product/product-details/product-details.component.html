@@ -1,6 +1,6 @@
 <div>
   <div style="width: 100%; margin-bottom: 1em;">
-    <h1 style="font-size: 1.3rem;margin-bottom: .45em;">感恩（ganen）儿童安全座椅 larky系列半人马座宝宝座椅 9个月-12岁 枫树蓝</h1>
+    <h1 style="font-size: 1.3rem;margin-bottom: .45em;">{{productModel.product_name}}</h1>
     <p style="font-size: .9em;color:gray;">
 
       <span style="font-size: 1.1em;">
@@ -15,9 +15,8 @@
       <span style="color: gray;">&Iota;</span>
       类型: eBay <span style="color: gray;">&Iota;</span>
       分享: 8 <span style="color: gray;">&Iota;</span>
-      加入收藏
+      加入收藏 <span style="color: gray;">&Iota;</span>
 
-      <span style="color: gray;">&Iota;</span>
       <fa name="cog" animation="spin"></fa>
 
       <span class="fa-layers fa-fw">
@@ -27,11 +26,12 @@
 
       <fa name="video" ></fa>
 
+      <span style="color: gray;">&Iota;</span> {{ productModel.last_updated_time | formatDate }}
     </p>
   </div>
   <div class="product-left">
 
-    <app-slick-carousel [images]="images_slide" [thumbnails]="thumbnails_slide"></app-slick-carousel>
+    <app-slick-carousel #slickCarouselProduct [images]="images_slide" [thumbnails]="thumbnails_slide"></app-slick-carousel>
 
     <div class="product-tab-boxes">
       <mat-tab-group>
@@ -146,10 +146,10 @@
   </div>
 
   <div class="product-right">
-    <div class="product-pillar">
+    <div class="product-pillar" style="padding-bottom: 4em;">
       <div class="product-pillar-container">
         <span class="fa-layers fa-fw">
-          <i class="fas fa-certificate" style="color: blue;"></i>
+          <fa name="certificate" animation="spin" style="color: blue;"></fa>
           <span class="fa-layers-text fa-inverse" data-fa-transform="shrink-11.5 rotate--30" style="font-weight:900">NEW</span>
         </span>
         <span class="fa-layers fa-fw">
@@ -159,15 +159,13 @@
         </span>
 
 
-        <h1 style="font-size: .925em;line-height: 1.7em;">
-
-          感恩（ganen）儿童安全座椅 larky系列半人马座宝宝座椅 9个月-12岁 枫树蓝</h1>
+        <h1 style="font-size: .925em;line-height: 1.7em;">{{productModel.product_name}}</h1>
         <ul class="product-skus">
           <li *ngFor="let sku of skuItems">
             <mat-checkbox (click)="skuClick(sku)"
                           [ngClass]="{'skuChoosed': sku.selected === true }"
                           disableRipple="true">{{sku.name}}</mat-checkbox>
-            <span style="float:right;color:darkorange;"><b>￥{{sku.price}}</b>
+            <span style="float:right;color:darkorange;font-size: 1.2em;"><b>￥{{sku.price}}</b>
               <mat-icon _ngcontent-c1=""
                         [style.font-size]="'.7em'"
                         [style.color]="'gray'"

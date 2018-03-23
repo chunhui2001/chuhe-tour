@@ -22,6 +22,7 @@ export const router: Routes = [
   { path: '_c/product/new', component: ProductNewComponent },
   { path: '_c/product/details', component: ProductDetailsComponent },
   { path: '_c/charts', component: ChartsPageComponent },
+  { path: '_c/p/:pid', component: ProductDetailsComponent },
 
   { path: '', component: IndexPageComponent },
   { path: 'index', component: IndexPageComponent },

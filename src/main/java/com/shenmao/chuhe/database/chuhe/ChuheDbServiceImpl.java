@@ -168,11 +168,13 @@ public class ChuheDbServiceImpl implements ChuheDbService {
 
         if (create_at != null) {
             product.put("created_at", _DATE_FM_MINUTE.format(create_at));
+            product.put("created_at_time",create_at.getTime());
         }
 
         if (last_updated != null) {
             product.put("last_updated", _DATE_FM_MINUTE.format(last_updated));
             product.put("last_updated_friendly", DatetimeHelper.getFriendlyTime(last_updated, "无"));
+            product.put("last_updated_time", last_updated.getTime());
         }
 
         byte[] productDesc = product.getBinary("product_desc");

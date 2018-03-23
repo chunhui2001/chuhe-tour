@@ -42,12 +42,23 @@ export class SlickCarouselComponent implements OnInit {
 
   ngOnInit() {
 
+    this.load();
+
+  }
+
+  reload(images, thumbnails) {
+    this.images = images;
+    this.thumbnails = thumbnails;
+    this.load();
+  }
+
+  load() {
     this.currentSlide = this.thumbnails_slide[0];
 
     if (this.images) {
       // from(this.images).subscribe(val => { this.images_slide.push({ idx: 0, img: val }); });
       this.images_slide = this.images.map((val, index) => {
-          return { idx: index, img: val};
+        return { idx: index, img: val};
       });
     }
 
@@ -56,9 +67,7 @@ export class SlickCarouselComponent implements OnInit {
         return { idx: index, img: val};
       });
     }
-
   }
-
 
   beforeChange(e) {
     this.currentSlide = this.thumbnails_slide[e.slick.currentSlide];

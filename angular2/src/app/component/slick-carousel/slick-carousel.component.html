@@ -2,7 +2,8 @@
   <ngx-slick class="slider-for slick-gallery carousel"  #slickModal1="slick-modal"
              [config]="{ infinite: true, pauseOnHover: true, slidesToShow: 1, slidesToScroll: 1, arrows: false, asNavFor: '.slick-carousel-component .slider-nav', autoplay: false, fade: true, cssEase: 'linear'}">
     <div ngxSlickItem *ngFor="let slide of images_slide"
-         [style.height]="'100%'" [style.background-image]="'url(' + slide.img + ')'" [style.background-size]="'100% 100%'"
+         [style.height]="'100%'" [style.background-image]="'url(' + slide.img + ')'" [style.background-size]="'cover'"
+         [style.background-color]="'darkslategray'"
          class="slide">
     </div>
   </ngx-slick>
@@ -11,7 +12,8 @@
              [config]="{ infinite: true, pauseOnHover: true, slidesToShow: 5, slidesToScroll: 1, arrows: true, asNavFor: '.slick-carousel-component .slider-for', autoplay: false, centerMode: true, focusOnSelect: true}"
              (afterChange)="beforeChange($event)">
     <div ngxSlickItem *ngFor="let slide of thumbnails_slide; let i = index"
-         [style.width]="'350px'" [style.height]="'100%'" [style.background-image]="'url(' + slide.img + ')'" [style.background-size]="'cover'"
+         [style.width]="'350px'" [style.height]="'100%'" [style.background-image]="'url(' + slide.img + ')'"
+         [style.background-size]="'cover'" [style.background-color]="'darkslategray'"
          class="slide" [ngClass]="{'active-slide': i === currentSlide.idx }">
       <div [ngClass]="{'active': i === currentSlide.idx }"></div>
     </div>

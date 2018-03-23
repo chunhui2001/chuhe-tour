@@ -81,6 +81,8 @@ import { FloatInputComponent, MediaUploadComponent, SlickCarouselComponent } fro
 
 import { CellInputCrossMoveDirective, SelectTextOnFocusDirective } from './directive/_index';
 
+import { DatePipePipe } from './pipes/_index';
+
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
 };
@@ -135,7 +137,10 @@ export class GoogleMaterialModule {}
 
 
     // directive
-    CellInputCrossMoveDirective, SelectTextOnFocusDirective
+    CellInputCrossMoveDirective, SelectTextOnFocusDirective,
+
+    // pipes
+    DatePipePipe
 
   ],
   imports: [

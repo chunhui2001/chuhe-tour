@@ -87,8 +87,11 @@ public class ChainSerialization {
   }
 
   public ChainSerialization putFlashMessage(String msg) {
-    if(! "XMLHttpRequest".equals(this._context.request().getHeader("X-Requested-With")))
+
+    if(! "XMLHttpRequest".equals(this._context.request().getHeader("X-Requested-With"))) {
       this._context.session().put("flashMessage", msg);
+    }
+
     this.putMessage(msg);
     return this;
   }
