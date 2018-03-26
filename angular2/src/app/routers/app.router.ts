@@ -24,8 +24,11 @@ export const router: Routes = [
   { path: '_c/charts', component: ChartsPageComponent },
   { path: '_c/p/:pid', component: ProductDetailsComponent },
 
-  { path: '', component: IndexPageComponent },
-  { path: 'index', component: IndexPageComponent },
+  // { path: '', component: IndexPageComponent },
+  // { path: 'index', component: IndexPageComponent },
+  { path: '', component: OrdersSalesComponent },
+  { path: 'index', component: OrdersSalesComponent },
+
   { path: 'registry', component: SignupComponent },
   { path: 'login', component: EmptyComponent },
 

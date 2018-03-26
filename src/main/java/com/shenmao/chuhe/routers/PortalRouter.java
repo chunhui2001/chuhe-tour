@@ -93,7 +93,10 @@ public class PortalRouter  implements ChuheRouter {
     this.router.route(HttpMethod.GET, "/").handler(routingContext ->
             routingContext.reroute("/index"));
     this.router.routeWithRegex(HttpMethod.GET, "/index" + GlobalHandlers._SUPPORT_EXTS_PATTERN)
-            .handler(portalHandlers::indexHandler);
+            // .handler(portalHandlers::indexHandler)
+            .handler(routeingContext -> {
+              routeingContext.reroute("/mans/orders/sales");
+            });
 
   }
 
