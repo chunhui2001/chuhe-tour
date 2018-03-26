@@ -1,12 +1,13 @@
 package com.shenmao.chuhe.handlers.manage;
 
 import com.shenmao.chuhe.database.chuhe.ChuheDbService;
+import com.shenmao.chuhe.handlers.BaseHandler;
 import com.shenmao.chuhe.serialization.ChainSerialization;
 import io.vertx.rxjava.ext.web.RoutingContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ManageStockHandlers {
+public class ManageStockHandlers extends BaseHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ManageStockHandlers.class);
 
@@ -23,6 +24,16 @@ public class ManageStockHandlers {
 
 
     public void stockIndex(RoutingContext routingContext) {
+
+        Long productId = -1L;
+
+        try {
+            productId = Long.parseLong(getQueryParam(routingContext, "pid"));
+        } catch (Exception e) {
+
+        }
+
+        System.out.println(productId + ", productId");
 
         this.chuheDbService.fetchAllStocks(listAsyncResult -> {
 

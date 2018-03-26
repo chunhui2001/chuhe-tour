@@ -829,9 +829,9 @@ public class ChuheDbServiceImpl implements ChuheDbService {
                 count = item.getDouble("product_sale_count");
 
             params.add(count);
+            params.add(item.getDouble("product_price"));
             params.add(count * item.getDouble("product_price"));
 
-            params.add(0.0);
             params.add(0);
 
         }
