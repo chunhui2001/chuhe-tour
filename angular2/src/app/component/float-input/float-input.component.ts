@@ -45,7 +45,7 @@ export class FloatInputComponent implements OnInit {
   }
 
   onlive(event): void {
-    this.model[this.field] = isNaN(parseFloat(this.model[this.field])) ? 0 : parseFloat(this.model[this.field]).toFixed(2);
+    this.model[this.field] = isNaN(parseFloat(this.model[this.field])) ? null : parseFloat(this.model[this.field]).toFixed(2);
     this.onInput.emit();
   }
 

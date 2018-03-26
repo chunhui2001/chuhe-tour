@@ -101,7 +101,19 @@ export class TableCellsComponent implements OnInit {
   }
 
   calculateTotalPrice(product: any): void {
+
+    if (isNaN(parseFloat(product[this.input_count_field]))) {
+      product.product_total_money = null;
+      return;
+    }
+
+    if (isNaN(parseFloat(product.product_price))) {
+      product.product_total_money = null;
+      return;
+    }
+
     product.product_total_money = (parseFloat(product[this.input_count_field]) * (product.product_price ? parseFloat(product.product_price) : 0)).toFixed(2);
+
   }
 
   getTableData(): any {

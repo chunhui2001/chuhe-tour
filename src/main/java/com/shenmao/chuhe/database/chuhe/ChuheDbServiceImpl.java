@@ -873,7 +873,9 @@ public class ChuheDbServiceImpl implements ChuheDbService {
             params.add(item.getValue("product_price"));
             params.add(item.getValue("product_sale_count"));
 
-            if (!item.containsKey("order_item_desc") || item.getString("order_item_desc").trim().length() == 0) {
+            if (!item.containsKey("order_item_desc")
+                    || item.getString("order_item_desc").trim().length() == 0
+                    || "null".equals(item.getString("order_item_desc").trim().toLowerCase())) {
                 params.addNull();
             } else {
                 params.add(item.getValue("order_item_desc"));

@@ -149,14 +149,30 @@ public class ManageOrderHandlers extends BaseHandler {
 
             JsonObject order_item = getJson(routingContext,"order_item_" + i);
             order_item.put("product_id", Long.parseLong(order_item.getValue("product_id") + ""));
-            order_item.put("product_price", Double.parseDouble(order_item.getValue("product_price") + ""));
+
+            try {
+                order_item.put("product_price", Double.parseDouble(order_item.getValue("product_price") + ""));
+            } catch (Exception e) {
+                order_item.put("product_price", 0.00);
+            }
 
             order_item.put("order_item_desc", order_item.getString("order_item_desc") + "");
 
             if (orderType.equals("replenish")) {
-                order_item.put("product_buy_count", Double.parseDouble(order_item.getValue("product_buy_count") + ""));
+                try {
+                    order_item.put("product_buy_count", Double.parseDouble(order_item.getValue("product_buy_count") + ""));
+                } catch (Exception e) {
+                    order_item.put("product_buy_count", 0.00);
+                }
+
             } else {
-                order_item.put("product_sale_count", Double.parseDouble(order_item.getValue("product_sale_count") + ""));
+
+                try {
+                    order_item.put("product_sale_count", Double.parseDouble(order_item.getValue("product_sale_count") + ""));
+                } catch (Exception e) {
+                    order_item.put("product_sale_count", 0.00);
+                }
+
             }
 
             orderDetailItemList.add(order_item);
