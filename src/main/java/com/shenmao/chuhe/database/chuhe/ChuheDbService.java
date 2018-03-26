@@ -64,7 +64,7 @@ public interface ChuheDbService {
 
     // stock
     @Fluent
-    ChuheDbService fetchAllStocks(Handler<AsyncResult<List<JsonObject>>> resultHandler);
+    ChuheDbService fetchAllStocks(Long productId, Handler<AsyncResult<List<JsonObject>>> resultHandler);
 
     // users
     @Fluent

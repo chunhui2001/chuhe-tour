@@ -951,14 +951,28 @@ public class ChuheDbServiceImpl implements ChuheDbService {
 
 
     @Override
-    public ChuheDbService fetchAllStocks(Handler<AsyncResult<List<JsonObject>>> resultHandler) {
+    public ChuheDbService fetchAllStocks(Long productId, Handler<AsyncResult<List<JsonObject>>> resultHandler) {
 
         String fetchAllStocksSql = this.sqlQueries.get(ChuheSqlQuery.GET_ALL_STOCK);
+        String productStocksSql = this.sqlQueries.get(ChuheSqlQuery.PRODUCT_STOCK);
 
-        LOGGER.info(fetchAllStocksSql);
+        String sql = fetchAllStocksSql;
 
-        this.dbClient.rxQuery(fetchAllStocksSql)
-                .flatMapObservable(resultSet -> Observable.from(resultSet.getRows()))
+        if (productId != -1) {
+            sql = productStocksSql;
+        }
+
+        LOGGER.info(sql);
+
+        Single<ResultSet> singleQuery = null;
+
+        if (productId == -1) {
+            singleQuery = this.dbClient.rxQuery(sql);
+        } else {
+            singleQuery = this.dbClient.rxQueryWithParams(sql, new JsonArray().add(productId));
+        }
+
+        singleQuery.flatMapObservable(resultSet -> Observable.from(resultSet.getRows()))
                 .map(stock -> {
 
                     Date orderDate = null;

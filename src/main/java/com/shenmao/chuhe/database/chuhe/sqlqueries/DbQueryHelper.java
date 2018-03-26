@@ -118,6 +118,7 @@ public class DbQueryHelper {
         sqlQueries.put(ChuheSqlQuery.CREATE_STOCK_TABLE, queriesProps.getProperty("create-stock-table"));
         sqlQueries.put(ChuheSqlQuery.SAVE_STOCK, queriesProps.getProperty("save-stock"));
         sqlQueries.put(ChuheSqlQuery.GET_ALL_STOCK, queriesProps.getProperty("all-stocks"));
+        sqlQueries.put(ChuheSqlQuery.PRODUCT_STOCK, queriesProps.getProperty("product-stocks"));
 
     }
 

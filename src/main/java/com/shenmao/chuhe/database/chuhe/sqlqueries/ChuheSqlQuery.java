@@ -49,6 +49,7 @@ public enum ChuheSqlQuery {
     CREATE_STOCK_TABLE,
     SAVE_STOCK,
     GET_ALL_STOCK,
+    PRODUCT_STOCK,
 
     // dealer
     CREATE_DEALER_TABLE,

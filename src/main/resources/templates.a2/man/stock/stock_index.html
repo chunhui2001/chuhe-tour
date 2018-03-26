@@ -31,6 +31,7 @@
             <th style="text-align: right;">金额</th>
             <th>日期</th>
             <th style="text-align: center;">类型</th>
+            <th style="text-align: center;">单据编号</th>
             <th>&ensp;</th>
         </tr>
     </thead>
@@ -54,6 +55,7 @@
                 <td style="text-align: right;">{{total_price}}</td>
                 <td style="text-align: center;">{{order_date}}</td>
                 <td style="text-align: center;">{{order_type_name}}</td>
+                <td style="text-align: center;">{{order_id}}</td>
                 <td style="text-align: center;">
 
                     {{#compare order_type 'eq' 'sales' }}
@@ -70,7 +72,7 @@
 
 
         {{#compare viewData.length 'eq' 0 }}
-        <td colspan="9">当前还没有任何数据 ~</td>
+        <td colspan="10">当前还没有任何数据 ~</td>
         {{/compare}}
 
     </tbody>

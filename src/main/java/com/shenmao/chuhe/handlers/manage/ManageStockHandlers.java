@@ -35,7 +35,7 @@ public class ManageStockHandlers extends BaseHandler {
 
         System.out.println(productId + ", productId");
 
-        this.chuheDbService.fetchAllStocks(listAsyncResult -> {
+        this.chuheDbService.fetchAllStocks(productId, listAsyncResult -> {
 
             ChainSerialization chainSerialization = ChainSerialization.create(routingContext.getDelegate())
                     .putViewName("/man/stock/stock_index.html")

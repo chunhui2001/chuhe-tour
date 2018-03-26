@@ -71,7 +71,9 @@
 
       <input type="hidden" [disabled]="editOrNew !== 'edit'" name="_method" [(ngModel)]="formMethod" />
 
-      <button type="submit" *ngIf="editOrNew === 'edit'" (click)="onDelSubmit(formData)" class="small primary button">删除该产品</button>
+      <button type="submit" *ngIf="editOrNew === 'edit'" (click)="onDelSubmit(formData)" class="small alert button">删除该产品</button>
+
+      <a class="small success button" href="/mans/stock?pid={{product_id}}">查看库存状况</a>
 
       <button type="submit"  [disabled]="!formData.valid"
               (click)="onSaveSubmit(formData)"
