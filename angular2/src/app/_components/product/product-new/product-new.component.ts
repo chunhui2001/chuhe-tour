@@ -24,6 +24,7 @@ export class ProductNewComponent extends BasicComponent implements OnInit {
   editOrNew: String = 'new';
   the_action: String = '/mans/products';
   the_url: String = '';
+  formMethod: String = 'put';
 
   product_id: Number;
   product_name: String = '';
@@ -157,7 +158,7 @@ export class ProductNewComponent extends BasicComponent implements OnInit {
     this.created_at = productObject.created_at;
     this.last_updated = productObject.last_updated;
 
-    this.the_action = this.editOrNew === 'edit' ? (this.the_action + '/' + this.product_id) : '/mans/products';
+    this.the_action = this.editOrNew === 'edit' ? (this.the_action + '/' + this.product_id) : this.the_action;
 
 
     this.productTypeFruits = this.product_type
@@ -173,7 +174,7 @@ export class ProductNewComponent extends BasicComponent implements OnInit {
 
   }
 
-  onSubmit(formData) {
+  onSaveSubmit(formData): void {
 
     if (!formData.valid) {
       return;
@@ -189,8 +190,22 @@ export class ProductNewComponent extends BasicComponent implements OnInit {
       );
     }
 
+    this.formMethod = 'put';
+
     $('.product-new-component #product-new-form').submit();
 
+  }
+
+
+  onDelSubmit(formData): Boolean {
+
+    this.formMethod = 'delete';
+
+    if (!confirm('确认删除么?')) {
+      return false;
+    }
+
+    $('.product-new-component #product-new-form').submit();
   }
 
 }

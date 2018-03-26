@@ -69,10 +69,12 @@
 
     <div style="text-align: right;margin-bottom: 1em;">
 
-      <input type="hidden" [disabled]="editOrNew !== 'edit'" name="_method" value="put" />
+      <input type="hidden" [disabled]="editOrNew !== 'edit'" name="_method" [(ngModel)]="formMethod" />
+
+      <button type="submit" *ngIf="editOrNew === 'edit'" (click)="onDelSubmit(formData)" class="small primary button">删除该产品</button>
 
       <button type="submit"  [disabled]="!formData.valid"
-              (click)="onSubmit(formData)"
+              (click)="onSaveSubmit(formData)"
               class="small primary button">保存</button>
       <a *ngIf="editOrNew === 'edit'" class="small clear button last" href="/mans/products/{{product_id}}">取消编辑</a>
       <a class="small clear link button" href="/mans/products">返回产品列表</a>

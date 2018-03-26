@@ -330,13 +330,13 @@ public class ManageProductsHandlers extends BaseHandler {
 
             if (reply.succeeded()) {
 
-                String message = reply.result() > 0 ? "成功更新一个产品 [" + productId + "]" : "内容无更新或产品不存在 [" + productId + "]";
+                String message = reply.result() > 0 || 1==1 ? "成功更新一个产品 [" + productId + "]" : "内容无更新或产品不存在 [" + productId + "]";
 
                 ChainSerialization.create(routingContext.getDelegate())
                         .setStatusRealCode(reply.result() > 0 ? 200 : 202)
                         .putMessage(message)
                         .putFlashMessage(message)
-                        .redirect(routingContext.normalisedPath());
+                        .redirect(routingContext.normalisedPath() + "/edit");
             } else {
                 ChainSerialization.create(routingContext.getDelegate())
                         // .putFlashMessage(reply.cause().getMessage())
