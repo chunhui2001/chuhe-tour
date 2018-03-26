@@ -45,7 +45,9 @@ public class PortalVerticle extends AbstractVerticle {
     // SessionStore sessionStore = LocalSessionStore.create(vertx, "myapp.sessionmap", 10000);
     SessionStore sessionStore = new SessionStore(RedisSessionStore
             .create(vertx.getDelegate(), "myapp.vertx.sessionmap", 10000)
-            .host("127.0.0.1").port(6379));
+            .host(Application.getConfig().getString("redis_host"))
+            .port(Application.getConfig().getInteger("redis_port"))
+            .auth(Application.getConfig().getString("redis_passwd")).init());
 
     // Route: consumes and produces
     // routeInstance.consumes("text/html").consumes("text/plain").consumes("*/json");

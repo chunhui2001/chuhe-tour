@@ -1,5 +1,6 @@
 package com.shenmao.chuhe.passport;
 
+import com.shenmao.chuhe.Application;
 import io.vertx.rxjava.core.Vertx;
 import io.vertx.core.json.JsonObject;
 import io.vertx.rxjava.ext.auth.AuthProvider;
@@ -11,6 +12,7 @@ import io.vertx.ext.auth.shiro.ShiroAuthOptions;
 import io.vertx.ext.auth.shiro.ShiroAuthRealmType;
 import io.vertx.rxjava.ext.jdbc.JDBCClient;
 import io.vertx.rxjava.ext.web.handler.*;
+import scala.Int;
 
 import java.util.Objects;
 
@@ -32,13 +34,20 @@ public class AuthHandlerImpl {
 
     // http://vertx.io/docs/vertx-auth-jdbc/java/
     // http://vertx.io/docs/vertx-jdbc-client/java/
-    String dbName = "db_chuhe_local";//json.getString("db-name");
+
+    String dbHost = Application.getConfig().getString("mysql_host");
+    Integer dbPort = Application.getConfig().getInteger("mysql_port");
+    String dbName = Application.getConfig().getString("mysql_database_name");
+    String dbUname = Application.getConfig().getString("mysql_uname");
+    String dbPasswd = Application.getConfig().getString("mysql_password");
+
     Objects.requireNonNull(dbName);
+
     JDBCClient client = JDBCClient.createNonShared(vertx, new JsonObject()
-            .put("url", "jdbc:mysql://127.0.0.1:3307/db_chuhe_local")
+            .put("url", "jdbc:mysql://" + dbHost + ":" + dbPort + "/" + dbName)
             .put("driver_class", "com.mysql.jdbc.Driver")
-            .put("user", "root")
-            .put("password", "Cc")
+            .put("user", dbUname)
+            .put("password", dbPasswd)
             .put("max_pool_size", 30));
     // JDBCClient client = JDBCClient.createShared(vertx.getDelegate(), mySQLClientConfig, dbName);
     JDBCAuth jdbcAuthProvider = JDBCAuth.create(vertx, client);

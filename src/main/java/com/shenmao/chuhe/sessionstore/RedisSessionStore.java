@@ -27,4 +27,6 @@ public interface RedisSessionStore extends SessionStore {
 
   RedisSessionStore auth(String pwd);
 
+  RedisSessionStore init();
+
 }

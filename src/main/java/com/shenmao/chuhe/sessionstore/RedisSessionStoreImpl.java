@@ -39,13 +39,14 @@ public class RedisSessionStoreImpl implements RedisSessionStore {
 
 
   public RedisSessionStoreImpl(Vertx vertx, String defaultSessionMapName, int retryTimeout) {
+
     this.vertx = vertx;
     this.sessionMapName = defaultSessionMapName;
     this.retryTimeout = retryTimeout;
 
     localMap = vertx.sharedData().getLocalMap(sessionMapName);
     localSessionIds = new Vector<>();
-    redisManager();
+
   }
 
   @Override
@@ -172,6 +173,12 @@ public class RedisSessionStoreImpl implements RedisSessionStore {
     redisClient.close(res->{
       logger.debug("关闭 redisClient ");
     });
+  }
+
+  @Override
+  public RedisSessionStore init() {
+    this.redisManager();
+    return this;
   }
 
   private void redisManager() {

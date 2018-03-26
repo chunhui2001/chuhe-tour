@@ -1,5 +1,6 @@
 package com.shenmao.chuhe.verticle;
 
+import com.shenmao.chuhe.Application;
 import com.shenmao.chuhe.commons.PropertyParser;
 import com.shenmao.chuhe.database.chuhe.ChuheDbService;
 import com.shenmao.chuhe.database.chuhe.sqlqueries.ChuheSqlQuery;
@@ -63,16 +64,23 @@ public class ChuheDbVerticle extends AbstractVerticle {
 
     public SQLClient mysql(JsonObject config) {
 
+
+        String dbHost = Application.getConfig().getString("mysql_host");
+        Integer dbPort = Application.getConfig().getInteger("mysql_port");
+        String dbName = Application.getConfig().getString("mysql_database_name");
+        String dbUname = Application.getConfig().getString("mysql_uname");
+        String dbPasswd = Application.getConfig().getString("mysql_password");
+
         JsonObject mySQLClientConfig = new JsonObject()
-                .put("host", "127.0.0.1")
-                .put("port", 3307)
-                .put("database", "db_chuhe_local")
+                .put("host", dbHost)
+                .put("port", dbPort)
+                .put("database", dbName)
                 .put("driver_class", config().getString(CONFIG_CHUHEDB_JDBC_DRIVER_CLASS, "com.mysql.jdbc.Driver"))
                 .put("maxPoolSize", config().getInteger(CONFIG_CHUHEDB_JDBC_MAX_POOL_SIZE, 30))
                 .put("queryTimeout", 20000)     // 20 seconds
                 .put("charset", "UTF-8")
-                .put("username", "root")
-                .put("password", "Cc");
+                .put("username", dbUname)
+                .put("password", dbPasswd);
 
 //        SQLClient mySQLClient  = MySQLClient.createShared(vertx.getDelegate(), mySQLClientConfig);
 

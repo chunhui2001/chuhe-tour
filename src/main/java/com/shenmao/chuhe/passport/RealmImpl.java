@@ -1,5 +1,6 @@
 package com.shenmao.chuhe.passport;
 
+import com.shenmao.chuhe.Application;
 import com.shenmao.chuhe.database.chuhe.ChuheDbService;
 import com.shenmao.chuhe.database.chuhe.sqlqueries.ChuheSqlQuery;
 import com.shenmao.chuhe.database.chuhe.sqlqueries.DbQueryHelper;
@@ -127,10 +128,17 @@ public class RealmImpl extends AuthorizingRealm {
 
   private static Connection getJdbcConnection() {
 
+
+    String dbHost = Application.getConfig().getString("mysql_host");
+    Integer dbPort = Application.getConfig().getInteger("mysql_port");
+    String dbName = Application.getConfig().getString("mysql_database_name");
+    String dbUname = Application.getConfig().getString("mysql_uname");
+    String dbPasswd = Application.getConfig().getString("mysql_password");
+
     String driver = "com.mysql.jdbc.Driver";
-    String url = "jdbc:mysql://127.0.0.1:3307/db_chuhe_local";
-    String username = "root";
-    String password = "Cc";
+    String url = "jdbc:mysql://" + dbHost + ":" + dbPort + "/" + dbName;
+    String username = dbUname;
+    String password = dbPasswd;
     Connection conn = null;
 
     try {

@@ -1,15 +1,21 @@
 package com.shenmao.chuhe;
 
+import com.shenmao.chuhe.commons.PropertyParser;
+import com.shenmao.chuhe.database.chuhe.sqlqueries.DbQueryHelper;
 import com.shenmao.chuhe.exceptions.PurposeException;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpMethod;
+import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.FileUpload;
 import io.vertx.rxjava.core.buffer.Buffer;
 import io.vertx.rxjava.ext.web.RoutingContext;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.ProtocolException;
 import java.net.URL;
@@ -34,8 +40,41 @@ public class Application {
     public static String UPLOAD_FOLDER_PDF_PRODUCT = UPLOAD_FOLDER + "/pdf/product";
     public static String UPLOAD_FOLDER_AUDIO_PRODUCT = UPLOAD_FOLDER + "/audio/product";
 
-
     static String ENV = "local";
+    static JsonObject config  = new JsonObject();
+
+    static {
+
+
+        InputStream envInputStream = DbQueryHelper.class.getResourceAsStream("/properties/application/environemnt." + ENV + ".properties");
+
+        Properties envProps = new PropertyParser();
+
+        try {
+
+            envProps.load(new InputStreamReader(envInputStream, "utf-8"));
+            envInputStream.close();
+
+            // config database
+            config.put("mysql_host", envProps.getProperty("mysql_host"));
+            config.put("mysql_port", Integer.parseInt(envProps.getProperty("mysql_port")));
+            config.put("mysql_database_name", envProps.getProperty("mysql_database_name"));
+            config.put("mysql_uname", envProps.getProperty("mysql_uname"));
+            config.put("mysql_password", envProps.getProperty("mysql_password"));
+            // config redis
+            config.put("redis_host", envProps.getProperty("redis_host"));
+            config.put("redis_port", Integer.parseInt(envProps.getProperty("redis_port")));
+            config.put("redis_passwd", envProps.getProperty("redis_passwd"));
+
+        } catch (IOException e) {
+            throw  new RuntimeException(e);
+        }
+
+    }
+
+    public static JsonObject getConfig() {
+        return config;
+    }
 
     public static String getAppRoot () {
 
@@ -177,7 +216,7 @@ public class Application {
 
         String result = m.replaceAll("_").trim();
 
-//        return  Pattern.compile("[_][2,]").matcher(result).replaceAll("_");
+        // return  Pattern.compile("[_][2,]").matcher(result).replaceAll("_");
         return result;
     }
 
