@@ -30,17 +30,18 @@ public class PortalVerticle extends AbstractVerticle {
 
   private static final int KB = 1024;
   private static final int MB = 1024 * KB;
-  private static final int _PORT = 8081;
+  private static int _PORT = 8081;
+
+  static {
+    _PORT = Integer.parseInt(Application.getConfig().getString("http_port"));
+  }
 
   private static final Logger logger = LoggerFactory.getLogger(PortalVerticle.class);
 
   @Override
   public void start() throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
 
-
     Router router = Router.router(vertx);
-
-
 
     // SessionStore sessionStore = LocalSessionStore.create(vertx, "myapp.sessionmap", 10000);
     SessionStore sessionStore = new SessionStore(RedisSessionStore
@@ -126,7 +127,9 @@ public class PortalVerticle extends AbstractVerticle {
     router.mountSubRouter("/mans/", ChuheRouter.create(ManageRouter.class.getName(), vertx).getRouter());
     router.mountSubRouter("/", ChuheRouter.create(GlobalRouter.class.getName(), vertx).getRouter());
 
-    vertx.createHttpServer(createDefaultHttpServerOptions()).requestHandler(router::accept).listen(_PORT);
+    vertx.createHttpServer(createDefaultHttpServerOptions()).requestHandler(router::accept).listen(
+            config().getInteger("http.port", _PORT)
+    );
 
   }
 

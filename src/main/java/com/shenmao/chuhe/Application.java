@@ -46,7 +46,12 @@ public class Application {
     static {
 
 
-        InputStream envInputStream = DbQueryHelper.class.getResourceAsStream("/properties/application/environemnt." + ENV + ".properties");
+        String ENV = Optional.ofNullable(System.getenv("VERTX_ENV_CHUHE")).orElseThrow(
+                () -> new RuntimeException("VERTX_ENV_CHUHE is not set in the environment"));
+
+        String envPath = "/properties/application/environemnt." + ENV + ".properties";
+
+        InputStream envInputStream = DbQueryHelper.class.getResourceAsStream(envPath);
 
         Properties envProps = new PropertyParser();
 
@@ -54,7 +59,8 @@ public class Application {
 
             envProps.load(new InputStreamReader(envInputStream, "utf-8"));
             envInputStream.close();
-
+            // http
+            config.put("http_port", envProps.getProperty("http_port"));
             // config database
             config.put("mysql_host", envProps.getProperty("mysql_host"));
             config.put("mysql_port", Integer.parseInt(envProps.getProperty("mysql_port")));
@@ -67,7 +73,7 @@ public class Application {
             config.put("redis_passwd", envProps.getProperty("redis_passwd"));
 
         } catch (IOException e) {
-            throw  new RuntimeException(e);
+            throw  new RuntimeException("Read '" + envPath + "' file error");
         }
 
     }
