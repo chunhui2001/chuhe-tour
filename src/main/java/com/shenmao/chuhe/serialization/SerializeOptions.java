@@ -35,8 +35,11 @@ public class SerializeOptions {
       case JSON:
         _routingContext.request().headers().set("Accept", "*/json");
         break;
-      case XML:
+      case CSV:
         _routingContext.request().headers().set("Accept", "*/xml");
+        break;
+      case XML:
+        _routingContext.request().headers().set("Accept", "*/csv");
         break;
       case WS:
         _routingContext.request().headers().set("Accept", "*/json");
@@ -44,7 +47,7 @@ public class SerializeOptions {
       case TEXT:
         break;
       default:
-        throw new IllegalArgumentException("Invalid shiro auth realm type: " + type);
+        throw new IllegalArgumentException("Invalid Accept type: " + type);
     }
 
   }

@@ -39,6 +39,9 @@ public class ChainSerialization {
       case JSON:
         JsonSerialization.serialize(this._context, serializeOptions);
         break;
+      case CSV:
+        CsvSerialization.serialize(this._context, serializeOptions);
+        break;
       case XML:
         XmlSerialization.serialize(this._context, serializeOptions);
         break;
@@ -48,7 +51,7 @@ public class ChainSerialization {
       case TEXT:
         break;
       default:
-          throw new IllegalArgumentException("Invalid shiro auth realm type: " + serializeOptions.getType());
+          throw new IllegalArgumentException("Invalid Accept type: " + serializeOptions.getType());
     }
 
   }

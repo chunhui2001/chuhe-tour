@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, QueryList, ViewChildren} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Input, OnInit, QueryList, ViewChildren} from '@angular/core';
 
 
 import * as _ from 'lodash';
@@ -9,11 +9,13 @@ import * as _ from 'lodash';
   templateUrl: './table-cells.component.html',
   styleUrls: ['./table-cells.component.css']
 })
-export class TableCellsComponent implements OnInit {
+export class TableCellsComponent implements OnInit, AfterViewInit {
 
   @Input() input_count_field: string;
 
   @ViewChildren('txt_input_count') txt_input_count: QueryList<any>;
+
+  htmlChanged = new EventEmitter(true); // true for async emitting
 
   rowList: any = [];
 
@@ -75,7 +77,10 @@ export class TableCellsComponent implements OnInit {
       }
     });
 
+  }
 
+  ngAfterViewInit() {
+    this.txt_input_count.changes.subscribe(() => this.htmlChanged.emit('txt_input_count changed')); // Async, should not cause issue
   }
 
   getEmptyRowIndex(): number {

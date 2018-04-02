@@ -2,7 +2,7 @@ package com.shenmao.chuhe.serialization;
 
 public enum SerializeType {
   HTML,
-  JSON, XML, TEXT, PDF, WS;
+  JSON, XML, CSV, TEXT, PDF, WS;
 
   private SerializeType() {
   }

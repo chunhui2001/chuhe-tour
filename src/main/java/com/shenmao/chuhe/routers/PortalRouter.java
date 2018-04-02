@@ -233,6 +233,7 @@ public class PortalRouter  implements ChuheRouter {
     router.routeWithRegex(".+\\.html").handler(globalHandlers::htmlRenderHandler);
     router.routeWithRegex(".+\\.json").handler(globalHandlers::jsonSerializationHandler);
     router.routeWithRegex(".+\\.xml").handler(globalHandlers::xmlSerializationHandler);
+    router.routeWithRegex(".+\\.csv").handler(globalHandlers::csvSerializationHandler);
 
     // not support exts
     router.route().handler(globalHandlers::notSupportExtensionMiddleware);

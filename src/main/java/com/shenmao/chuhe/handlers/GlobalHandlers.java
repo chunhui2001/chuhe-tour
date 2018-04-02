@@ -12,8 +12,8 @@ import java.io.StringWriter;
 
 public class GlobalHandlers {
 
-  public static final String _SUPPORT_EXTS_PATTERN = "(.html|.htm|.json|.xml)?";
-  public static final String _SUPPORT_EXTS_PATTERN2 = "^.*(\\.html|\\.htm|\\.json|\\.xml)$";
+  public static final String _SUPPORT_EXTS_PATTERN = "(.html|.htm|.json|.xml|.csv)?";
+  public static final String _SUPPORT_EXTS_PATTERN2 = "^.*(\\.html|\\.htm|\\.json|\\.xml|\\.csv)$";
   public static final String _SUPPORT_RESOURCE_EXTS_PATTERN = "^.*(\\.jpg|\\.jpeg|\\.png|\\.gif|\\.css|\\.js|\\.ppt|\\.pdf|\\.png)$";
 
   public static GlobalHandlers create() {
@@ -37,6 +37,11 @@ public class GlobalHandlers {
 
   public void xmlSerializationHandler(RoutingContext routingContext) {
     SerializeOptions.create(routingContext.getDelegate(), SerializeType.XML);
+    routingContext.next();
+  }
+
+  public void csvSerializationHandler(RoutingContext routingContext) {
+    SerializeOptions.create(routingContext.getDelegate(), SerializeType.CSV);
     routingContext.next();
   }
 
