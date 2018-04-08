@@ -1,18 +1,11 @@
 package com.shenmao.chuhe.commons.exports;
 
-import io.vertx.core.json.JsonArray;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.lang3.RandomStringUtils;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class CSVWriter {
@@ -25,19 +18,23 @@ public class CSVWriter {
 
     public static File get(String[] columns, List<ArrayList<Object>> data) throws IOException {
 
-        Path path = Paths.get(SAMPLE_CSV_FILE_DIR, RandomStringUtils.randomAlphanumeric(15) + ".csv");
-
-
         CSVFormat format = CSVFormat.DEFAULT;
 
         if (columns != null) {
             format = format.withHeader(columns);
         }
 
-        try (
+        File file = new File(SAMPLE_CSV_FILE_DIR, RandomStringUtils.randomAlphanumeric(15) + ".csv");
 
-            BufferedWriter writer = Files.newBufferedWriter(path);
-            CSVPrinter csvPrinter = new CSVPrinter(writer, format);
+        FileOutputStream fos = new FileOutputStream(file);
+
+        // 写BOM
+        fos.write(new byte[] { (byte)0xEF, (byte)0xBB, (byte)0xBF });
+
+        try (
+            OutputStreamWriter osw = new OutputStreamWriter(fos, "UTF-8");
+            // BufferedWriter writer = Files.newBufferedWriter(path);
+            CSVPrinter csvPrinter = new CSVPrinter(osw, format);
 
         ) {
 
@@ -56,7 +53,7 @@ public class CSVWriter {
 
             csvPrinter.flush();
 
-            return path.toFile();
+            return file;
 
         }
 

@@ -16,7 +16,6 @@ public class CsvSerialization {
 
     public static void serialize(RoutingContext context, SerializeOptions options) {
 
-        context.response().putHeader("Content-Type", "application/csv;charset=UTF-8");
         JsonObject result = JsonSerialization.getData(context, options);
 
         try {
@@ -38,7 +37,7 @@ public class CsvSerialization {
     }
 
     public static void sendCsvFile(RoutingContext context, File file, String displayName) {
-        context.response().putHeader(HttpHeaders.CONTENT_TYPE, "application/csv;charset=UTF-8")
+        context.response().putHeader(HttpHeaders.CONTENT_TYPE, "text/csv;charset=UTF-8")
                 .putHeader("Content-Disposition", "attachment; filename=\""
                         + (displayName == null ? file.getName() : displayName) + "\"")
                 .putHeader(HttpHeaders.TRANSFER_ENCODING, "chunked")
