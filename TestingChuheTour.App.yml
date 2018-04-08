@@ -1,0 +1,23 @@
+main:
+    app_name: TestingChuheTour
+    app_env: testing
+    app_port: 8081
+    app_params: volume mysql redis jdk
+    app_root: ./
+    # app_certs: letsencrypt/
+images:
+    volume: chunhui2001/centos_6_dev:basic
+    mysql: chunhui2001/debian_8_dev:mysql_5.7
+    redis: chunhui2001/centos_6_dev:redis_instance
+    jdk: chunhui2001/ubuntu_1610_dev:java8
+volumes:
+    mysql: /home/ubuntu/workspace/db_chuhetour_testing
+    jdk: /home/ubuntu/workspace/chuhe-tour
+redis:
+    redis_passwd: 1miz0dK0x9TyYvba+j7WD2FPwuJo+iBn1iBBuzgaww
+
+mysql:
+    mysql_passwd: vxKbvZYACuJKVAmL5i5ma6WSrneIHglDkYirBgXX5I
+
+commands:
+    cmd: cmd
