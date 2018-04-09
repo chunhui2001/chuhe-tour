@@ -75,6 +75,10 @@ public class PortalHandlers extends BaseHandler {
     code.put("code_sign", sign);
     code.put("code_value", checkCode.getCheckCodeStr());
     code.put("send_channel", "email");
+    code.put("client_ip", routingContext.request().remoteAddress().host());
+    code.put("client_agent", routingContext.request().getHeader("User-Agent"));
+
+
 
     this.chuheDbService.createCheckCode(code, reply -> {
 

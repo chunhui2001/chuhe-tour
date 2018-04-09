@@ -1592,6 +1592,8 @@ public class ChuheDbServiceImpl implements ChuheDbService {
         data.add(checkcode.getString("code_sign"));
         data.add(checkcode.getString("code_value"));
         data.add(checkcode.getString("send_channel"));
+        data.add(checkcode.getString("client_ip"));
+        data.add(checkcode.getString("client_agent"));
         data.add(_DATE_FM_T.format(now.getTime()));
 
         now.add(Calendar.SECOND, 90);
