@@ -61,16 +61,30 @@ export class CheckCodeInputComponent implements OnInit {
 
   onKeyup(event): void {
 
-    if ( this.steps === 'clicked_send_click' && this.checkCodeValue.length >= this.checkCodeLength) {
+    if ( this.steps === 'clicked_send_click') {
 
-      if (this.checkCodeValue.length > this.checkCodeLength) {
-        this.checkcodeInvalid = true;
-        return;
-      }
+      if (this.checkCodeValue.length >= this.checkCodeLength) {
+        if (this.checkCodeValue.length > this.checkCodeLength) {
+          this.checkcodeInvalid = true;
+          return;
+        }
 
-      if (this.checkCodeValue.length === this.checkCodeLength) {
+        if (this.checkCodeValue.length === this.checkCodeLength) {
 
-        // this.steps = 'clicked_checkcode';
+          this.checkcodeInvalid = false;
+
+          // validate check code
+          if ('22'.length === 2) {
+            this.steps = 'clicked_checkcode';
+            this.checkCode = null;
+            this.placeholder = '已发送, 请输入短信验证码';
+
+          } else {
+            // invalide checkcode
+            this.checkcodeInvalid = true;
+          }
+
+        }
       }
 
     }
@@ -79,7 +93,14 @@ export class CheckCodeInputComponent implements OnInit {
 
   onKeydown(event): void {
 
+    const code = event.keyCode || event.which;
+
     if ( this.steps === 'clicked_send_click' && this.checkCodeValue && this.checkCodeValue.length >= this.checkCodeLength) {
+
+      // 8: back, 37: left arrow
+      if (code === 8 || code === 37 || code === 39) {
+        return;
+      }
 
       event.preventDefault();
 
