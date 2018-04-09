@@ -8,3 +8,7 @@
   background-repeat: no-repeat;
   background-position-y: center;
 }
+
+.checkcode-invalid {
+  color: red;
+}

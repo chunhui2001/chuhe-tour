@@ -26,9 +26,6 @@ export class FloatInputComponent implements OnInit {
 
     const code = event.keyCode || event.which;
 
-
-    console.log(event.key, 'code 2');
-    console.log(code, 'code 2');
     if ((code < 48 || code > 57) && [8, 9, 13, 16, 17, 37, 39, 91, 190].indexOf(code) === -1) {
 
       if (event.getModifierState
@@ -38,7 +35,6 @@ export class FloatInputComponent implements OnInit {
       } else {
         event.preventDefault();
       }
-
 
     }
 

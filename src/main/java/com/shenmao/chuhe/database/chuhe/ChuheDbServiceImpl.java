@@ -70,6 +70,11 @@ public class ChuheDbServiceImpl implements ChuheDbService {
             readyHandler.handle(Future.succeededFuture(this));
         });
 
+
+        this.createTable(sqlQueries.get(ChuheSqlQuery.CREATE_CHECKCODE_TABLE), voidAsyncResult -> {
+            readyHandler.handle(Future.succeededFuture(this));
+        });
+
     }
 
 
@@ -83,14 +88,14 @@ public class ChuheDbServiceImpl implements ChuheDbService {
 
                 SQLConnection connection = ar.result().getDelegate();
 
-                LOGGER.error(create_sql);
+                // LOGGER.info(create_sql);
 
                 connection.execute(create_sql, create -> {
                     connection.close();
                     if (create.succeeded())
                         resultHandler.handle(Future.succeededFuture());
                     else {
-                        LOGGER.error("Chuhe Database preparation error", Future.failedFuture(create.cause()));
+                        LOGGER.error("建表错误, " + create_sql, Future.failedFuture(create.cause()));
                         resultHandler.handle(Future.failedFuture(create.cause()));
                     }
                 });
@@ -1568,6 +1573,43 @@ public class ChuheDbServiceImpl implements ChuheDbService {
 
         return this;
 
+    }
+
+
+    // check_code
+    @Override
+    public ChuheDbService createCheckCode(JsonObject checkcode, Handler<AsyncResult<Long>> resultHandler)  {
+
+        String saveCheckCodeSql = sqlQueries.get(ChuheSqlQuery.SAVE_CHECKCODE);
+
+        LOGGER.info(saveCheckCodeSql);
+
+
+        JsonArray data = new JsonArray();
+
+        Calendar now = Calendar.getInstance();
+
+        data.add(checkcode.getString("code_sign"));
+        data.add(checkcode.getString("code_value"));
+        data.add(checkcode.getString("send_channel"));
+        data.add(_DATE_FM_T.format(now.getTime()));
+
+        now.add(Calendar.SECOND, 90);
+
+        data.add(_DATE_FM_T.format(now.getTime()));
+
+
+        this.dbClient.updateWithParams(saveCheckCodeSql, data, reply -> {
+
+            if (reply.succeeded()) {
+                resultHandler.handle(Future.succeededFuture(reply.result().getKeys().getLong(0)));
+            } else {
+                resultHandler.handle(Future.failedFuture(reply.cause()));
+            }
+        });
+
+
+        return this;
     }
 
 }

@@ -19,6 +19,7 @@ public class DbQueryHelper {
             putProductSqlQueries(sqlQueries);
             putOrderSqlQueries(sqlQueries);
             putStockSqlQueries(sqlQueries);
+            putCheckCodeSqlQueries(sqlQueries);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -119,6 +120,20 @@ public class DbQueryHelper {
         sqlQueries.put(ChuheSqlQuery.SAVE_STOCK, queriesProps.getProperty("save-stock"));
         sqlQueries.put(ChuheSqlQuery.GET_ALL_STOCK, queriesProps.getProperty("all-stocks"));
         sqlQueries.put(ChuheSqlQuery.PRODUCT_STOCK, queriesProps.getProperty("product-stocks"));
+
+    }
+
+    private static void putCheckCodeSqlQueries(HashMap<ChuheSqlQuery, String> sqlQueries) throws IOException {
+
+        InputStream queriesInputStream = DbQueryHelper.class.getResourceAsStream("/properties/database-sql-queries/chuhe-db-checkcode-queries.properties");
+
+        Properties queriesProps = new PropertyParser();
+        queriesProps.load(new InputStreamReader(queriesInputStream, "utf-8"));
+        queriesInputStream.close();
+
+        sqlQueries.put(ChuheSqlQuery.CREATE_CHECKCODE_TABLE, queriesProps.getProperty("create-checkcode-table"));
+        sqlQueries.put(ChuheSqlQuery.VALIDATE_CHECKCODE, queriesProps.getProperty("validate-checkcode"));
+        sqlQueries.put(ChuheSqlQuery.SAVE_CHECKCODE, queriesProps.getProperty("save-checkcode"));
 
     }
 

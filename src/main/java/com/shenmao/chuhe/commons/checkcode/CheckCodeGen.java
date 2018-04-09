@@ -32,10 +32,10 @@ public class CheckCodeGen {
      * @Date:2012-3-1 上午10:26:20
      * @return CheckCode
      */
-    public CheckCodeGen createCheckCode() {
+    public static CheckCodeGen createCheckCode() {
         CheckCodeGen checkCode = new CheckCodeGen();
-        checkCode.setCheckCodeStr(createRandomCode());
-        checkCode.setBuffImg(disturb());
+        checkCode.setCheckCodeStr(checkCode.createRandomCode());
+        checkCode.setBuffImg(checkCode.disturb());
         return checkCode;
     }
 
@@ -62,7 +62,7 @@ public class CheckCodeGen {
         graphics.setColor(createColor());
 
         for (int i = 0; i < codeCount; i++) {
-            strRand = String.valueOf(codeSequence[random.nextInt(32)]);
+            strRand = String.valueOf(codeSequence[random.nextInt(codeSequence.length)]);
             randomCode.append(strRand);
 
             graphics.drawString(strRand, (i + 1) * xx, codeY);

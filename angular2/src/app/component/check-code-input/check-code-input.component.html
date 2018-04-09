@@ -2,7 +2,10 @@
   <span class="input-group-label" style="padding: 0 .425rem;color:black;">
     <i class="material-icons">&#xE8CE;</i>
   </span>
-  <input class="input-group-field" type="text"
+  <input class="input-group-field checkcode-invalid" type="text"
+         [ngClass]="{'checkcode-invalid': checkcodeInvalid }"
+         (keyup)="onKeyup($event)"
+         (keydown)="onKeydown($event)"
          placeholder="{{placeholder}}" [(ngModel)]="checkCode" id="check_code" name="check_code" required>
   <span (click)="changeSteps('clicked_send_click')" *ngIf="steps==='pre_send_click'"
         class="input-group-label" style="cursor: pointer; padding: 0 .425rem;color: blueviolet;background-color: antiquewhite;">

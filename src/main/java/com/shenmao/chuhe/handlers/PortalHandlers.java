@@ -1,12 +1,15 @@
 package com.shenmao.chuhe.handlers;
 
+import com.shenmao.chuhe.commons.checkcode.CheckCodeGen;
 import com.shenmao.chuhe.database.chuhe.ChuheDbService;
 import com.shenmao.chuhe.database.wikipage.WikiPageDbService;
+import com.shenmao.chuhe.exceptions.PurposeException;
 import com.shenmao.chuhe.passport.RealmImpl;
 import com.shenmao.chuhe.serialization.SerializeType;
 import com.shenmao.chuhe.passport.AuthHandlerImpl;
 import com.shenmao.chuhe.serialization.ChainSerialization;
 import io.vertx.core.Handler;
+import io.vertx.core.buffer.Buffer;
 import io.vertx.core.json.JsonArray;
 import io.vertx.rxjava.core.Vertx;
 import io.vertx.core.json.JsonObject;
@@ -22,6 +25,7 @@ import io.vertx.ext.web.handler.sockjs.BridgeOptions;
 import io.vertx.rxjava.ext.web.handler.sockjs.SockJSHandler;
 import rx.Single;
 
+import java.io.ByteArrayOutputStream;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Set;
@@ -54,6 +58,41 @@ public class PortalHandlers extends BaseHandler {
       .putContextData(null)
       .serialize();
   }
+
+
+  public void checkCodeHandler(RoutingContext routingContext) {
+
+    String sign = getQueryParam(routingContext, "sign");
+
+    if ( sign == null || sign.isEmpty()) {
+      throw new PurposeException("非法请求");
+    }
+
+    final CheckCodeGen checkCode = CheckCodeGen.createCheckCode();
+
+    JsonObject code  = new JsonObject();
+
+    code.put("code_sign", sign);
+    code.put("code_value", checkCode.getCheckCodeStr());
+    code.put("send_channel", "email");
+
+    this.chuheDbService.createCheckCode(code, reply -> {
+
+      if (reply.succeeded()) {
+        ByteArrayOutputStream baos = checkCode.createImgStream();
+
+        routingContext.getDelegate().response().putHeader("Content-Length",String.valueOf(baos.size()));
+        routingContext.getDelegate().response().write(Buffer.buffer(baos.toByteArray()));
+        routingContext.getDelegate().response().end();
+        return;
+      }
+
+      routingContext.getDelegate().response().end(reply.cause().getMessage());
+
+    });
+
+  }
+
 
   public void accessToken(RoutingContext routingContext) {
 

@@ -106,4 +106,10 @@ public interface ChuheDbService {
     @Fluent
     ChuheDbService updateDealer(Long dealerId, JsonObject dealer, Handler<AsyncResult<Integer>> resultHandler);
 
+
+    // check_code
+    @Fluent
+    ChuheDbService createCheckCode(JsonObject checkcode, Handler<AsyncResult<Long>> resultHandler) ;
+
+
 }

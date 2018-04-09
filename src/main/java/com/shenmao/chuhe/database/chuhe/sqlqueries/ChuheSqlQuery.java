@@ -57,5 +57,11 @@ public enum ChuheSqlQuery {
     ALL_DEALERS,
     DELETE_DEALER_BATCH,
     GET_DEALER,
-    UPDATE_DEALER
+    UPDATE_DEALER,
+
+    // check_code
+    CREATE_CHECKCODE_TABLE,
+    SAVE_CHECKCODE,
+    VALIDATE_CHECKCODE
+
 }

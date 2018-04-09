@@ -119,22 +119,7 @@ public class PortalRouter  implements ChuheRouter {
   private void checkCodeRouter() {
     Route checkCodeGet =  this.router.routeWithRegex(HttpMethod.GET, "/checkcode|/checkcode/");
 
-    checkCodeGet.handler(routingContext -> {
-
-      CheckCodeGen checkCode=new CheckCodeGen();
-
-      checkCode=checkCode.createCheckCode();
-      String checkCodeStr=checkCode.getCheckCodeStr();
-
-      checkCode.getBuffImg();
-
-        ByteArrayOutputStream baos = checkCode.createImgStream();
-
-        routingContext.getDelegate().response().putHeader("Content-Length",String.valueOf(baos.size()));
-        routingContext.getDelegate().response().write(Buffer.buffer(baos.toByteArray()));
-        routingContext.getDelegate().response().end();
-
-    });
+    checkCodeGet.handler(portalHandlers::checkCodeHandler);
 
   }
 
