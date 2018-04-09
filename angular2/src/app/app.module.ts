@@ -77,7 +77,7 @@ import {
 } from './_components/_index';
 
 // component
-import { FloatInputComponent, MediaUploadComponent, SlickCarouselComponent } from './component/_index';
+import { FloatInputComponent, MediaUploadComponent, SlickCarouselComponent, CheckCodeInputComponent } from './component/_index';
 
 import { CellInputCrossMoveDirective, SelectTextOnFocusDirective } from './directive/_index';
 
@@ -117,6 +117,7 @@ export class GoogleMaterialModule {}
     MediaUploadComponent,
     ProductDetailsComponent,
     SlickCarouselComponent,
+    CheckCodeInputComponent,
 
     // table
     TableCellsComponent,

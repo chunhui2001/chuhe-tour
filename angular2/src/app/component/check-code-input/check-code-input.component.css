@@ -1,0 +1,10 @@
+.checkcode {
+  cursor: pointer;
+  padding: 0 .425rem;
+  color: blueviolet;
+  background-color: antiquewhite;
+  min-width: 109px;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position-y: center;
+}

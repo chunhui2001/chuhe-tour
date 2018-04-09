@@ -18,5 +18,10 @@
     "target": "http://localhost:8081",
     "secure": false,
     "logLevel": "debug"
+  },
+  "/checkcode": {
+    "target": "http://localhost:8081",
+    "secure": false,
+    "logLevel": "debug"
   }
 }

@@ -37,8 +37,10 @@
         <i class="material-icons">&#xE0CD;</i>
       </span>
       <input class="input-group-field" type="text"
-        placeholder="请输入手机号码" [(ngModel)]="phone" id="user_phone" name="user_phone">
+        placeholder="请输入手机号码" [(ngModel)]="phone" id="user_phone" name="user_phone" required>
     </div>
+
+    <app-check-code-input [(checkCode)]="checkCode"></app-check-code-input>
 
     <div class="input-group">
       <span class="input-group-label" style="padding: 0 .425rem;color:black;">

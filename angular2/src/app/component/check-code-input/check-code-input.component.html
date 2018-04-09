@@ -1,0 +1,20 @@
+<div class="input-group">
+  <span class="input-group-label" style="padding: 0 .425rem;color:black;">
+    <i class="material-icons">&#xE8CE;</i>
+  </span>
+  <input class="input-group-field" type="text"
+         placeholder="{{placeholder}}" [(ngModel)]="checkCode" id="check_code" name="check_code" required>
+  <span (click)="changeSteps('clicked_send_click')" *ngIf="steps==='pre_send_click'"
+        class="input-group-label" style="cursor: pointer; padding: 0 .425rem;color: blueviolet;background-color: antiquewhite;">
+        发送短信验证码
+  </span>
+  <span (click)="changeCode()" *ngIf="steps==='clicked_send_click'"
+        class="input-group-label checkcode"
+        [style.background-image]="'url(' + checkCodeSrc + ')'">
+
+  </span>
+  <span (click)="changeSteps('pre_send_click')" *ngIf="steps==='clicked_checkcode'"
+        class="input-group-label" style="cursor: pointer; padding: 0 .425rem;color: blueviolet;background-color: antiquewhite;">
+        倒计时60秒
+  </span>
+</div>

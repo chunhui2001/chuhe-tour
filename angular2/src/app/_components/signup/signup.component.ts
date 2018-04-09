@@ -22,6 +22,7 @@ export class SignupComponent implements OnInit {
   username: String = '';
   passwd: String = '';
   phone: String = '';
+  checkCode: any;
   address: String = '';
   isAgreeRule: Boolean = false;
 
@@ -30,7 +31,6 @@ export class SignupComponent implements OnInit {
   }
 
   onSubmit(formData) {
-
 
     if (!formData.valid) {
       return;
