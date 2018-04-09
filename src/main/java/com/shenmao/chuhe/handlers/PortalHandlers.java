@@ -78,11 +78,11 @@ public class PortalHandlers extends BaseHandler {
     code.put("client_ip", routingContext.request().remoteAddress().host());
     code.put("client_agent", routingContext.request().getHeader("User-Agent"));
 
-
-
     this.chuheDbService.createCheckCode(code, reply -> {
 
       if (reply.succeeded()) {
+
+        // publish checkcode to message queue
         ByteArrayOutputStream baos = checkCode.createImgStream();
 
         routingContext.getDelegate().response().putHeader("Content-Length",String.valueOf(baos.size()));
