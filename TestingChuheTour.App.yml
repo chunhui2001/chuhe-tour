@@ -14,10 +14,10 @@ volumes:
     mysql: /home/ubuntu/workspace/db_chuhetour_testing
     jdk: /home/ubuntu/workspace/chuhe-tour
 redis:
-    redis_passwd: 1miz0dK0x9TyYvba+j7WD2FPwuJo+iBn1iBBuzgaww
+    redis_passwd: DfYjdslIObs9RBQ5jRicNa8DS3hadGZ8h6CoZZbM+8
 
 mysql:
-    mysql_passwd: vxKbvZYACuJKVAmL5i5ma6WSrneIHglDkYirBgXX5I
+    mysql_passwd: 9FTrIC3K4y9YdMcPFLoPWWi2+YZT1y2AHYrXPU9M7U
 
 commands:
     cmd: cmd

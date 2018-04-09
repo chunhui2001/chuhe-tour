@@ -6,7 +6,7 @@ docker create --net TestingChuheTour_network -h app.TestingChuheTour.container.v
 docker create -P --net TestingChuheTour_network -h app.TestingChuheTour.jdk.web.1 --volumes-from app.TestingChuheTour.container.volume --name app.TestingChuheTour.jdk.web.1  chunhui2001/ubuntu_1610_dev:java8 /root/app/redeploy.sh testing
 
 ### app.TestingChuheTour.redis.primary:
-docker create -P --net TestingChuheTour_network -h app.TestingChuheTour.redis.primary --volumes-from app.TestingChuheTour.container.volume --name app.TestingChuheTour.redis.primary  chunhui2001/centos_6_dev:redis_instance --requirepass 1miz0dK0x9TyYvba+j7WD2FPwuJo+iBn1iBBuzgaww
+docker create -P --net TestingChuheTour_network -h app.TestingChuheTour.redis.primary --volumes-from app.TestingChuheTour.container.volume --name app.TestingChuheTour.redis.primary  chunhui2001/centos_6_dev:redis_instance --requirepass DfYjdslIObs9RBQ5jRicNa8DS3hadGZ8h6CoZZbM+8 --bind 0.0.0.0 --protected-mode no
 
 ### app.TestingChuheTour.mysql.primary:
 docker create -P --net TestingChuheTour_network -h app.TestingChuheTour.mysql.primary --volumes-from app.TestingChuheTour.container.volume --name app.TestingChuheTour.mysql.primary -e MYSQL_ROOT_PASSWORD=Cc chunhui2001/debian_8_dev:mysql_5.7 
