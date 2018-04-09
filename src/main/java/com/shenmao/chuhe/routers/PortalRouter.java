@@ -118,8 +118,10 @@ public class PortalRouter  implements ChuheRouter {
 
   private void checkCodeRouter() {
     Route checkCodeGet =  this.router.routeWithRegex(HttpMethod.GET, "/checkcode|/checkcode/");
+    Route checkCodePost =  this.router.routeWithRegex(HttpMethod.POST, "/checkcode|/checkcode/");
 
     checkCodeGet.handler(portalHandlers::checkCodeHandler);
+    checkCodePost.handler(portalHandlers::validCheckCodeHandler);
 
   }
 

@@ -1614,4 +1614,41 @@ public class ChuheDbServiceImpl implements ChuheDbService {
         return this;
     }
 
+    @Override
+    public ChuheDbService validateCheckCode(String sign, String code, Handler<AsyncResult<Boolean>> resultHandler)  {
+
+        String validateCheckCodeSql = sqlQueries.get(ChuheSqlQuery.VALIDATE_CHECKCODE);
+
+        LOGGER.info(validateCheckCodeSql);
+
+        JsonArray data = new JsonArray();
+
+        data.add(sign);
+        data.add(code);
+
+        Single<Boolean> result = this.dbClient
+                .rxQueryWithParams(validateCheckCodeSql, data)
+                .flatMapObservable(res -> Observable.from(res.getRows()))
+                .map(checkcode -> {
+
+                    Date expired = null;
+
+                    try {
+                        expired = _DATE_FM_T.parse(checkcode.getString("expired_at"));
+                    } catch (ParseException e) {
+                        // 无过期时间，即长期有效
+                        return true;
+                    }
+
+                    return expired.compareTo(Calendar.getInstance().getTime()) == 1;
+
+                })
+                .defaultIfEmpty(Boolean.FALSE).toSingle();
+
+
+        result.subscribe(RxHelper.toSubscriber(resultHandler));
+
+        return this;
+    }
+
 }

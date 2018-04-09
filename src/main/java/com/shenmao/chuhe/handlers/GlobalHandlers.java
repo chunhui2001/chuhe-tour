@@ -116,9 +116,14 @@ public class GlobalHandlers {
       routingContext.failure().printStackTrace(new PrintWriter(errorsTrace));
     }
 
-    System.out.println(exceptionClassName + ", exceptionName");
 
-    ChainSerialization.create(routingContext.getDelegate())
+    ChainSerialization chainSerialization = ChainSerialization.create(routingContext.getDelegate());
+
+    if (routingContext.normalisedPath().equals("/checkcode")) {
+      chainSerialization.setSerializeType(SerializeType.JSON);
+    }
+
+    chainSerialization
       .setStatusCode(201)
       .setStatusRealCode(errorCode)
       .putViewName("/500.html")

@@ -59,6 +59,30 @@ public class PortalHandlers extends BaseHandler {
       .serialize();
   }
 
+  public void validCheckCodeHandler(RoutingContext routingContext) {
+
+    String sign = getString(routingContext, "sign");
+    String checkcode = getString(routingContext, "checkcode");
+
+    if (sign.isEmpty() || checkcode.isEmpty()) {
+      throw new PurposeException("非法请求");
+    }
+
+    this.chuheDbService.validateCheckCode(sign, checkcode, reply -> {
+
+      if (reply.succeeded()) {
+
+        routingContext.response().end(sign + ", " + checkcode + ", " + reply.result());
+        return;
+      }
+
+      routingContext.getDelegate().response().end(reply.cause().getMessage());
+
+    });
+
+
+
+  }
 
   public void checkCodeHandler(RoutingContext routingContext) {
 
