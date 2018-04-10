@@ -12,3 +12,14 @@
 .checkcode-invalid {
   color: red;
 }
+
+.checkcode-valid-button, .checkcode-time-button {
+  cursor: pointer; padding: 0 .425rem;color: blueviolet;background-color: antiquewhite;
+}
+
+.checkcode-valid-button {
+  border-left: none;
+  background-color: burlywood;
+  color: brown;
+  font-weight: bold;
+}
