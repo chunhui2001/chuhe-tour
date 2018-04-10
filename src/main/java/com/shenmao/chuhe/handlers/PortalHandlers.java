@@ -68,7 +68,7 @@ public class PortalHandlers extends BaseHandler {
       .serialize();
   }
 
-  public void validCheckCodeHandler(RoutingContext routingContext) {
+  public void checkCodeHandler(RoutingContext routingContext) {
 
     String sign = getString(routingContext, "sign");
     String checkcode = getString(routingContext, "checkcode");
@@ -88,8 +88,6 @@ public class PortalHandlers extends BaseHandler {
 
       if (reply.succeeded()) {
 
-        chainSerialization.putContextData(reply.result());
-
         if (reply.result()) {
 
           JsonObject code  = new JsonObject();
@@ -101,38 +99,52 @@ public class PortalHandlers extends BaseHandler {
           code.put("client_ip", routingContext.request().remoteAddress().host());
           code.put("client_agent", routingContext.request().getHeader("User-Agent"));
 
-          this.chuheDbService.createCheckCode(code, reply2 -> {
+          this.chuheDbService.createCheckCode(code, 90, reply2 -> {
 
             if (reply.succeeded()) {
 
               redisQueue.publish();
 
+              JsonObject result = new JsonObject();
+
+              result.put("sign", code.getString("code_sign"));
+              result.put("seconds", 90);
+
+              chainSerialization.putContextData(result);
               // publish to message queue
               chainSerialization.putMessage("validate code send");
-              return;
+
+            } else {
+              routingContext.getDelegate().response().end(reply.cause().getMessage());
             }
 
-            routingContext.getDelegate().response().end(reply.cause().getMessage());
+            chainSerialization.serialize();
+            return;
 
           });
 
         } else {
+          chainSerialization.putContextData(null);
+          chainSerialization.setStatusRealCode(4000);
           chainSerialization.putMessage("bad");
+          chainSerialization.serialize();
+          return;
         }
 
       } else {
-        chainSerialization.putContextData(false);
-        chainSerialization.putMessage(reply.cause().getMessage());
+        chainSerialization.putContextData(null);
+        chainSerialization.setStatusRealCode(4000);
+        chainSerialization.putMessage("reply.cause().getMessage()");
+        chainSerialization.serialize();
+        return;
       }
-
-      chainSerialization.serialize();
 
     });
 
   }
 
 
-  public void checkCodeHandler(RoutingContext routingContext) {
+  public void checkCodeImageHandler(RoutingContext routingContext) {
 
     String sign = getQueryParam(routingContext, "sign");
     String receiver = getQueryParam(routingContext, "receiver");
@@ -152,7 +164,7 @@ public class PortalHandlers extends BaseHandler {
     code.put("client_ip", routingContext.request().remoteAddress().host());
     code.put("client_agent", routingContext.request().getHeader("User-Agent"));
 
-    this.chuheDbService.createCheckCode(code, reply -> {
+    this.chuheDbService.createCheckCode(code, null, reply -> {
 
       if (reply.succeeded()) {
 

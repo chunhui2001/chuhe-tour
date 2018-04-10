@@ -109,7 +109,7 @@ public interface ChuheDbService {
 
     // check_code
     @Fluent
-    ChuheDbService createCheckCode(JsonObject checkcode, Handler<AsyncResult<Long>> resultHandler) ;
+    ChuheDbService createCheckCode(JsonObject checkcode, Integer seconds, Handler<AsyncResult<Long>> resultHandler) ;
 
     @Fluent
     ChuheDbService validateCheckCode(String sign, String code, String receiver, Handler<AsyncResult<Boolean>> resultHandler) ;

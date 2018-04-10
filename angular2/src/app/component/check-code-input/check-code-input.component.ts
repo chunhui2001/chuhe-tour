@@ -28,6 +28,7 @@ export class CheckCodeInputComponent implements OnInit, AfterViewInit {
   timerCount: any = 10;
   checkcodeTimeButtonText: String;
   checkCodeSign: String;
+  checkNewSign: String;             // 通过图片验证之后，服务器会返回一个新的sign, 拿着这个新的sign去服务器验证用户收到的短信验证码(或邮件验证码)
   isValidate: boolean;
   timer: any;
 
@@ -103,10 +104,9 @@ export class CheckCodeInputComponent implements OnInit, AfterViewInit {
 
     this.isValidate = null;
 
-    const b = true;
+    if (this.checkNewSign) {
 
-    if (b) {
-
+      alert(this.checkNewSign);
       this.isValidate = true;
       this.setCheckcodeTimeButtonText('验证成功');
 
@@ -152,10 +152,11 @@ export class CheckCodeInputComponent implements OnInit, AfterViewInit {
 
     this.checkcodeService.check(this.checkCodeSign, this.checkCodeValue, this.phoneOrEmail).subscribe(result => {
 
-      debugger;
-      if (result.data) {
+      if (result.code === 200) {
 
-        // good
+        // good and get new sign
+        this.checkNewSign = result.data.sign;
+        this.timerCount = result.data.seconds;
         this.steps = 'clicked_checkcode';
         this.checkCode = null;
         this.placeholder = '已发送, 请输入验证码';
@@ -176,6 +177,7 @@ export class CheckCodeInputComponent implements OnInit, AfterViewInit {
       } else {
         // bad
         // invalide checkcode
+        this.checkNewSign = null;
         this.checkcodeInvalid = true;
       }
     });

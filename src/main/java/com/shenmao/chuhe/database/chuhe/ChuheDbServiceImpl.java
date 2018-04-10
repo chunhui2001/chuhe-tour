@@ -1578,7 +1578,7 @@ public class ChuheDbServiceImpl implements ChuheDbService {
 
     // check_code
     @Override
-    public ChuheDbService createCheckCode(JsonObject checkcode, Handler<AsyncResult<Long>> resultHandler)  {
+    public ChuheDbService createCheckCode(JsonObject checkcode, Integer seconds, Handler<AsyncResult<Long>> resultHandler)  {
 
         String saveCheckCodeSql = sqlQueries.get(ChuheSqlQuery.SAVE_CHECKCODE);
 
@@ -1596,9 +1596,13 @@ public class ChuheDbServiceImpl implements ChuheDbService {
         data.add(checkcode.getString("client_agent"));
         data.add(_DATE_FM_T.format(now.getTime()));
 
-        now.add(Calendar.SECOND, 90);
+        if (seconds != null) {
+            now.add(Calendar.SECOND, seconds);
+            data.add(_DATE_FM_T.format(now.getTime()));
+        } else {
+            data.addNull();
+        }
 
-        data.add(_DATE_FM_T.format(now.getTime()));
 
 
         this.dbClient.updateWithParams(saveCheckCodeSql, data, reply -> {
@@ -1632,14 +1636,20 @@ public class ChuheDbServiceImpl implements ChuheDbService {
                 .flatMapObservable(res -> Observable.from(res.getRows()))
                 .map(checkcode -> {
 
+                    if (checkcode.getString("expired_at") == null) {
+                        // 无过期时间，即长期有效
+                        return true;
+                    }
+
                     Date expired = null;
 
                     try {
                         expired = _DATE_FM_T.parse(checkcode.getString("expired_at"));
                     } catch (ParseException e) {
-                        // 无过期时间，即长期有效
-                        return true;
+                        System.out.println(e.getMessage() + ", parse expired_at error");
                     }
+
+                    if (expired == null) return true;
 
                     return expired.compareTo(Calendar.getInstance().getTime()) == 1;
 
@@ -1647,6 +1657,8 @@ public class ChuheDbServiceImpl implements ChuheDbService {
                 .defaultIfEmpty(Boolean.FALSE).toSingle();
 
 
+
+        System.out.println(4);
         result.subscribe(RxHelper.toSubscriber(resultHandler));
 
         return this;
