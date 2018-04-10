@@ -3,6 +3,9 @@ package com.shenmao.chuhe;
 import com.shenmao.chuhe.commons.PropertyParser;
 import com.shenmao.chuhe.database.chuhe.sqlqueries.DbQueryHelper;
 import com.shenmao.chuhe.exceptions.PurposeException;
+import com.shenmao.chuhe.queue.RedisQueue;
+import com.shenmao.chuhe.queue.RedisQueueImpl;
+import com.shenmao.chuhe.redis.RedisStore;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
@@ -17,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLDecoder;
@@ -42,6 +46,34 @@ public class Application {
 
     static String ENV = "local";
     static JsonObject config  = new JsonObject();
+
+    static RedisQueue redisQueue = null;
+
+    public static RedisQueue getRedisQueue(Vertx vertx) {
+
+        if (redisQueue != null) return redisQueue;
+
+        try {
+            redisQueue = (RedisQueue) RedisStore
+                    .create(RedisQueueImpl.class.getName(), vertx, 10000)
+                    .host(Application.getConfig().getString("redis_host"))
+                    .port(Application.getConfig().getInteger("redis_port"))
+                    .auth(Application.getConfig().getString("redis_passwd")).init();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        }
+
+
+        return redisQueue;
+    }
 
     static {
 
@@ -75,6 +107,7 @@ public class Application {
         } catch (IOException e) {
             throw  new RuntimeException("Read '" + envPath + "' file error");
         }
+
 
     }
 

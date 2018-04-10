@@ -1,10 +1,14 @@
 package com.shenmao.chuhe.handlers;
 
+import com.shenmao.chuhe.Application;
 import com.shenmao.chuhe.commons.checkcode.CheckCodeGen;
 import com.shenmao.chuhe.database.chuhe.ChuheDbService;
 import com.shenmao.chuhe.database.wikipage.WikiPageDbService;
 import com.shenmao.chuhe.exceptions.PurposeException;
 import com.shenmao.chuhe.passport.RealmImpl;
+import com.shenmao.chuhe.queue.RedisQueue;
+import com.shenmao.chuhe.queue.RedisQueueImpl;
+import com.shenmao.chuhe.redis.RedisStore;
 import com.shenmao.chuhe.serialization.SerializeType;
 import com.shenmao.chuhe.passport.AuthHandlerImpl;
 import com.shenmao.chuhe.serialization.ChainSerialization;
@@ -24,9 +28,9 @@ import io.vertx.rxjava.ext.web.RoutingContext;
 import io.vertx.rxjava.ext.web.handler.sockjs.BridgeEvent;
 import io.vertx.ext.web.handler.sockjs.BridgeOptions;
 import io.vertx.rxjava.ext.web.handler.sockjs.SockJSHandler;
-import rx.Single;
 
 import java.io.ByteArrayOutputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Set;
@@ -35,14 +39,18 @@ public class PortalHandlers extends BaseHandler {
 
   private static final Logger logger = LoggerFactory.getLogger(PortalHandlers.class);
 
-  public static PortalHandlers create(ChuheDbService chuheDbService, WikiPageDbService wikiPageDbService) {
-    return new PortalHandlers(chuheDbService, wikiPageDbService);
+  public static PortalHandlers create(Vertx vertx, ChuheDbService chuheDbService, WikiPageDbService wikiPageDbService) {
+    return new PortalHandlers(vertx, chuheDbService, wikiPageDbService);
   }
 
+  RedisQueue redisQueue;
   ChuheDbService chuheDbService;
   WikiPageDbService wikiPageDbService;
 
-  public PortalHandlers(ChuheDbService chuheDbService, WikiPageDbService wikiPageDbService) {
+  public PortalHandlers(Vertx vertx, ChuheDbService chuheDbService, WikiPageDbService wikiPageDbService) {
+
+    redisQueue = Application.getRedisQueue(vertx.getDelegate());
+
     this.chuheDbService = chuheDbService;
     this.wikiPageDbService = wikiPageDbService;
   }
@@ -96,6 +104,9 @@ public class PortalHandlers extends BaseHandler {
           this.chuheDbService.createCheckCode(code, reply2 -> {
 
             if (reply.succeeded()) {
+
+              redisQueue.publish();
+
               // publish to message queue
               chainSerialization.putMessage("validate code send");
               return;

@@ -48,7 +48,7 @@ public class PortalRouter  implements ChuheRouter {
 
     this.authHandler = authHandler;
     this.globalHandlers = GlobalHandlers.create();
-    this.portalHandlers = PortalHandlers.create(chuheDbService, wikiPageDbService);
+    this.portalHandlers = PortalHandlers.create(vertx, chuheDbService, wikiPageDbService);
 
     this.storeHandlers = StoreHandlers.create(chuheDbService);
 
