@@ -15,13 +15,13 @@ export class CheckCodeInputComponent implements OnInit {
   checkCodeValue: any;
   steps: String = 'pre_send_click';       // clicked_send_click
   placeholder: String = '请输入验证码';
-  checkCodeTime: any;
   checkCodeSrc: String ;
   checkcodeInvalid: Boolean = false;
   checkCodeLength: Number = 6;
   timerCount: any = 10;
   checkcodeTimeButtonText: String;
   checkCodeSign: String;
+  isValidate: boolean;
 
   @Output()
   checkCodeChange = new EventEmitter<string>();
@@ -42,6 +42,7 @@ export class CheckCodeInputComponent implements OnInit {
 
   ngOnInit() {
     this.setCheckcodeTimeButtonText(this.getTimeStr(this.timerCount));
+   //  this.steps = 'clicked_checkcode';
   }
 
   setCheckcodeTimeButtonText(text: String): void {
@@ -77,18 +78,20 @@ export class CheckCodeInputComponent implements OnInit {
     this.changeCode();
     this.checkcodeInvalid = false;
     this.checkCode = null;
+    this.isValidate = null;
   }
 
   validateCheckCode(): void {
     // pre_send_click
 
-    const isValid = false;
+    this.isValidate = null;
 
-    if (isValid) {
+    const b = true;
 
+    if (b) {
+      this.isValidate = true;
     } else {
-      // this.steps = 'clicked_send_click';
-      // this.setCheckcodeTimeButtonText('验证码有误，请重新输入');
+      this.isValidate = false;
       this.checkcodeInvalid = true;
     }
 

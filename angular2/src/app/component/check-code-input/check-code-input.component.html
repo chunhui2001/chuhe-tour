@@ -12,12 +12,13 @@
         发送验证码
   </span>
   <span (click)="changeCode()" *ngIf="steps==='clicked_send_click'"
-        class="input-group-label checkcode"
+        class="input-group-label checkcode "
         [style.background-image]="'url(' + checkCodeSrc + ')'">
 
   </span>
   <span (click)="validateCheckCode()" *ngIf="steps==='clicked_checkcode'"
-        class="input-group-label checkcode-valid-button">
+        class="input-group-label checkcode-valid-button checkcode-correct"
+        [ngClass]="{'checkcode-correct': isValidate != null && isValidate,'checkcode-wrong': isValidate != null && !isValidate  }">
         &ensp;验证&ensp;
   </span>
   <span *ngIf="steps==='clicked_checkcode'"

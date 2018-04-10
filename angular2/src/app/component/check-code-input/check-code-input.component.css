@@ -24,4 +24,19 @@
   background-color: antiquewhite;
   color: brown;
   font-weight: bold;
+  text-shadow: 0 1px 0 #d8d8d8;
+}
+
+.checkcode-correct {
+  background-image: url('/assets/images/icons/checkmark.png');
+  background-size: auto 100%;
+  background-repeat: no-repeat;
+  background-position-x: center;
+}
+
+.checkcode-wrong {
+  background-image: url('/assets/images/icons/wrong-hi.png');
+  background-size: auto 100%;
+  background-repeat: no-repeat;
+  background-position-x: center;
 }
