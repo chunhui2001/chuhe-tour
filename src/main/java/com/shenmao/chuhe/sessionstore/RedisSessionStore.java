@@ -1,32 +1,31 @@
 package com.shenmao.chuhe.sessionstore;
 
+import com.shenmao.chuhe.redis.RedisStore;
 import io.vertx.core.Vertx;
 import io.vertx.ext.web.sstore.SessionStore;
 
-public interface RedisSessionStore extends SessionStore {
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
-  int DEFAULT_RETRY_TIMEOUT = 2 * 1000;
+public interface RedisSessionStore extends SessionStore, RedisStore {
 
-  String DEFAULT_SESSION_MAP_NAME = "vertx-web.sessions";
+    static RedisStore create(String className, Vertx vertx) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
 
-  static RedisSessionStore create(Vertx vertx) {
-    return new RedisSessionStoreImpl(vertx, DEFAULT_SESSION_MAP_NAME, DEFAULT_RETRY_TIMEOUT);
-  }
+        Class<?> clazz = Class.forName(className);
+        Constructor<?> ctor = clazz.getConstructor(Vertx.class, int.class);
 
-  static RedisSessionStore create(Vertx vertx, String sessionMapName) {
-    return new RedisSessionStoreImpl(vertx, sessionMapName, DEFAULT_RETRY_TIMEOUT);
-  }
+        return (RedisStore)ctor.newInstance(new Object[] { vertx, DEFAULT_RETRY_TIMEOUT });
 
-  static RedisSessionStore create(Vertx vertx, String sessionMapName, int reaperInterval) {
-    return new RedisSessionStoreImpl(vertx, sessionMapName, reaperInterval);
-  }
+        // return new RedisSessionStoreImpl(vertx, DEFAULT_RETRY_TIMEOUT);
+    }
 
-  RedisSessionStore host(String host);
+    static RedisStore create(String className, Vertx vertx, int reaperInterval) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
 
-  RedisSessionStore port(int port);
+        Class<?> clazz = Class.forName(className);
+        Constructor<?> ctor = clazz.getConstructor(Vertx.class, int.class);
 
-  RedisSessionStore auth(String pwd);
+        return (RedisStore)ctor.newInstance(new Object[] { vertx, reaperInterval });
 
-  RedisSessionStore init();
-
+        // return new RedisSessionStoreImpl(vertx, reaperInterval);
+    }
 }

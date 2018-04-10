@@ -1,10 +1,12 @@
 package com.shenmao.chuhe.sessionstore;
 
+import com.shenmao.chuhe.redis.RedisStore;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.buffer.Buffer;
+import io.vertx.ext.web.sstore.SessionStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import io.vertx.core.shareddata.LocalMap;
@@ -22,8 +24,10 @@ public class RedisSessionStoreImpl implements RedisSessionStore {
 
   private static final Logger logger = LoggerFactory.getLogger(RedisSessionStoreImpl.class);
 
+
+  private static String DEFAULT_SESSION_MAP_NAME = "vertx-web.sessions";
+
   private final Vertx vertx;
-  private final String sessionMapName;
   private final int retryTimeout;
   private final LocalMap<String, Session> localMap;
 
@@ -38,13 +42,12 @@ public class RedisSessionStoreImpl implements RedisSessionStore {
   private List<String> localSessionIds;
 
 
-  public RedisSessionStoreImpl(Vertx vertx, String defaultSessionMapName, int retryTimeout) {
+  public RedisSessionStoreImpl(Vertx vertx, int retryTimeout) {
 
     this.vertx = vertx;
-    this.sessionMapName = defaultSessionMapName;
     this.retryTimeout = retryTimeout;
 
-    localMap = vertx.sharedData().getLocalMap(sessionMapName);
+    localMap = vertx.sharedData().getLocalMap(DEFAULT_SESSION_MAP_NAME);
     localSessionIds = new Vector<>();
 
   }
@@ -176,7 +179,7 @@ public class RedisSessionStoreImpl implements RedisSessionStore {
   }
 
   @Override
-  public RedisSessionStore init() {
+  public RedisStore init() {
     this.redisManager();
     return this;
   }
@@ -189,19 +192,19 @@ public class RedisSessionStoreImpl implements RedisSessionStore {
   }
 
   @Override
-  public RedisSessionStore host(String host) {
+  public RedisStore host(String host) {
     this.host = host;
     return this;
   }
 
   @Override
-  public RedisSessionStore port(int port) {
+  public RedisStore port(int port) {
     this.port = port;
     return this;
   }
 
   @Override
-  public RedisSessionStore auth(String pwd) {
+  public RedisStore auth(String pwd) {
     this.auth = pwd;
     return this;
   }

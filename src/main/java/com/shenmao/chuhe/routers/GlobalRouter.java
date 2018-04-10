@@ -35,9 +35,6 @@ public class GlobalRouter implements ChuheRouter {
 
     private void globalRouter() {
 
-
-
-
         // throw error purpose
         this.router.routeWithRegex(HttpMethod.GET, "/throw" + GlobalHandlers._SUPPORT_EXTS_PATTERN).handler(routingContext -> {
             throw new PurposeException();

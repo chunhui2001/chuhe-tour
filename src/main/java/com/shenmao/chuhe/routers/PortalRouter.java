@@ -1,28 +1,18 @@
 package com.shenmao.chuhe.routers;
 
-import com.shenmao.chuhe.commons.checkcode.CheckCodeGen;
 import com.shenmao.chuhe.database.chuhe.ChuheDbService;
 import com.shenmao.chuhe.database.wikipage.WikiPageDbService;
 import com.shenmao.chuhe.handlers.GlobalHandlers;
 import com.shenmao.chuhe.handlers.PortalHandlers;
 import com.shenmao.chuhe.handlers.StoreHandlers;
-import com.shenmao.chuhe.handlers.manage.ManageUserHandlers;
 import com.shenmao.chuhe.routers.store.StoreRouter;
-import com.shenmao.chuhe.routers.user.UserRouter;
-import com.shenmao.chuhe.sessionstore.RedisSessionStore;
-import com.shenmao.chuhe.exceptions.PurposeException;
 import com.shenmao.chuhe.passport.AuthHandlerImpl;
 import io.vertx.core.VertxException;
-import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.rxjava.ext.web.Route;
-import io.vertx.rxjava.ext.web.sstore.SessionStore;
 import io.vertx.rxjava.core.Vertx;
 import io.vertx.rxjava.ext.web.Router;
 import io.vertx.rxjava.ext.web.handler.*;
-
-import java.io.ByteArrayOutputStream;
-import java.nio.ByteBuffer;
 
 import static com.shenmao.chuhe.verticle.ChuheDbVerticle.CONFIG_CHUHEDB_QUEUE;
 import static com.shenmao.chuhe.verticle.WikiPageVerticle.CONFIG_WIKIDB_QUEUE;
