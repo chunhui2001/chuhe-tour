@@ -3,6 +3,7 @@ import * as _ from 'lodash';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/from';
 import 'rxjs/add/observable/interval';
+import { CheckcodeService } from '../../_services/_index';
 
 @Component({
   selector: 'app-check-code-input',
@@ -20,6 +21,7 @@ export class CheckCodeInputComponent implements OnInit {
   checkCodeLength: Number = 6;
   timerCount: any = 10;
   checkcodeTimeButtonText: String;
+  checkCodeSign: String;
 
   @Output()
   checkCodeChange = new EventEmitter<string>();
@@ -34,7 +36,7 @@ export class CheckCodeInputComponent implements OnInit {
     this.checkCodeChange.emit(this.checkCodeValue);
   }
 
-  constructor() {
+  constructor(private checkcodeService: CheckcodeService) {
     this.changeCode();
   }
 
@@ -66,7 +68,8 @@ export class CheckCodeInputComponent implements OnInit {
   }
 
   changeCode(): void {
-    this.checkCodeSrc = '/checkcode?sign=' + this.randomStr();
+    this.checkCodeSign = this.randomStr();
+    this.checkCodeSrc = '/checkcode?sign=' + this.checkCodeSign;
   }
 
   resendCode(): void {
@@ -110,29 +113,31 @@ export class CheckCodeInputComponent implements OnInit {
 
           this.checkcodeInvalid = false;
 
-          // validate check code
-          if ('22'.length === 2) {
+          this.checkcodeService.check(this.checkCodeSign, this.checkCodeValue).subscribe(result => {
+            if (result.data) {
+              // good
+              this.steps = 'clicked_checkcode';
+              this.checkCode = null;
+              this.placeholder = '已发送, 请输入验证码';
 
-            this.steps = 'clicked_checkcode';
-            this.checkCode = null;
-            this.placeholder = '已发送, 请输入验证码';
+              let timer =  Observable.interval(1000).subscribe((v) => {
 
-            let timer =  Observable.interval(1000).subscribe((v) => {
+                this.setCheckcodeTimeButtonText(this.getTimeStr(this.timerCount - v));
 
-              this.setCheckcodeTimeButtonText(this.getTimeStr(this.timerCount - v));
+                if (this.timerCount - v <= 0) {
+                  timer.unsubscribe();
+                  timer = null;
+                  this.setCheckcodeTimeButtonText('重新发送');
+                }
 
-              if (this.timerCount - v <= 0) {
-                timer.unsubscribe();
-                timer = null;
-                this.setCheckcodeTimeButtonText('重新发送');
-              }
+              });
 
-            });
-
-          } else {
-            // invalide checkcode
-            this.checkcodeInvalid = true;
-          }
+            } else {
+              // bad
+              // invalide checkcode
+              this.checkcodeInvalid = true;
+            }
+          });
 
         }
       }

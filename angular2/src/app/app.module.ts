@@ -43,8 +43,7 @@ import { HttpIntercepor } from './_interceptor/http.interceptor';
 import { routers } from './routers/app.router';
 
 // _service
-import { VoteService } from './_services/vote/vote.service';
-import { ProductService } from './_services/product/product.service';
+import { VoteService, ProductService, CheckcodeService } from './_services/_index';
 
 // doc: https://swimlane.gitbooks.io/ngx-charts/content/intro/installing.html
 // demo: https://swimlane.github.io/ngx-charts/#/ngx-charts/combo-chart
@@ -161,7 +160,7 @@ export class GoogleMaterialModule {}
       provide: HTTP_INTERCEPTORS,
       useClass: HttpIntercepor,
       multi: true,
-    }, VoteService, ProductService
+    }, VoteService, ProductService, CheckcodeService
   ],
   bootstrap: [AppComponent]
 })

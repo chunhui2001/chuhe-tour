@@ -14,12 +14,14 @@
 }
 
 .checkcode-valid-button, .checkcode-time-button {
-  cursor: pointer; padding: 0 .425rem;color: blueviolet;background-color: antiquewhite;
+  cursor: pointer; padding: 0 .425rem;
+  color: blueviolet;
+  background-color: burlywood;
 }
 
 .checkcode-valid-button {
   border-left: none;
-  background-color: burlywood;
+  background-color: antiquewhite;
   color: brown;
   font-weight: bold;
 }
