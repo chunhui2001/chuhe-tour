@@ -13,10 +13,27 @@
   color: red;
 }
 
+.checkcode-disable-button {
+  background-color: #c5c5c5 !important;
+  color:grey !important;
+}
+
 .checkcode-valid-button, .checkcode-time-button {
   cursor: pointer; padding: 0 .425rem;
   color: blueviolet;
   background-color: burlywood;
+
+}
+
+.checkcode-time-button {
+  width: 85px;
+  text-align: center;
+}
+
+.checkcode-time-button > i {
+  display: inline-block;
+  width: 100%;
+  font-style: normal;
 }
 
 .checkcode-valid-button {

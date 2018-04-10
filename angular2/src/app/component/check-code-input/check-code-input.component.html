@@ -2,13 +2,15 @@
   <span class="input-group-label" style="padding: 0 .425rem;color:black;">
     <i class="material-icons">&#xE8CE;</i>
   </span>
-  <input class="input-group-field checkcode-invalid" type="text"
+  <input class="input-group-field checkcode-invalid" type="text" [disabled]="isDisable"
          [ngClass]="{'checkcode-invalid': checkcodeInvalid }"
          (keyup)="onKeyup($event)"
          (keydown)="onKeydown($event)"
          placeholder="{{placeholder}}" [(ngModel)]="checkCode" id="check_code" name="check_code" required>
   <span (click)="changeSteps('clicked_send_click')" *ngIf="steps==='pre_send_click'"
-        class="input-group-label" style="cursor: pointer; padding: 0 .425rem;color: blueviolet;background-color: antiquewhite;">
+        class="input-group-label"
+        [ngClass]="{'checkcode-disable-button': isDisable}"
+        style="cursor: pointer; padding: 0 .425rem;color: blueviolet;background-color: antiquewhite;">
         发送验证码
   </span>
   <span (click)="changeCode()" *ngIf="steps==='clicked_send_click'"
@@ -18,12 +20,13 @@
   </span>
   <span (click)="validateCheckCode()" *ngIf="steps==='clicked_checkcode'"
         class="input-group-label checkcode-valid-button checkcode-correct"
-        [ngClass]="{'checkcode-correct': isValidate != null && isValidate,'checkcode-wrong': isValidate != null && !isValidate  }">
+        [ngClass]="{'checkcode-correct': isValidate != null && isValidate,'checkcode-wrong': isValidate != null && !isValidate, 'checkcode-disable-button': isDisable }">
         &ensp;验证&ensp;
   </span>
   <span *ngIf="steps==='clicked_checkcode'"
         (click)="resendCode()"
-        class="input-group-label checkcode-time-button">
-        {{checkcodeTimeButtonText}}
+        class="input-group-label checkcode-time-button"
+        [ngClass]="{'checkcode-disable-button': isDisable}">
+        <i>{{checkcodeTimeButtonText}}</i>
   </span>
 </div>

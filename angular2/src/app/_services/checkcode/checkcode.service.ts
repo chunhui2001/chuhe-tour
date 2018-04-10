@@ -8,11 +8,11 @@ export class CheckcodeService {
 
   constructor(private http: HttpClient) { }
 
-  check(sign: String, code: String): Observable<any> {
+  check(sign: String, code: String, receiver: String): Observable<any> {
 
     const endpoint = '/checkcode';
 
-    return this.http.post(endpoint, {sign: sign, checkcode: code})
+    return this.http.post(endpoint, {sign: sign, checkcode: code, receiver: receiver})
       .map((response: RestResponse) => {
         if (response.error) {
           return response.message[0];

@@ -1,5 +1,5 @@
 
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
@@ -25,6 +25,9 @@ export class SignupComponent implements OnInit {
   checkCode: any;
   address: String = '';
   isAgreeRule: Boolean = false;
+
+
+  @ViewChild('check_code_input') check_code_input;
 
   constructor(private http: HttpClient, private router: Router ) {
 
@@ -75,7 +78,7 @@ export class SignupComponent implements OnInit {
   }
 
   ngOnInit() {
-
+    // this.check_code_input.isDisable = false;
   }
 
 

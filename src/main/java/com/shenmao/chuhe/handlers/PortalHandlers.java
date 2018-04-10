@@ -13,6 +13,7 @@ import io.vertx.core.buffer.Buffer;
 import io.vertx.core.json.JsonArray;
 import io.vertx.rxjava.core.Vertx;
 import io.vertx.core.json.JsonObject;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import io.vertx.ext.auth.jwt.JWTOptions;
@@ -63,6 +64,7 @@ public class PortalHandlers extends BaseHandler {
 
     String sign = getString(routingContext, "sign");
     String checkcode = getString(routingContext, "checkcode");
+    String receiver = getString(routingContext, "receiver");
 
     if (sign.isEmpty() || checkcode.isEmpty()) {
 
@@ -70,21 +72,43 @@ public class PortalHandlers extends BaseHandler {
       throw new PurposeException("非法请求");
     }
 
-    this.chuheDbService.validateCheckCode(sign, checkcode, reply -> {
+    this.chuheDbService.validateCheckCode(sign, checkcode, receiver, reply -> {
 
-
-      ChainSerialization chainSerialization = ChainSerialization.create(routingContext.getDelegate());
-              //.putViewName("/registry.html")
-              //.putContextData(contextData)
-              //.serialize();
-
+      ChainSerialization chainSerialization =
+              ChainSerialization.create(routingContext.getDelegate());
       chainSerialization.setSerializeType(SerializeType.JSON);
 
       if (reply.succeeded()) {
+
         chainSerialization.putContextData(reply.result());
-        //routingContext.response().end(sign + ", " + checkcode + ", " + reply.result());
-        //return;
-        chainSerialization.putMessage(reply.result() ? "good": "bad");
+
+        if (reply.result()) {
+
+          JsonObject code  = new JsonObject();
+
+          code.put("code_sign", RandomStringUtils.randomAlphanumeric(48));
+          code.put("code_value", RandomStringUtils.randomNumeric(4));
+          code.put("receiver", receiver);
+          code.put("send_channel", "email");
+          code.put("client_ip", routingContext.request().remoteAddress().host());
+          code.put("client_agent", routingContext.request().getHeader("User-Agent"));
+
+          this.chuheDbService.createCheckCode(code, reply2 -> {
+
+            if (reply.succeeded()) {
+              // publish to message queue
+              chainSerialization.putMessage("validate code send");
+              return;
+            }
+
+            routingContext.getDelegate().response().end(reply.cause().getMessage());
+
+          });
+
+        } else {
+          chainSerialization.putMessage("bad");
+        }
+
       } else {
         chainSerialization.putContextData(false);
         chainSerialization.putMessage(reply.cause().getMessage());
@@ -94,15 +118,15 @@ public class PortalHandlers extends BaseHandler {
 
     });
 
-
-
   }
+
 
   public void checkCodeHandler(RoutingContext routingContext) {
 
     String sign = getQueryParam(routingContext, "sign");
+    String receiver = getQueryParam(routingContext, "receiver");
 
-    if ( sign == null || sign.isEmpty()) {
+    if (sign.isEmpty() || receiver.isEmpty()) {
       throw new PurposeException("非法请求");
     }
 
@@ -112,7 +136,8 @@ public class PortalHandlers extends BaseHandler {
 
     code.put("code_sign", sign);
     code.put("code_value", checkCode.getCheckCodeStr());
-    code.put("send_channel", "email");
+    code.put("receiver", receiver);
+    code.put("send_channel", "image");
     code.put("client_ip", routingContext.request().remoteAddress().host());
     code.put("client_agent", routingContext.request().getHeader("User-Agent"));
 

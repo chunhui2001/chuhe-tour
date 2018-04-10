@@ -1584,7 +1584,6 @@ public class ChuheDbServiceImpl implements ChuheDbService {
 
         LOGGER.info(saveCheckCodeSql);
 
-
         JsonArray data = new JsonArray();
 
         Calendar now = Calendar.getInstance();
@@ -1592,6 +1591,7 @@ public class ChuheDbServiceImpl implements ChuheDbService {
         data.add(checkcode.getString("code_sign"));
         data.add(checkcode.getString("code_value"));
         data.add(checkcode.getString("send_channel"));
+        data.add(checkcode.getString("receiver"));
         data.add(checkcode.getString("client_ip"));
         data.add(checkcode.getString("client_agent"));
         data.add(_DATE_FM_T.format(now.getTime()));
@@ -1615,7 +1615,7 @@ public class ChuheDbServiceImpl implements ChuheDbService {
     }
 
     @Override
-    public ChuheDbService validateCheckCode(String sign, String code, Handler<AsyncResult<Boolean>> resultHandler)  {
+    public ChuheDbService validateCheckCode(String sign, String code, String receiver, Handler<AsyncResult<Boolean>> resultHandler)  {
 
         String validateCheckCodeSql = sqlQueries.get(ChuheSqlQuery.VALIDATE_CHECKCODE);
 
@@ -1625,6 +1625,7 @@ public class ChuheDbServiceImpl implements ChuheDbService {
 
         data.add(sign);
         data.add(code);
+        // data.add(receiver);
 
         Single<Boolean> result = this.dbClient
                 .rxQueryWithParams(validateCheckCodeSql, data)

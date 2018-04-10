@@ -40,7 +40,9 @@
         placeholder="请输入手机号码" [(ngModel)]="phone" id="user_phone" name="user_phone" required>
     </div>
 
-    <app-check-code-input #check_code_input [(checkCode)]="checkCode"></app-check-code-input>
+    <app-check-code-input #check_code_input [(checkCode)]="checkCode"
+                          [isDisable]=" !phone || phone.length === 0 "
+                          [(phoneOrEmail)]="phone"></app-check-code-input>
 
     <div class="input-group">
       <span class="input-group-label" style="padding: 0 .425rem;color:black;">
@@ -66,7 +68,7 @@
     <div style="text-align: left;    margin-top: 1em;margin-bottom: 2em;">
 	    <button style="margin-bottom: 0;" type="submit" [disabled]="!(formData.valid && isAgreeRule)"
               (click)="onSubmit(formData)"
-	            class="basic-btn button">立即注册{{check_code_input.checkcodeInvalid}}</button>
+	            class="basic-btn button">立即注册</button>
   	</div>
 
   </form>

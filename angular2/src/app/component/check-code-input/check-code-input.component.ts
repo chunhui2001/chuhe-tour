@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import * as _ from 'lodash';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/from';
@@ -10,9 +10,16 @@ import { CheckcodeService } from '../../_services/_index';
   templateUrl: './check-code-input.component.html',
   styleUrls: ['./check-code-input.component.css']
 })
-export class CheckCodeInputComponent implements OnInit {
+export class CheckCodeInputComponent implements OnInit, AfterViewInit {
+
+  @Input()
+  isDisable: Boolean;
+
+  @Input()
+  phoneOrEmail: any;
 
   checkCodeValue: any;
+
   steps: String = 'pre_send_click';       // clicked_send_click
   placeholder: String = '请输入验证码';
   checkCodeSrc: String ;
@@ -22,6 +29,7 @@ export class CheckCodeInputComponent implements OnInit {
   checkcodeTimeButtonText: String;
   checkCodeSign: String;
   isValidate: boolean;
+  timer: any;
 
   @Output()
   checkCodeChange = new EventEmitter<string>();
@@ -37,12 +45,15 @@ export class CheckCodeInputComponent implements OnInit {
   }
 
   constructor(private checkcodeService: CheckcodeService) {
-    this.changeCode();
+
   }
 
   ngOnInit() {
     this.setCheckcodeTimeButtonText(this.getTimeStr(this.timerCount));
-   //  this.steps = 'clicked_checkcode';
+  }
+
+  ngAfterViewInit() {
+
   }
 
   setCheckcodeTimeButtonText(text: String): void {
@@ -57,6 +68,7 @@ export class CheckCodeInputComponent implements OnInit {
   changeSteps(val: String): void {
 
     if (val === 'clicked_send_click') {
+      this.changeCode();
       this.placeholder = '请输入图形验证码';
     }
 
@@ -70,10 +82,15 @@ export class CheckCodeInputComponent implements OnInit {
 
   changeCode(): void {
     this.checkCodeSign = this.randomStr();
-    this.checkCodeSrc = '/checkcode?sign=' + this.checkCodeSign;
+    this.checkCodeSrc = '/checkcode?sign=' + this.checkCodeSign + '&receiver=' + this.phoneOrEmail;
   }
 
   resendCode(): void {
+
+    if (this.timer !== null || this.isValidate) {
+      return;
+    }
+
     this.changeSteps('clicked_send_click');
     this.changeCode();
     this.checkcodeInvalid = false;
@@ -89,7 +106,15 @@ export class CheckCodeInputComponent implements OnInit {
     const b = true;
 
     if (b) {
+
       this.isValidate = true;
+      this.setCheckcodeTimeButtonText('验证成功');
+
+      if (this.timer != null) {
+        this.timer.unsubscribe();
+        this.timer = null;
+      }
+
     } else {
       this.isValidate = false;
       this.checkcodeInvalid = true;
@@ -113,39 +138,47 @@ export class CheckCodeInputComponent implements OnInit {
         }
 
         if (this.checkCodeValue.length === this.checkCodeLength) {
-
-          this.checkcodeInvalid = false;
-
-          this.checkcodeService.check(this.checkCodeSign, this.checkCodeValue).subscribe(result => {
-            if (result.data) {
-              // good
-              this.steps = 'clicked_checkcode';
-              this.checkCode = null;
-              this.placeholder = '已发送, 请输入验证码';
-
-              let timer =  Observable.interval(1000).subscribe((v) => {
-
-                this.setCheckcodeTimeButtonText(this.getTimeStr(this.timerCount - v));
-
-                if (this.timerCount - v <= 0) {
-                  timer.unsubscribe();
-                  timer = null;
-                  this.setCheckcodeTimeButtonText('重新发送');
-                }
-
-              });
-
-            } else {
-              // bad
-              // invalide checkcode
-              this.checkcodeInvalid = true;
-            }
-          });
-
+          this.checkCodeCheck();
         }
       }
 
     }
+
+  }
+
+  checkCodeCheck(): void {
+
+    this.checkcodeInvalid = false;
+
+    this.checkcodeService.check(this.checkCodeSign, this.checkCodeValue, this.phoneOrEmail).subscribe(result => {
+
+      debugger;
+      if (result.data) {
+
+        // good
+        this.steps = 'clicked_checkcode';
+        this.checkCode = null;
+        this.placeholder = '已发送, 请输入验证码';
+        this.setCheckcodeTimeButtonText(this.getTimeStr(this.timerCount));
+
+        this.timer = Observable.interval(1000).subscribe((v) => {
+
+          this.setCheckcodeTimeButtonText(this.getTimeStr(this.timerCount - v - 1));
+
+          if (this.timerCount - v <= 0) {
+            this.timer.unsubscribe();
+            this.timer = null;
+            this.setCheckcodeTimeButtonText('重新发送');
+          }
+
+        });
+
+      } else {
+        // bad
+        // invalide checkcode
+        this.checkcodeInvalid = true;
+      }
+    });
 
   }
 
