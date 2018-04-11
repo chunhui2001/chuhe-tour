@@ -20,8 +20,8 @@
   </span>
   <span (click)="validateCheckCode()" *ngIf="steps==='clicked_checkcode'"
         class="input-group-label checkcode-valid-button checkcode-correct"
-        [ngClass]="{'checkcode-correct': isValidate != null && isValidate,
-                    'checkcode-wrong': isValidate != null && !isValidate,
+        [ngClass]="{'checkcode-correct': validSuccess != null && validSuccess,
+                    'checkcode-wrong': validSuccess != null && !validSuccess,
                     'checkcode-disable-button': isDisable || !(checkCode && checkCode.trim().length > 3 && checkCode.trim().length < 8) }">
         &ensp;验证&ensp;
   </span>

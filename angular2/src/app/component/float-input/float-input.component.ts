@@ -30,7 +30,7 @@ export class FloatInputComponent implements OnInit {
 
       if (event.getModifierState
           && (event.getModifierState('Meta') || event.getModifierState('Control'))
-          && (event.keyCode === 65 || event.keyCode === 67 || event.keyCode === 86 || event.keyCode === 88)) {
+          && (code === 65 || code === 67 || code === 86 || code === 88)) {
 
       } else {
         event.preventDefault();

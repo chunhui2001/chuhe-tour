@@ -29,7 +29,7 @@ export class CheckCodeInputComponent implements OnInit, AfterViewInit {
   checkcodeTimeButtonText: String;
   checkCodeSign: String;
   checkNewSign: String;             // 通过图片验证之后，服务器会返回一个新的sign, 拿着这个新的sign去服务器验证用户收到的短信验证码(或邮件验证码)
-  isValidate: boolean;
+  validSuccess: boolean;
   timer: any;
 
   @Output()
@@ -88,7 +88,7 @@ export class CheckCodeInputComponent implements OnInit, AfterViewInit {
 
   resendCode(): void {
 
-    if (this.timer !== null || this.isValidate) {
+    if (this.timer !== null || this.validSuccess) {
       return;
     }
 
@@ -96,12 +96,14 @@ export class CheckCodeInputComponent implements OnInit, AfterViewInit {
     this.changeCode();
     this.checkcodeInvalid = false;
     this.checkCode = null;
-    this.isValidate = null;
+    this.validSuccess = null;
   }
 
   validateCheckCode(): void {
 
-    this.isValidate = null;
+    if (this.validSuccess) {
+      return;
+    }
 
     if (this.checkNewSign && this.checkCode) {
 
@@ -123,13 +125,13 @@ export class CheckCodeInputComponent implements OnInit, AfterViewInit {
   }
 
   validateFailed(): void {
-    this.isValidate = false;
+    this.validSuccess = false;
     this.checkcodeInvalid = true;
   }
 
   validateSuccess(): void {
 
-    this.isValidate = true;
+    this.validSuccess = true;
     this.checkcodeInvalid = false;
     this.setCheckcodeTimeButtonText('验证成功');
 
@@ -209,10 +211,27 @@ export class CheckCodeInputComponent implements OnInit, AfterViewInit {
 
     const code = event.keyCode || event.which;
 
+    if (this.validSuccess) {
+      // 一旦验证成功，冻结输入框，不让用户在改, 但是可以按tab键
+
+      if ((code === 9)) {
+        return;   // tab
+      }
+
+      if (event.getModifierState
+        && (event.getModifierState('Meta') || event.getModifierState('Control'))
+        && (code === 9)) {
+        return;   // shift + tab
+      }
+
+      event.preventDefault();
+      return;
+    }
+
     if ( this.steps === 'clicked_send_click' && this.checkCodeValue && this.checkCodeValue.length >= this.checkCodeLength) {
 
       // 8: back, 37: left arrow
-      if (code === 8 || code === 37 || code === 39) {
+      if (code === 8 || code === 9 || code === 37 || code === 39) {
         return;
       }
 
