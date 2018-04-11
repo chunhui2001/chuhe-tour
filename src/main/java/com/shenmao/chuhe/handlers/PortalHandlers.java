@@ -74,6 +74,8 @@ public class PortalHandlers extends BaseHandler {
     String checkcode = getString(routingContext, "checkcode");
     String receiver = getString(routingContext, "receiver");
 
+    System.out.println(receiver + ", receiver 777");
+
     if (sign.isEmpty() || checkcode.isEmpty()) {
       throw new PurposeException("非法请求");
     }
@@ -156,9 +158,9 @@ public class PortalHandlers extends BaseHandler {
   public void checkCodeImageHandler(RoutingContext routingContext) {
 
     String sign = getQueryParam(routingContext, "sign");
-    String receiver = getQueryParam(routingContext, "receiver");
+    // String receiver = getQueryParam(routingContext, "receiver");
 
-    if (sign.isEmpty() || receiver.isEmpty()) {
+    if (sign.isEmpty()) {
       throw new PurposeException("非法请求");
     }
 
@@ -168,7 +170,7 @@ public class PortalHandlers extends BaseHandler {
 
     code.put("code_sign", sign);
     code.put("code_value", checkCode.getCheckCodeStr());
-    code.put("receiver", receiver);
+    // code.put("receiver", receiver);
     code.put("send_channel", "image");
     code.put("client_ip", routingContext.request().remoteAddress().host());
     code.put("client_agent", routingContext.request().getHeader("User-Agent"));

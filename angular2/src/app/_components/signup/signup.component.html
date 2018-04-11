@@ -36,12 +36,13 @@
       <span class="input-group-label" style="padding: 0 .425rem;color:black;">
         <i class="material-icons">&#xE0CD;</i>
       </span>
-      <input class="input-group-field" type="text"
+      <input #check_input_element class="input-group-field" type="text"
         placeholder="请输入手机号码" [(ngModel)]="phone" id="user_phone" name="user_phone" required>
     </div>
 
     <app-check-code-input #check_code_input [(checkCode)]="checkCode"
                           [isDisable]=" !phone || phone.length === 0 "
+                          [check_input_element]="check_input_element"
                           [(phoneOrEmail)]="phone"></app-check-code-input>
 
     <div class="input-group">

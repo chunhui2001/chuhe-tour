@@ -110,7 +110,7 @@ public class ChuheDbServiceImpl implements ChuheDbService {
 
         String fetchProductByIdSql = sqlQueries.get(ChuheSqlQuery.GET_PRODUCT);
 
-        LOGGER.info( fetchProductByIdSql);
+        LOGGER.info(fetchProductByIdSql);
 
         JsonArray sqlParams = new JsonArray().add(productId);
 
@@ -149,7 +149,6 @@ public class ChuheDbServiceImpl implements ChuheDbService {
     }
 
 
-
     final SimpleDateFormat _DATE_FM_T = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
     final SimpleDateFormat _DATE_FM_MINUTE = new SimpleDateFormat("yyyy年MM月dd日 HH时mm分");
     final SimpleDateFormat _DATE_FM_HOUR = new SimpleDateFormat("yyyy年MM月dd日 HH时");
@@ -173,7 +172,7 @@ public class ChuheDbServiceImpl implements ChuheDbService {
 
         if (create_at != null) {
             product.put("created_at", _DATE_FM_MINUTE.format(create_at));
-            product.put("created_at_time",create_at.getTime());
+            product.put("created_at_time", create_at.getTime());
         }
 
         if (last_updated != null) {
@@ -189,14 +188,14 @@ public class ChuheDbServiceImpl implements ChuheDbService {
             return !p.equals("product_medias") && !p.equals("product_desc");
         }).forEach(p -> {
             Object val = product.getValue(p);
-            if (val == null || ((val instanceof String) && ((String)val).trim().isEmpty())) {
+            if (val == null || ((val instanceof String) && ((String) val).trim().isEmpty())) {
                 product.put(p, "无");
             }
         });
 
         if (!product.containsKey("product_medias")
                 || productMedias == null || (new String(productMedias)).trim().isEmpty()) {
-             // product.put("product_medias", "无");
+            // product.put("product_medias", "无");
         } else {
             product.put("product_medias", new String(productMedias));
         }
@@ -216,7 +215,7 @@ public class ChuheDbServiceImpl implements ChuheDbService {
     public ChuheDbService fetchAllProducts(Handler<AsyncResult<List<JsonObject>>> resultHandler) {
 
         String allProductSql = sqlQueries.get(ChuheSqlQuery.ALL_PRODUCTS);
-        LOGGER.info( allProductSql);
+        LOGGER.info(allProductSql);
 
 
         this.dbClient.rxQuery(allProductSql)
@@ -234,7 +233,7 @@ public class ChuheDbServiceImpl implements ChuheDbService {
     public ChuheDbService filterProductsByName(String pName, Handler<AsyncResult<List<JsonObject>>> resultHandler) {
 
         String filtrProductsByNameSql = sqlQueries.get(ChuheSqlQuery.FILTER_PRODUCTS_BY_NAME);
-        LOGGER.info( filtrProductsByNameSql);
+        LOGGER.info(filtrProductsByNameSql);
 
         JsonArray params = new JsonArray();
 
@@ -243,8 +242,8 @@ public class ChuheDbServiceImpl implements ChuheDbService {
         this.dbClient.rxQueryWithParams(filtrProductsByNameSql, params)
                 .flatMapObservable(res -> Observable.from(res.getRows()))
                 .map(product -> {
-                   JsonObject j = this.processProduct(product);
-                   return j;
+                    JsonObject j = this.processProduct(product);
+                    return j;
                 })
                 // .sorted()
                 .collect(ArrayList<JsonObject>::new, List::add)
@@ -254,12 +253,11 @@ public class ChuheDbServiceImpl implements ChuheDbService {
     }
 
 
-
     @Override
     public ChuheDbService createProducts(JsonObject product, Handler<AsyncResult<Long>> resultHandler) {
 
         String createProductSql = sqlQueries.get(ChuheSqlQuery.CREATE_PRODUCT);
-        LOGGER.info( createProductSql);
+        LOGGER.info(createProductSql);
 
         JsonArray data = new JsonArray();
 
@@ -383,14 +381,13 @@ public class ChuheDbServiceImpl implements ChuheDbService {
             }
 
 
-
             if (productSpecStr != null) {
                 sqlParams.add(newProduct.getString("product_spec"));
             } else {
                 sqlParams.addNull();
             }
 
-            if ( productDescStr != null) {
+            if (productDescStr != null) {
                 sqlParams.add(newProduct.getString("product_desc"));
             } else {
                 sqlParams.addNull();
@@ -410,10 +407,8 @@ public class ChuheDbServiceImpl implements ChuheDbService {
         });
 
 
-
         return this;
     }
-
 
 
     @Override
@@ -443,7 +438,7 @@ public class ChuheDbServiceImpl implements ChuheDbService {
 
         productIdList.forEach(pid -> {
             sqlParam.add(pid);
-            joiner.add( "?");
+            joiner.add("?");
         });
 
         String temp = sql.toString().replaceAll(s, joiner.toString());
@@ -464,7 +459,7 @@ public class ChuheDbServiceImpl implements ChuheDbService {
 
         productIdList.forEach(pid -> {
             sqlParam.add(pid);
-            joiner.add( "?");
+            joiner.add("?");
         });
 
         deleteProductSqlBatch = deleteProductSqlBatch.replaceAll("_product_id_list_", joiner.toString());
@@ -492,7 +487,7 @@ public class ChuheDbServiceImpl implements ChuheDbService {
 
         Double orderMonty = 0.0;
 
-        for (int i=0; i<orderDetailItemList.size(); i++) {
+        for (int i = 0; i < orderDetailItemList.size(); i++) {
 
             Double price = orderDetailItemList.get(i).getDouble("product_price");
             Double count = 0.0;
@@ -512,7 +507,6 @@ public class ChuheDbServiceImpl implements ChuheDbService {
     private ChuheDbService createOrderDeatailReplenish(Long orderId, List<JsonObject> orderDetailItemList, Handler<AsyncResult<Long>> resultHandler) {
 
 
-
         return this;
     }
 
@@ -529,7 +523,7 @@ public class ChuheDbServiceImpl implements ChuheDbService {
     public ChuheDbService createOrder(JsonObject order, List<JsonObject> orderDetailItemList, Handler<AsyncResult<Long>> resultHandler) {
 
         String createOrderSql = sqlQueries.get(ChuheSqlQuery.CREATE_ORDER);
-        LOGGER.info( createOrderSql);
+        LOGGER.info(createOrderSql);
 
         JsonArray data = new JsonArray()
                 .add(order.getValue("order_flow_no"));
@@ -564,63 +558,63 @@ public class ChuheDbServiceImpl implements ChuheDbService {
         // https://github.com/vert-x3/vertx-examples/blob/master/rxjava-1-examples/src/main/java/io/vertx/example/rxjava/database/jdbc/Transaction.java
         this.dbClient.rxGetConnection()
                 .flatMap(conn ->
-                    conn
-                        .rxSetAutoCommit(false)
-                        // insert order
-                        .flatMap(autoCommit -> conn.rxUpdateWithParams(createOrderSql, data))
-                        // get products
-                        .flatMap(updateResult -> {
-                            Long newOrderId = updateResult.getKeys().getLong(0);
-                            order.put("order_id", newOrderId);
-                            return this.fetchProductsByIdList(getProductIdInOrderItems(orderDetailItemList));
-                        })
-                        .map(ResultSet::getRows)
-                        // inert order items
-                        .flatMap(productList -> {
+                        conn
+                                .rxSetAutoCommit(false)
+                                // insert order
+                                .flatMap(autoCommit -> conn.rxUpdateWithParams(createOrderSql, data))
+                                // get products
+                                .flatMap(updateResult -> {
+                                    Long newOrderId = updateResult.getKeys().getLong(0);
+                                    order.put("order_id", newOrderId);
+                                    return this.fetchProductsByIdList(getProductIdInOrderItems(orderDetailItemList));
+                                })
+                                .map(ResultSet::getRows)
+                                // inert order items
+                                .flatMap(productList -> {
 
-                            order.put("productList", productList);
+                                    order.put("productList", productList);
 
 
-                            if ("sales".equals(order.getString("order_type"))) {
-                                return saveOrderItemsSales(order, productList, orderDetailItemList);
-                            }
+                                    if ("sales".equals(order.getString("order_type"))) {
+                                        return saveOrderItemsSales(order, productList, orderDetailItemList);
+                                    }
 
-                            return saveOrderItemsReplenish(order, productList, orderDetailItemList);
+                                    return saveOrderItemsReplenish(order, productList, orderDetailItemList);
 
-                        })
-                        // save stocks
-                        .flatMap(updateResult -> {
+                                })
+                                // save stocks
+                                .flatMap(updateResult -> {
 
-                            JsonArray productArray = (JsonArray)order.getValue("productList");
-                            List<JsonObject> productList = new ArrayList<>();
-                            // List<JsonObject> productList = (List<JsonObject>)order.getValue("productList");
+                                    JsonArray productArray = (JsonArray) order.getValue("productList");
+                                    List<JsonObject> productList = new ArrayList<>();
+                                    // List<JsonObject> productList = (List<JsonObject>)order.getValue("productList");
 
-                            for (int i=0; i<productArray.size(); i++) {
-                                productList.add(productArray.getJsonObject(i));
-                            }
+                                    for (int i = 0; i < productArray.size(); i++) {
+                                        productList.add(productArray.getJsonObject(i));
+                                    }
 
-                            return saveStocks(order, productList, orderDetailItemList);
-                        })
-                        .flatMap(updateResult -> conn.rxCommit().map(commit -> updateResult))
-                        .onErrorResumeNext(ex ->
-                                conn.rxRollback()
-                                    .onErrorResumeNext(ex2 ->
-                                            Single.error(new CompositeException(ex, ex2))
-                                    ).flatMap(ignore -> Single.error(ex))
-                        ).doAfterTerminate(conn::close)
+                                    return saveStocks(order, productList, orderDetailItemList);
+                                })
+                                .flatMap(updateResult -> conn.rxCommit().map(commit -> updateResult))
+                                .onErrorResumeNext(ex ->
+                                        conn.rxRollback()
+                                                .onErrorResumeNext(ex2 ->
+                                                        Single.error(new CompositeException(ex, ex2))
+                                                ).flatMap(ignore -> Single.error(ex))
+                                ).doAfterTerminate(conn::close)
                 ).subscribe(updateResult -> {
-                    resultHandler.handle(Future.succeededFuture(order.getLong("order_id")));
-                }, error -> {
+            resultHandler.handle(Future.succeededFuture(order.getLong("order_id")));
+        }, error -> {
 
-                    resultHandler.handle(Future.failedFuture(error.getMessage()));
-                });
+            resultHandler.handle(Future.failedFuture(error.getMessage()));
+        });
 
         return this;
     }
 
     private List<JsonObject> processOrderItems(List<JsonObject> orderItems, String orderType) {
 
-        for (int i=0; i<orderItems.size(); i++) {
+        for (int i = 0; i < orderItems.size(); i++) {
 
             orderItems.get(i).put("order_item_no", i + 1);
 
@@ -731,7 +725,7 @@ public class ChuheDbServiceImpl implements ChuheDbService {
     public ChuheDbService fetchAllOrders(String orderType, Handler<AsyncResult<List<JsonObject>>> resultHandler) {
 
         String allOrdersSql = sqlQueries.get(ChuheSqlQuery.ALL_ORDERS);
-        LOGGER.info( allOrdersSql);
+        LOGGER.info(allOrdersSql);
 
         JsonArray params = new JsonArray();
 
@@ -747,7 +741,7 @@ public class ChuheDbServiceImpl implements ChuheDbService {
         return this;
     }
 
-    private String getProductNameById(Long productId,  List<JsonObject> productList) {
+    private String getProductNameById(Long productId, List<JsonObject> productList) {
 
         JsonObject result = productList.stream().filter(p -> {
             return p.getLong("product_id").compareTo(productId) == 0;
@@ -763,14 +757,14 @@ public class ChuheDbServiceImpl implements ChuheDbService {
         String s = allOrdersReplenishSql.substring(allOrdersReplenishSql.lastIndexOf("("));     // (?, ?, ?, ?, ?, ?, ?)
 
         StringJoiner joiner = new StringJoiner(",");
-        for (int i=0; i<orderDetailItemList.size() - 1; i++) joiner.add(s);
+        for (int i = 0; i < orderDetailItemList.size() - 1; i++) joiner.add(s);
         if (orderDetailItemList.size() > 1) allOrdersReplenishSql = allOrdersReplenishSql + "," + joiner.toString();
 
-        LOGGER.info( allOrdersReplenishSql);
+        LOGGER.info(allOrdersReplenishSql);
 
         JsonArray params = new JsonArray();
 
-        for (int i=0; i<orderDetailItemList.size(); i++) {
+        for (int i = 0; i < orderDetailItemList.size(); i++) {
 
             JsonObject item = orderDetailItemList.get(i);
 
@@ -797,21 +791,20 @@ public class ChuheDbServiceImpl implements ChuheDbService {
     }
 
 
-
     public Single<UpdateResult> saveStocks(JsonObject order, List<JsonObject> productList, List<JsonObject> orderDetailItemList) {
 
         String saveStocksSql = sqlQueries.get(ChuheSqlQuery.SAVE_STOCK);
         String s = saveStocksSql.substring(saveStocksSql.lastIndexOf("("));     // (?, ?, ?, ?, ?, ?, ?)
 
         StringJoiner joiner = new StringJoiner(",");
-        for (int i=0; i<orderDetailItemList.size() - 1; i++) joiner.add(s);
+        for (int i = 0; i < orderDetailItemList.size() - 1; i++) joiner.add(s);
         if (orderDetailItemList.size() > 1) saveStocksSql = saveStocksSql + "," + joiner.toString();
 
         LOGGER.info(saveStocksSql);
 
         JsonArray params = new JsonArray();
 
-        for (int i=0; i<orderDetailItemList.size(); i++) {
+        for (int i = 0; i < orderDetailItemList.size(); i++) {
 
             JsonObject item = orderDetailItemList.get(i);
 
@@ -855,14 +848,14 @@ public class ChuheDbServiceImpl implements ChuheDbService {
         String s = allOrdersSalesSql.substring(allOrdersSalesSql.lastIndexOf("("));     // (?, ?, ?, ?, ?, ?, ?)
 
         StringJoiner joiner = new StringJoiner(",");
-        for (int i=0; i<orderDetailItemList.size() - 1; i++) joiner.add(s);
+        for (int i = 0; i < orderDetailItemList.size() - 1; i++) joiner.add(s);
         if (orderDetailItemList.size() > 1) allOrdersSalesSql = allOrdersSalesSql + "," + joiner.toString();
 
-        LOGGER.info( allOrdersSalesSql);
+        LOGGER.info(allOrdersSalesSql);
 
         JsonArray params = new JsonArray();
 
-        for (int i=0; i<orderDetailItemList.size(); i++) {
+        for (int i = 0; i < orderDetailItemList.size(); i++) {
 
             JsonObject item = orderDetailItemList.get(i);
 
@@ -947,7 +940,7 @@ public class ChuheDbServiceImpl implements ChuheDbService {
                         resultHandler.handle(Future.succeededFuture(returnOrder.getJsonObject(0)));
                     }
                 }, error -> {
-                        resultHandler.handle(Future.failedFuture(error.getMessage()));
+                    resultHandler.handle(Future.failedFuture(error.getMessage()));
                 });
 
         return this;
@@ -1020,7 +1013,7 @@ public class ChuheDbServiceImpl implements ChuheDbService {
 
         StringJoiner userRolesJoiner = new StringJoiner(",");
 
-        for (int i=0; i<userRoles.size(); i++) {
+        for (int i = 0; i < userRoles.size(); i++) {
             userRolesJoiner.add(userRoles.getString(i));
         }
 
@@ -1074,7 +1067,7 @@ public class ChuheDbServiceImpl implements ChuheDbService {
 
         userIdList.forEach(dealerId -> {
             sqlParam.add(dealerId);
-            joiner.add( "?");
+            joiner.add("?");
         });
 
         deleteUserSqlBatch = deleteUserSqlBatch.replaceAll(
@@ -1114,7 +1107,7 @@ public class ChuheDbServiceImpl implements ChuheDbService {
 
 
     @Override
-    public ChuheDbService userDetail(Long userId, Handler<AsyncResult<JsonObject>> resultHandler)  {
+    public ChuheDbService userDetail(Long userId, Handler<AsyncResult<JsonObject>> resultHandler) {
 
         String userDetailSql = this.sqlQueries.get(ChuheSqlQuery.GET_USER);
 
@@ -1214,11 +1207,11 @@ public class ChuheDbServiceImpl implements ChuheDbService {
 
                                     return conn.rxUpdateWithParams(createDealerSql, dealerParams);
                                 }).onErrorResumeNext(ex ->
-                                        conn.rxRollback()
-                                                .onErrorResumeNext(ex2 ->
-                                                        Single.error(new CompositeException(ex, ex2))
-                                                ).flatMap(ignore -> Single.error(ex))
-                                ).doAfterTerminate(conn::close)
+                                conn.rxRollback()
+                                        .onErrorResumeNext(ex2 ->
+                                                Single.error(new CompositeException(ex, ex2))
+                                        ).flatMap(ignore -> Single.error(ex))
+                        ).doAfterTerminate(conn::close)
                 ).subscribe(updateResult -> {
             resultHandler.handle(Future.succeededFuture(dealer.getLong("user_id")));
         }, error -> {
@@ -1246,7 +1239,7 @@ public class ChuheDbServiceImpl implements ChuheDbService {
     }
 
     @Override
-     public ChuheDbService dealerDetail(Long dealerId, Handler<AsyncResult<JsonObject>> resultHandler)  {
+    public ChuheDbService dealerDetail(Long dealerId, Handler<AsyncResult<JsonObject>> resultHandler) {
 
         String dealerDetailsSql = this.sqlQueries.get(ChuheSqlQuery.GET_DEALER);
 
@@ -1404,7 +1397,6 @@ public class ChuheDbServiceImpl implements ChuheDbService {
         });
 
 
-
         return this;
 
     }
@@ -1418,11 +1410,11 @@ public class ChuheDbServiceImpl implements ChuheDbService {
         LOGGER.info(fetchAllDealersSql);
 
         this.dbClient.rxQuery(fetchAllDealersSql)
-                    .flatMapObservable(res -> Observable.from(res.getRows()))
-                    .map(user -> processEmptyFields(user))
-                    .map(dealer -> processGender(dealer, "dealer_gender"))
-                    .collect(ArrayList<JsonObject>::new, List::add)
-                    .subscribe(RxHelper.toSubscriber(resultHandler));
+                .flatMapObservable(res -> Observable.from(res.getRows()))
+                .map(user -> processEmptyFields(user))
+                .map(dealer -> processGender(dealer, "dealer_gender"))
+                .collect(ArrayList<JsonObject>::new, List::add)
+                .subscribe(RxHelper.toSubscriber(resultHandler));
 
         return this;
     }
@@ -1438,7 +1430,7 @@ public class ChuheDbServiceImpl implements ChuheDbService {
 
         dealerIdList.forEach(dealerId -> {
             sqlParam.add(dealerId);
-            joiner.add( "?");
+            joiner.add("?");
         });
 
         deleteUserSqlBatch = deleteUserSqlBatch.replaceAll(
@@ -1541,24 +1533,24 @@ public class ChuheDbServiceImpl implements ChuheDbService {
             this.dbClient.rxGetConnection()
                     .flatMap(conn ->
                             conn
-                            .rxSetAutoCommit(false)
-                            // update user
-                            .flatMap(autoCommit -> {
-                                return conn.rxUpdateWithParams(updateUserSql, sqlParamsUser);
-                            })
-                            // update dealer
-                            .flatMap(updateResult -> {
-                                return conn.rxUpdateWithParams(updateDealerSql, sqlParamsDealer);
-                            })
-                            .flatMap(updateResult -> {
-                                return conn.rxCommit().map(commit -> updateResult.getUpdated());
-                            })
-                            .onErrorResumeNext(ex ->
-                                    conn.rxRollback()
-                                        .onErrorResumeNext(ex2 ->
-                                                Single.error(new CompositeException(ex, ex2))
-                                        ).flatMap(ignore -> Single.error(ex))
-                            ).doAfterTerminate(conn::close)
+                                    .rxSetAutoCommit(false)
+                                    // update user
+                                    .flatMap(autoCommit -> {
+                                        return conn.rxUpdateWithParams(updateUserSql, sqlParamsUser);
+                                    })
+                                    // update dealer
+                                    .flatMap(updateResult -> {
+                                        return conn.rxUpdateWithParams(updateDealerSql, sqlParamsDealer);
+                                    })
+                                    .flatMap(updateResult -> {
+                                        return conn.rxCommit().map(commit -> updateResult.getUpdated());
+                                    })
+                                    .onErrorResumeNext(ex ->
+                                            conn.rxRollback()
+                                                    .onErrorResumeNext(ex2 ->
+                                                            Single.error(new CompositeException(ex, ex2))
+                                                    ).flatMap(ignore -> Single.error(ex))
+                                    ).doAfterTerminate(conn::close)
                     ).subscribe(affectRowCount -> {
                 resultHandler.handle(Future.succeededFuture(affectRowCount));
             }, error -> {
@@ -1570,7 +1562,6 @@ public class ChuheDbServiceImpl implements ChuheDbService {
         });
 
 
-
         return this;
 
     }
@@ -1578,7 +1569,7 @@ public class ChuheDbServiceImpl implements ChuheDbService {
 
     // check_code
     @Override
-    public ChuheDbService createCheckCode(JsonObject checkcode, Integer seconds, Handler<AsyncResult<Long>> resultHandler)  {
+    public ChuheDbService createCheckCode(JsonObject checkcode, Integer seconds, Handler<AsyncResult<Long>> resultHandler) {
 
         String saveCheckCodeSql = sqlQueries.get(ChuheSqlQuery.SAVE_CHECKCODE);
 
@@ -1591,7 +1582,14 @@ public class ChuheDbServiceImpl implements ChuheDbService {
         data.add(checkcode.getString("code_sign"));
         data.add(checkcode.getString("code_value"));
         data.add(checkcode.getString("send_channel"));
-        data.add(checkcode.getString("receiver"));
+
+        if (checkcode.containsKey("receiver")
+                && checkcode.getString("receiver") != null) {
+            data.add(checkcode.getString("receiver"));
+        } else {
+            data.add("");
+        }
+
         data.add(checkcode.getString("client_ip"));
         data.add(checkcode.getString("client_agent"));
         data.add(_DATE_FM_T.format(now.getTime()));
@@ -1602,7 +1600,6 @@ public class ChuheDbServiceImpl implements ChuheDbService {
         } else {
             data.addNull();
         }
-
 
 
         this.dbClient.updateWithParams(saveCheckCodeSql, data, reply -> {
@@ -1619,7 +1616,7 @@ public class ChuheDbServiceImpl implements ChuheDbService {
     }
 
     @Override
-    public ChuheDbService validateCheckCode(String sign, String code, String receiver, Handler<AsyncResult<String>> resultHandler)  {
+    public ChuheDbService validateCheckCode(String sign, String code, String receiver, Handler<AsyncResult<String>> resultHandler) {
 
         String validateCheckCodeSql = sqlQueries.get(ChuheSqlQuery.VALIDATE_CHECKCODE);
 
@@ -1632,34 +1629,64 @@ public class ChuheDbServiceImpl implements ChuheDbService {
         // data.add(receiver);
 
         Single<String> result = this.dbClient
-            .rxQueryWithParams(validateCheckCodeSql, data)
-            .flatMapObservable(res -> Observable.from(res.getRows()))
-            .map(checkcode -> {
+                .rxQueryWithParams(validateCheckCodeSql, data)
+                .flatMapObservable(res -> Observable.from(res.getRows()))
+                .map(checkcode -> {
 
-                if (checkcode.getString("expired_at") == null) {
-                    // 无过期时间，即长期有效
-                    return checkcode.getString("send_channel");
-                }
+                    if (checkcode.getString("expired_at") == null) {
+                        // 无过期时间，即长期有效
+                        // 更新 receiver
+                        return checkcode.getString("send_channel");
+                    }
 
-                Date expired = null;
+                    Date expired = null;
 
-                try {
-                    expired = _DATE_FM_T.parse(checkcode.getString("expired_at"));
-                } catch (ParseException e) {
+                    try {
+                        expired = _DATE_FM_T.parse(checkcode.getString("expired_at"));
+                    } catch (ParseException e) {
 
-                }
+                    }
 
-                if (expired == null) return checkcode.getString("send_channel");
+                    if (expired == null) {
+                        // 更新 receiver
+                        return checkcode.getString("send_channel");
+                    }
 
-                return expired.compareTo(Calendar.getInstance().getTime()) == 1
-                        ? checkcode.getString("send_channel") : null;
+                    if (expired.compareTo(Calendar.getInstance().getTime()) == 1) {
+                        // 更新 receiver
+                        return checkcode.getString("send_channel");
+                    } else {
+                        return null;
+                    }
 
-            })
-            .defaultIfEmpty(null).toSingle();
+                })
+                .map(channel -> {
+
+                    if (channel == null) {
+                        return null;
+                    }
+
+                    return channel;
+
+                })
+//                .flatMap(channel -> {
+//                    return updateCheckCodeReceiver(null, null);
+//                })
+                .defaultIfEmpty(null).toSingle();
 
         result.subscribe(RxHelper.toSubscriber(resultHandler));
 
         return this;
+
+    }
+
+
+    public Observable<String> updateCheckCodeReceiver(String sign, String receiver, String channel) {
+
+        Observable<String> updateSingle = null;
+
+        return updateSingle;
+
     }
 
 }

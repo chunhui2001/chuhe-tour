@@ -1,4 +1,7 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {
+  AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, Renderer2,
+  ViewChild
+} from '@angular/core';
 import * as _ from 'lodash';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/from';
@@ -11,6 +14,8 @@ import { CheckcodeService } from '../../_services/_index';
   styleUrls: ['./check-code-input.component.css']
 })
 export class CheckCodeInputComponent implements OnInit, AfterViewInit {
+
+  @Input() check_input_element: ElementRef;
 
   @Input()
   isDisable: Boolean;
@@ -45,7 +50,7 @@ export class CheckCodeInputComponent implements OnInit, AfterViewInit {
     this.checkCodeChange.emit(this.checkCodeValue);
   }
 
-  constructor(private checkcodeService: CheckcodeService) {
+  constructor(private element: ElementRef, private renderer: Renderer2, private checkcodeService: CheckcodeService) {
 
   }
 
@@ -54,7 +59,14 @@ export class CheckCodeInputComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
+    // this.renderer.selectRootElement(this.check_input_element['nativeElement']).focus();
+    // this.check_input_element.nativeElement.focus();
 
+    const _this = this;
+
+    $(this.check_input_element).on('keydown', function (e) {
+      _this.onUserInput(_this, e);
+    });
   }
 
   setCheckcodeTimeButtonText(text: String): void {
@@ -145,6 +157,16 @@ export class CheckCodeInputComponent implements OnInit, AfterViewInit {
     return _.times(48, () => _.random(35).toString(36)).join('');
   }
 
+  onUserInput(_this, event): void {
+
+    const code = event.keyCode || event.which;
+
+    if ((this.steps === 'clicked_checkcode' || this.validSuccess) && !_this.isInputTabKey(event, code)) {
+      event.preventDefault();
+    }
+
+  }
+
   onKeyup(event): void {
 
     if ( this.steps === 'clicked_send_click') {
@@ -205,6 +227,21 @@ export class CheckCodeInputComponent implements OnInit, AfterViewInit {
       }
     });
 
+  }
+
+  isInputTabKey(event, code: Number): Boolean {
+
+    if ((code === 9)) {
+      return true;   // tab
+    }
+
+    if (event.getModifierState
+      && (event.getModifierState('Meta') || event.getModifierState('Control'))
+      && (code === 9)) {
+      return true;   // shift + tab
+    }
+
+    return false;
   }
 
   onKeydown(event): void {
