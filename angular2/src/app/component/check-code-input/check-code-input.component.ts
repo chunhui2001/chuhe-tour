@@ -100,26 +100,43 @@ export class CheckCodeInputComponent implements OnInit, AfterViewInit {
   }
 
   validateCheckCode(): void {
-    // pre_send_click
 
     this.isValidate = null;
 
-    if (this.checkNewSign) {
+    if (this.checkNewSign && this.checkCode) {
 
-      alert(this.checkNewSign);
-      this.isValidate = true;
-      this.setCheckcodeTimeButtonText('验证成功');
+      this.checkcodeService.check(this.checkNewSign, this.checkCode, this.phoneOrEmail).subscribe(result => {
 
-      if (this.timer != null) {
-        this.timer.unsubscribe();
-        this.timer = null;
-      }
+        if (result.code !== 200) {
+          this.validateFailed();
+          return;
+        }
+
+        this.validateSuccess();
+
+      });
 
     } else {
-      this.isValidate = false;
-      this.checkcodeInvalid = true;
+      this.validateFailed();
     }
 
+  }
+
+  validateFailed(): void {
+    this.isValidate = false;
+    this.checkcodeInvalid = true;
+  }
+
+  validateSuccess(): void {
+
+    this.isValidate = true;
+    this.checkcodeInvalid = false;
+    this.setCheckcodeTimeButtonText('验证成功');
+
+    if (this.timer != null) {
+      this.timer.unsubscribe();
+      this.timer = null;
+    }
   }
 
   randomStr(): String {
@@ -156,7 +173,11 @@ export class CheckCodeInputComponent implements OnInit, AfterViewInit {
 
         // good and get new sign
         this.checkNewSign = result.data.sign;
-        this.timerCount = result.data.seconds;
+
+        if (result.data.seconds) {
+          this.timerCount = result.data.seconds;
+        }
+
         this.steps = 'clicked_checkcode';
         this.checkCode = null;
         this.placeholder = '已发送, 请输入验证码';

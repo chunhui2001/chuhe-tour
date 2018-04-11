@@ -53,7 +53,8 @@
 
 .checkcode-wrong {
   background-image: url('/assets/images/icons/wrong-hi.png');
-  background-size: auto 100%;
+  background-size: auto 39%;
   background-repeat: no-repeat;
-  background-position-x: center;
+  background-position-x: 41px;
+  background-position-y: 3px;
 }

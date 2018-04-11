@@ -23,19 +23,4 @@ export class CheckcodeService {
 
   }
 
-  validate(sign: String, code: String): Observable<any> {
-
-    const endpoint = '/checkcode';
-
-    return this.http.post(endpoint, {sign: sign, checkcode: code})
-      .map((response: RestResponse) => {
-        if (response.error) {
-          return response.message[0];
-        }
-
-        return response;
-      });
-
-  }
-
 }

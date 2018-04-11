@@ -3,7 +3,7 @@
     <i class="material-icons">&#xE8CE;</i>
   </span>
   <input class="input-group-field checkcode-invalid" type="text" [disabled]="isDisable"
-         [ngClass]="{'checkcode-invalid': checkcodeInvalid }"
+         [ngClass]="{'checkcode-invalid': checkcodeInvalid}"
          (keyup)="onKeyup($event)"
          (keydown)="onKeydown($event)"
          placeholder="{{placeholder}}" [(ngModel)]="checkCode" id="check_code" name="check_code" required>
@@ -20,7 +20,9 @@
   </span>
   <span (click)="validateCheckCode()" *ngIf="steps==='clicked_checkcode'"
         class="input-group-label checkcode-valid-button checkcode-correct"
-        [ngClass]="{'checkcode-correct': isValidate != null && isValidate,'checkcode-wrong': isValidate != null && !isValidate, 'checkcode-disable-button': isDisable }">
+        [ngClass]="{'checkcode-correct': isValidate != null && isValidate,
+                    'checkcode-wrong': isValidate != null && !isValidate,
+                    'checkcode-disable-button': isDisable || !(checkCode && checkCode.trim().length > 3 && checkCode.trim().length < 8) }">
         &ensp;验证&ensp;
   </span>
   <span *ngIf="steps==='clicked_checkcode'"

@@ -75,8 +75,6 @@ public class PortalHandlers extends BaseHandler {
     String receiver = getString(routingContext, "receiver");
 
     if (sign.isEmpty() || checkcode.isEmpty()) {
-
-
       throw new PurposeException("非法请求");
     }
 
@@ -88,45 +86,56 @@ public class PortalHandlers extends BaseHandler {
 
       if (reply.succeeded()) {
 
-        if (reply.result()) {
+        if (reply.result() != null) {
 
-          JsonObject code  = new JsonObject();
+          if (reply.result().equals("image")) {
 
-          code.put("code_sign", RandomStringUtils.randomAlphanumeric(48));
-          code.put("code_value", RandomStringUtils.randomNumeric(4));
-          code.put("receiver", receiver);
-          code.put("send_channel", "email");
-          code.put("client_ip", routingContext.request().remoteAddress().host());
-          code.put("client_agent", routingContext.request().getHeader("User-Agent"));
+            JsonObject code  = new JsonObject();
 
-          this.chuheDbService.createCheckCode(code, 90, reply2 -> {
+            code.put("code_sign", RandomStringUtils.randomAlphanumeric(48));
+            code.put("code_value", RandomStringUtils.randomNumeric(4));
+            code.put("receiver", receiver);
+            code.put("send_channel", "email");
+            code.put("client_ip", routingContext.request().remoteAddress().host());
+            code.put("client_agent", routingContext.request().getHeader("User-Agent"));
 
-            if (reply.succeeded()) {
+            this.chuheDbService.createCheckCode(code, 90, reply2 -> {
 
-              redisQueue.publish();
+              if (reply.succeeded()) {
 
-              JsonObject result = new JsonObject();
+                redisQueue.publish();
 
-              result.put("sign", code.getString("code_sign"));
-              result.put("seconds", 90);
+                JsonObject result = new JsonObject();
 
-              chainSerialization.putContextData(result);
-              // publish to message queue
-              chainSerialization.putMessage("validate code send");
+                result.put("sign", code.getString("code_sign"));
+                result.put("seconds", 90);
 
-            } else {
-              routingContext.getDelegate().response().end(reply.cause().getMessage());
-            }
+                chainSerialization.putContextData(result);
+                // publish to message queue
+                chainSerialization.putMessage("validate code send");
 
+              } else {
+                routingContext.getDelegate().response().end(reply.cause().getMessage());
+              }
+
+              chainSerialization.serialize();
+              return;
+
+            });
+          } else if (reply.result().equals("email")) {
+            chainSerialization.putContextData(sign);
+            chainSerialization.putMessage("good code");
             chainSerialization.serialize();
             return;
-
-          });
+          } else {
+            throw new PurposeException("unimplements check_code.send_channel, "
+                    + reply.result() + ", " + reply.result().equals("image"));
+          }
 
         } else {
           chainSerialization.putContextData(null);
           chainSerialization.setStatusRealCode(4000);
-          chainSerialization.putMessage("bad");
+          chainSerialization.putMessage("bad code");
           chainSerialization.serialize();
           return;
         }

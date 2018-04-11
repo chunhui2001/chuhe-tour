@@ -1619,7 +1619,7 @@ public class ChuheDbServiceImpl implements ChuheDbService {
     }
 
     @Override
-    public ChuheDbService validateCheckCode(String sign, String code, String receiver, Handler<AsyncResult<Boolean>> resultHandler)  {
+    public ChuheDbService validateCheckCode(String sign, String code, String receiver, Handler<AsyncResult<String>> resultHandler)  {
 
         String validateCheckCodeSql = sqlQueries.get(ChuheSqlQuery.VALIDATE_CHECKCODE);
 
@@ -1631,34 +1631,32 @@ public class ChuheDbServiceImpl implements ChuheDbService {
         data.add(code);
         // data.add(receiver);
 
-        Single<Boolean> result = this.dbClient
-                .rxQueryWithParams(validateCheckCodeSql, data)
-                .flatMapObservable(res -> Observable.from(res.getRows()))
-                .map(checkcode -> {
+        Single<String> result = this.dbClient
+            .rxQueryWithParams(validateCheckCodeSql, data)
+            .flatMapObservable(res -> Observable.from(res.getRows()))
+            .map(checkcode -> {
 
-                    if (checkcode.getString("expired_at") == null) {
-                        // 无过期时间，即长期有效
-                        return true;
-                    }
+                if (checkcode.getString("expired_at") == null) {
+                    // 无过期时间，即长期有效
+                    return checkcode.getString("send_channel");
+                }
 
-                    Date expired = null;
+                Date expired = null;
 
-                    try {
-                        expired = _DATE_FM_T.parse(checkcode.getString("expired_at"));
-                    } catch (ParseException e) {
-                        System.out.println(e.getMessage() + ", parse expired_at error");
-                    }
+                try {
+                    expired = _DATE_FM_T.parse(checkcode.getString("expired_at"));
+                } catch (ParseException e) {
 
-                    if (expired == null) return true;
+                }
 
-                    return expired.compareTo(Calendar.getInstance().getTime()) == 1;
+                if (expired == null) return checkcode.getString("send_channel");
 
-                })
-                .defaultIfEmpty(Boolean.FALSE).toSingle();
+                return expired.compareTo(Calendar.getInstance().getTime()) == 1
+                        ? checkcode.getString("send_channel") : null;
 
+            })
+            .defaultIfEmpty(null).toSingle();
 
-
-        System.out.println(4);
         result.subscribe(RxHelper.toSubscriber(resultHandler));
 
         return this;
