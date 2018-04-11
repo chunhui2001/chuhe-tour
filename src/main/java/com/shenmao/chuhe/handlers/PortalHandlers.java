@@ -2,6 +2,7 @@ package com.shenmao.chuhe.handlers;
 
 import com.shenmao.chuhe.Application;
 import com.shenmao.chuhe.commons.checkcode.CheckCodeGen;
+import com.shenmao.chuhe.commons.validate.MyValidate;
 import com.shenmao.chuhe.database.chuhe.ChuheDbService;
 import com.shenmao.chuhe.database.wikipage.WikiPageDbService;
 import com.shenmao.chuhe.exceptions.PurposeException;
@@ -12,6 +13,7 @@ import com.shenmao.chuhe.redis.RedisStore;
 import com.shenmao.chuhe.serialization.SerializeType;
 import com.shenmao.chuhe.passport.AuthHandlerImpl;
 import com.shenmao.chuhe.serialization.ChainSerialization;
+import io.vertx.core.AsyncResult;
 import io.vertx.core.Handler;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.json.JsonArray;
@@ -72,15 +74,18 @@ public class PortalHandlers extends BaseHandler {
 
     String sign = getString(routingContext, "sign");
     String checkcode = getString(routingContext, "checkcode");
-    String receiver = getString(routingContext, "receiver");
+    String checktype = getString(routingContext, "checktype");
+    String receiver = getString(routingContext, "receiver") ;
 
-    System.out.println(receiver + ", receiver 777");
-
-    if (sign.isEmpty() || checkcode.isEmpty()) {
+    if (sign.isEmpty() || checkcode.isEmpty() || checktype.isEmpty()) {
       throw new PurposeException("非法请求");
     }
 
-    this.chuheDbService.validateCheckCode(sign, checkcode, receiver, reply -> {
+
+    String client_ip = routingContext.request().remoteAddress().host();
+    String client_agent = routingContext.request().getHeader("User-Agent");
+
+    Handler<AsyncResult<JsonObject>> resultHandler = reply -> {
 
       ChainSerialization chainSerialization =
               ChainSerialization.create(routingContext.getDelegate());
@@ -88,50 +93,36 @@ public class PortalHandlers extends BaseHandler {
 
       if (reply.succeeded()) {
 
-        if (reply.result() != null) {
+        JsonObject newCheckcode = reply.result();
 
-          if (reply.result().equals("image")) {
+        if (newCheckcode != null) {
 
-            JsonObject code  = new JsonObject();
+          String send_channel = newCheckcode.containsKey("send_channel") ?  newCheckcode.getString("send_channel") : null;
 
-            code.put("code_sign", RandomStringUtils.randomAlphanumeric(48));
-            code.put("code_value", RandomStringUtils.randomNumeric(4));
-            code.put("receiver", receiver);
-            code.put("send_channel", "email");
-            code.put("client_ip", routingContext.request().remoteAddress().host());
-            code.put("client_agent", routingContext.request().getHeader("User-Agent"));
+          if ("image".equals(checktype)) {
 
-            this.chuheDbService.createCheckCode(code, 90, reply2 -> {
+            JsonObject result = new JsonObject();
 
-              if (reply.succeeded()) {
+            result.put("sign", newCheckcode.getString("code_sign"));
+            result.put("seconds", 90);
 
-                redisQueue.publish();
+            chainSerialization.putContextData(result);
 
-                JsonObject result = new JsonObject();
+            // publish to message queue
+            // TODO
+            redisQueue.publish(newCheckcode.encodePrettily());
+            chainSerialization.putMessage("validate code send");
+            chainSerialization.serialize();
+            return;
 
-                result.put("sign", code.getString("code_sign"));
-                result.put("seconds", 90);
-
-                chainSerialization.putContextData(result);
-                // publish to message queue
-                chainSerialization.putMessage("validate code send");
-
-              } else {
-                routingContext.getDelegate().response().end(reply.cause().getMessage());
-              }
-
-              chainSerialization.serialize();
-              return;
-
-            });
-          } else if (reply.result().equals("email")) {
+          } else if (checktype.equals("email") || checktype.equals("phone")) {
             chainSerialization.putContextData(sign);
             chainSerialization.putMessage("good code");
             chainSerialization.serialize();
             return;
           } else {
             throw new PurposeException("unimplements check_code.send_channel, "
-                    + reply.result() + ", " + reply.result().equals("image"));
+                    + send_channel);
           }
 
         } else {
@@ -144,13 +135,22 @@ public class PortalHandlers extends BaseHandler {
 
       } else {
         chainSerialization.putContextData(null);
-        chainSerialization.setStatusRealCode(4000);
-        chainSerialization.putMessage("reply.cause().getMessage()");
+        chainSerialization.setStatusRealCode(4001);
+        chainSerialization.putMessage("validate failed");
         chainSerialization.serialize();
         return;
       }
 
-    });
+    };
+
+    if ("image".equals(checktype)) {
+      this.chuheDbService.validateCheckCodeImage(sign, checkcode, receiver, checktype, client_ip, client_agent, resultHandler);
+    }
+
+
+    if ("email".equals(checktype) || "phone".equals(checktype)) {
+      this.chuheDbService.validateCheckCodePhoneOrEmail(sign, checkcode, receiver, MyValidate.validateEmail(receiver) ? "email" : "phone", client_ip, client_agent, resultHandler);
+    }
 
   }
 

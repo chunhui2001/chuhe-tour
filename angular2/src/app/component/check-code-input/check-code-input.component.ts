@@ -80,6 +80,10 @@ export class CheckCodeInputComponent implements OnInit, AfterViewInit {
 
   changeSteps(val: String): void {
 
+    if (this.isDisable) {
+      return ;
+    }
+
     if (val === 'clicked_send_click') {
       this.changeCode();
       this.placeholder = '请输入图形验证码';
@@ -94,6 +98,11 @@ export class CheckCodeInputComponent implements OnInit, AfterViewInit {
   }
 
   changeCode(): void {
+
+    if (this.isDisable) {
+      return ;
+    }
+
     this.checkCodeSign = this.randomStr();
     this.checkCodeSrc = '/checkcode?sign=' + this.checkCodeSign + '&receiver=' + this.phoneOrEmail;
   }
@@ -119,7 +128,7 @@ export class CheckCodeInputComponent implements OnInit, AfterViewInit {
 
     if (this.checkNewSign && this.checkCode) {
 
-      this.checkcodeService.check(this.checkNewSign, this.checkCode, this.phoneOrEmail).subscribe(result => {
+      this.checkcodeService.check(this.checkNewSign, this.checkCode, this.phoneOrEmail, 'email').subscribe(result => {
 
         if (result.code !== 200) {
           this.validateFailed();
@@ -191,7 +200,7 @@ export class CheckCodeInputComponent implements OnInit, AfterViewInit {
 
     this.checkcodeInvalid = false;
 
-    this.checkcodeService.check(this.checkCodeSign, this.checkCodeValue, this.phoneOrEmail).subscribe(result => {
+    this.checkcodeService.check(this.checkCodeSign, this.checkCodeValue, this.phoneOrEmail, 'image').subscribe(result => {
 
       if (result.code === 200) {
 

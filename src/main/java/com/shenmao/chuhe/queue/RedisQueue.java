@@ -4,6 +4,6 @@ import com.shenmao.chuhe.redis.RedisStore;
 
 public interface RedisQueue extends RedisStore {
 
-    void publish();
+    void publish(String message);
     void subscribe();
 }

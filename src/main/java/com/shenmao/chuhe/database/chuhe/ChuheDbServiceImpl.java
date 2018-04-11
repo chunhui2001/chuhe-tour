@@ -1,6 +1,7 @@
 package com.shenmao.chuhe.database.chuhe;
 
 import com.google.common.base.Strings;
+import com.shenmao.chuhe.commons.validate.MyValidate;
 import com.shenmao.chuhe.database.chuhe.sqlqueries.ChuheSqlQuery;
 import io.vertx.codegen.annotations.Fluent;
 import io.vertx.core.AsyncResult;
@@ -14,6 +15,7 @@ import io.vertx.ext.sql.UpdateResult;
 import io.vertx.rxjava.ext.sql.SQLClient;
 import io.vertx.rx.java.RxHelper;
 import io.vertx.ext.sql.SQLConnection;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import rx.Observable;
@@ -558,50 +560,49 @@ public class ChuheDbServiceImpl implements ChuheDbService {
         // https://github.com/vert-x3/vertx-examples/blob/master/rxjava-1-examples/src/main/java/io/vertx/example/rxjava/database/jdbc/Transaction.java
         this.dbClient.rxGetConnection()
                 .flatMap(conn ->
-                        conn
-                                .rxSetAutoCommit(false)
-                                // insert order
-                                .flatMap(autoCommit -> conn.rxUpdateWithParams(createOrderSql, data))
-                                // get products
-                                .flatMap(updateResult -> {
-                                    Long newOrderId = updateResult.getKeys().getLong(0);
-                                    order.put("order_id", newOrderId);
-                                    return this.fetchProductsByIdList(getProductIdInOrderItems(orderDetailItemList));
-                                })
-                                .map(ResultSet::getRows)
-                                // inert order items
-                                .flatMap(productList -> {
+                        conn.rxSetAutoCommit(false)
+                            // insert order
+                            .flatMap(autoCommit -> conn.rxUpdateWithParams(createOrderSql, data))
+                            // get products
+                            .flatMap(updateResult -> {
+                                Long newOrderId = updateResult.getKeys().getLong(0);
+                                order.put("order_id", newOrderId);
+                                return this.fetchProductsByIdList(getProductIdInOrderItems(orderDetailItemList));
+                            })
+                            .map(ResultSet::getRows)
+                            // inert order items
+                            .flatMap(productList -> {
 
-                                    order.put("productList", productList);
+                                order.put("productList", productList);
 
 
-                                    if ("sales".equals(order.getString("order_type"))) {
-                                        return saveOrderItemsSales(order, productList, orderDetailItemList);
-                                    }
+                                if ("sales".equals(order.getString("order_type"))) {
+                                    return saveOrderItemsSales(order, productList, orderDetailItemList);
+                                }
 
-                                    return saveOrderItemsReplenish(order, productList, orderDetailItemList);
+                                return saveOrderItemsReplenish(order, productList, orderDetailItemList);
 
-                                })
-                                // save stocks
-                                .flatMap(updateResult -> {
+                            })
+                            // save stocks
+                            .flatMap(updateResult -> {
 
-                                    JsonArray productArray = (JsonArray) order.getValue("productList");
-                                    List<JsonObject> productList = new ArrayList<>();
-                                    // List<JsonObject> productList = (List<JsonObject>)order.getValue("productList");
+                                JsonArray productArray = (JsonArray) order.getValue("productList");
+                                List<JsonObject> productList = new ArrayList<>();
+                                // List<JsonObject> productList = (List<JsonObject>)order.getValue("productList");
 
-                                    for (int i = 0; i < productArray.size(); i++) {
-                                        productList.add(productArray.getJsonObject(i));
-                                    }
+                                for (int i = 0; i < productArray.size(); i++) {
+                                    productList.add(productArray.getJsonObject(i));
+                                }
 
-                                    return saveStocks(order, productList, orderDetailItemList);
-                                })
-                                .flatMap(updateResult -> conn.rxCommit().map(commit -> updateResult))
-                                .onErrorResumeNext(ex ->
-                                        conn.rxRollback()
-                                                .onErrorResumeNext(ex2 ->
-                                                        Single.error(new CompositeException(ex, ex2))
-                                                ).flatMap(ignore -> Single.error(ex))
-                                ).doAfterTerminate(conn::close)
+                                return saveStocks(order, productList, orderDetailItemList);
+                            })
+                            .flatMap(updateResult -> conn.rxCommit().map(commit -> updateResult))
+                            .onErrorResumeNext(ex ->
+                                    conn.rxRollback()
+                                            .onErrorResumeNext(ex2 ->
+                                                    Single.error(new CompositeException(ex, ex2))
+                                            ).flatMap(ignore -> Single.error(ex))
+                            ).doAfterTerminate(conn::close)
                 ).subscribe(updateResult -> {
             resultHandler.handle(Future.succeededFuture(order.getLong("order_id")));
         }, error -> {
@@ -1571,6 +1572,20 @@ public class ChuheDbServiceImpl implements ChuheDbService {
     @Override
     public ChuheDbService createCheckCode(JsonObject checkcode, Integer seconds, Handler<AsyncResult<Long>> resultHandler) {
 
+        Single<UpdateResult> updateResultSingle = this.createCheckCodeSingle(checkcode, seconds);
+
+        updateResultSingle.subscribe(updateResult -> {
+                    resultHandler.handle(Future.succeededFuture(updateResult.getKeys().getLong(0)));
+                }, error -> {
+                    resultHandler.handle(Future.failedFuture(error.getMessage()));
+
+                });
+
+        return this;
+    }
+
+    public Single<UpdateResult> createCheckCodeSingle(JsonObject checkcode, Integer seconds) {
+
         String saveCheckCodeSql = sqlQueries.get(ChuheSqlQuery.SAVE_CHECKCODE);
 
         LOGGER.info(saveCheckCodeSql);
@@ -1601,16 +1616,159 @@ public class ChuheDbServiceImpl implements ChuheDbService {
             data.addNull();
         }
 
+        Single<UpdateResult> updateResultSingle = this.dbClient.rxUpdateWithParams(saveCheckCodeSql, data);
 
-        this.dbClient.updateWithParams(saveCheckCodeSql, data, reply -> {
+        return updateResultSingle;
 
-            if (reply.succeeded()) {
-                resultHandler.handle(Future.succeededFuture(reply.result().getKeys().getLong(0)));
+    }
+
+    @Override
+    public ChuheDbService validateCheckCodePhoneOrEmail(String sign, String code, String receiver, String checktype, String client_ip, String client_agent, Handler<AsyncResult<JsonObject>> resultHandler) {
+
+        String validateCheckCodeSql = sqlQueries.get(ChuheSqlQuery.VALIDATE_CHECKCODE);
+
+        LOGGER.info(validateCheckCodeSql);
+
+        JsonArray data = new JsonArray();
+
+        data.add(sign);
+        data.add(code);
+        // data.add(receiver);
+
+        this.dbClient.rxQueryWithParams(validateCheckCodeSql, data).subscribe(resultSet -> {
+
+            JsonObject jsonObject = getCheckCode(resultSet);
+
+            if (jsonObject != null) {
+                this.updateCheckCodeConfirmTime(sign, receiver, checktype, reply -> {
+                    if (reply.succeeded()) {
+                        resultHandler.handle(Future.succeededFuture(jsonObject));
+                    } else {
+                        resultHandler.handle(Future.succeededFuture(null));
+                    }
+                });
             } else {
-                resultHandler.handle(Future.failedFuture(reply.cause()));
+                resultHandler.handle(Future.succeededFuture(jsonObject));
             }
+
+        }, error -> {
+            resultHandler.handle(Future.failedFuture(error.getMessage()));
+
         });
 
+        return this;
+
+    }
+
+    private JsonObject getCheckCode(ResultSet resultSet) {
+
+        if (resultSet.getRows().size() == 0) return null;
+
+        JsonObject returnCheckCoce = null;
+
+        if (resultSet.getRows().get(0).getString("expired_at") == null) {
+            // 无过期时间，即长期有效
+            returnCheckCoce = resultSet.getRows().get(0);
+        } else {
+
+            Date expired = null;
+
+            try {
+                expired = _DATE_FM_T.parse(resultSet.getRows().get(0).getString("expired_at"));
+            } catch (ParseException e) {
+
+            }
+
+            if (expired == null) {
+                returnCheckCoce = resultSet.getRows().get(0);
+            }
+
+            if (expired != null && expired.compareTo(Calendar.getInstance().getTime()) == 1) {
+                returnCheckCoce = resultSet.getRows().get(0);
+            }
+        }
+
+        return returnCheckCoce;
+
+    }
+
+    @Override
+    public ChuheDbService validateCheckCodeImage(String sign, String code, String receiver, String checktype, String client_ip, String client_agent, Handler<AsyncResult<JsonObject>> resultHandler) {
+
+
+        String validateCheckCodeSql = sqlQueries.get(ChuheSqlQuery.VALIDATE_CHECKCODE);
+
+        LOGGER.info(validateCheckCodeSql);
+
+        JsonArray data = new JsonArray();
+
+        data.add(sign);
+        data.add(code);
+        // data.add(receiver);
+
+        JsonObject newCheckcode = new JsonObject();
+        JsonObject checkCodeFinded = new JsonObject();
+
+
+        // https://github.com/vert-x3/vertx-examples/blob/master/rxjava-1-examples/src/main/java/io/vertx/example/rxjava/database/jdbc/Transaction.java
+        this.dbClient.rxGetConnection()
+                .flatMap(conn ->
+                        conn.rxSetAutoCommit(false)
+                                // select check code
+                                .flatMap(autoCommit -> conn.rxQueryWithParams(validateCheckCodeSql, data))
+                                // process result set
+                                .map(resultSet -> {
+                                    System.out.println(resultSet.getRows().size() + ", dssds");
+                                    return getCheckCode(resultSet);
+                                })
+                                // insert into email check code
+                                .flatMap(returnCheckCoce -> {
+
+                                    if (returnCheckCoce != null) {
+                                        // 验证成功, 图片验证成功后，插入一条短信或邮箱验证码
+                                        newCheckcode.put("code_sign", RandomStringUtils.randomAlphanumeric(48));
+                                        newCheckcode.put("code_value", RandomStringUtils.randomNumeric(4));
+                                        newCheckcode.put("receiver", receiver);
+                                        newCheckcode.put("send_channel", MyValidate.validateEmail(receiver) ? "email" : "phone");  // or phone
+                                        newCheckcode.put("client_ip", client_ip);
+                                        newCheckcode.put("client_agent", client_agent);
+                                        return createCheckCodeSingle(newCheckcode, 90);
+
+                                    }
+
+                                    return null;
+
+                                })
+                                // update confirm time
+                                .flatMap(returnCheckCoce -> {
+
+                                    if (returnCheckCoce != null) {
+                                        return updateCheckCodeConfirmTimeSingle(sign, receiver, checktype);
+                                    }
+
+                                    return null;
+                                })
+                                .flatMap(updateResult -> {
+                                    return conn.rxCommit().map(commit -> updateResult);
+                                })
+                                .onErrorResumeNext(ex -> {
+
+                                    return conn.rxRollback()
+                                            .onErrorResumeNext(ex2 ->
+                                                    Single.error(new CompositeException(ex, ex2))
+                                            ).flatMap(ignore -> Single.error(ex));
+
+                                }).doAfterTerminate(conn::close)
+                ).subscribe(updateResult -> {
+            resultHandler.handle(Future.succeededFuture(newCheckcode));
+        }, error -> {
+            if (checkCodeFinded.containsKey("code_sign")) {
+                resultHandler.handle(Future.succeededFuture(checkCodeFinded));
+            } else {
+                resultHandler.handle(Future.failedFuture(error.getMessage()));
+            }
+
+        });
 
         return this;
     }
@@ -1660,18 +1818,6 @@ public class ChuheDbServiceImpl implements ChuheDbService {
                     }
 
                 })
-                .map(channel -> {
-
-                    if (channel == null) {
-                        return null;
-                    }
-
-                    return channel;
-
-                })
-//                .flatMap(channel -> {
-//                    return updateCheckCodeReceiver(null, null);
-//                })
                 .defaultIfEmpty(null).toSingle();
 
         result.subscribe(RxHelper.toSubscriber(resultHandler));
@@ -1680,12 +1826,42 @@ public class ChuheDbServiceImpl implements ChuheDbService {
 
     }
 
+    public Single<UpdateResult> updateCheckCodeConfirmTimeSingle(String sign, String receiver, String channel) {
 
-    public Observable<String> updateCheckCodeReceiver(String sign, String receiver, String channel) {
+        String updateConfirmTimeSql = sqlQueries.get(ChuheSqlQuery.UPDATE_CONFIRM_TIME);
 
-        Observable<String> updateSingle = null;
+        LOGGER.info(updateConfirmTimeSql);
 
-        return updateSingle;
+        JsonArray data = new JsonArray();
+
+        data.add(_DATE_FM_T.format(Calendar.getInstance().getTime()));
+        data.add(receiver);
+        data.add(sign);
+
+        if (channel == null) {
+            data.addNull();
+        } else {
+            data.add(channel);
+        }
+
+        return this.dbClient.rxUpdateWithParams(updateConfirmTimeSql, data);
+
+    }
+
+
+    @Override()
+    public ChuheDbService updateCheckCodeConfirmTime(String sign, String receiver, String channel, Handler<AsyncResult<Long>> resultHandler) {
+
+        Single<UpdateResult> updateResultSingle = updateCheckCodeConfirmTimeSingle(sign, receiver, channel);
+
+        updateResultSingle.subscribe(updateResult -> {
+            resultHandler.handle(Future.succeededFuture(updateResult.getKeys().getLong(0)));
+        }, error -> {
+            resultHandler.handle(Future.failedFuture(error.getMessage()));
+
+        });
+
+        return this;
 
     }
 

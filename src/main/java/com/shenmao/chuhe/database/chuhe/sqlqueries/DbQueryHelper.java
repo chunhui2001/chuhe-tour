@@ -134,6 +134,7 @@ public class DbQueryHelper {
         sqlQueries.put(ChuheSqlQuery.CREATE_CHECKCODE_TABLE, queriesProps.getProperty("create-checkcode-table"));
         sqlQueries.put(ChuheSqlQuery.VALIDATE_CHECKCODE, queriesProps.getProperty("validate-checkcode"));
         sqlQueries.put(ChuheSqlQuery.SAVE_CHECKCODE, queriesProps.getProperty("save-checkcode"));
+        sqlQueries.put(ChuheSqlQuery.UPDATE_CONFIRM_TIME, queriesProps.getProperty("update-confirmed-time"));
 
     }
 

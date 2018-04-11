@@ -8,7 +8,9 @@ import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.sql.UpdateResult;
 import io.vertx.rxjava.ext.sql.SQLClient;
+import rx.Single;
 
 import java.util.HashMap;
 import java.util.List;
@@ -102,10 +104,8 @@ public interface ChuheDbService {
     @Fluent
     ChuheDbService deleteDealerBatch(List<Long> dealerIdList, Handler<AsyncResult<Integer>> resultHandler);
 
-
     @Fluent
     ChuheDbService updateDealer(Long dealerId, JsonObject dealer, Handler<AsyncResult<Integer>> resultHandler);
-
 
     // check_code
     @Fluent
@@ -114,5 +114,13 @@ public interface ChuheDbService {
     @Fluent
     ChuheDbService validateCheckCode(String sign, String code, String receiver, Handler<AsyncResult<String>> resultHandler) ;
 
+    @Fluent
+    ChuheDbService validateCheckCodeImage(String sign, String code, String receiver, String checktype, String client_ip, String client_agent, Handler<AsyncResult<JsonObject>> resultHandler) ;
+
+    @Fluent
+    ChuheDbService validateCheckCodePhoneOrEmail(String sign, String code, String receiver, String checktype, String client_ip, String client_agent, Handler<AsyncResult<JsonObject>> resultHandler) ;
+
+    @Fluent
+    ChuheDbService updateCheckCodeConfirmTime(String sign, String receiver, String channel, Handler<AsyncResult<Long>> resultHandler);
 
 }

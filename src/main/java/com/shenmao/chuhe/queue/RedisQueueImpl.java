@@ -71,8 +71,9 @@ public class RedisQueueImpl implements RedisQueue {
     }
 
     @Override
-    public void publish() {
-        System.out.println("publish to redis 666");
+    public void publish(String message) {
+
+        System.out.println(message);
     }
 
     @Override
