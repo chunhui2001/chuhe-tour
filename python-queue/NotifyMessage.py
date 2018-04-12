@@ -5,6 +5,9 @@ import phonenumbers
 from phonenumbers import carrier, NumberParseException
 from phonenumbers.phonenumberutil import number_type
 
+from SendEmail import Email
+from SendSMS import SMS
+
 class Notify():
 	
 	codeSign = None
@@ -51,23 +54,14 @@ class Notify():
 			self.send_email()
 			return
 
-		#if self.channel == 'phone':
-		#	self.send_sms()
-		#	return
+		if self.channel == 'phone':
+			self.send_sms()
+			return
 
 		print 'ERROR: not support send channel: ' + self.channel
 
 	def send_email(self):
-		print 'send email'
-		print self.channel
-		print self.codeSign
-		print self.codeValue
-		print self.receiver		
+		Email().send(self.receiver, self.codeValue)
 
 	def send_sms(self):
-		print 'send sms'
-		print self.channel
-		print self.codeSign
-		print self.codeValue
-		print self.receiver		
-
+		SMS().send(self.receiver, self.codeValue)
