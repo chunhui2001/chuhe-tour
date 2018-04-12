@@ -20,6 +20,7 @@ shenmao-chuhe.iml
 node_modules
 dist
 *.swp
+*.pyc
 
 
 
