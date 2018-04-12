@@ -1693,7 +1693,7 @@ public class ChuheDbServiceImpl implements ChuheDbService {
     }
 
     @Override
-    public ChuheDbService validateCheckCodeImage(String sign, String code, String receiver, String checktype, String client_ip, String client_agent, Handler<AsyncResult<JsonObject>> resultHandler) {
+    public ChuheDbService validateCheckCodeImage(String sign, String code, String receiver, int expiredSeconds, String checktype, String client_ip, String client_agent, Handler<AsyncResult<JsonObject>> resultHandler) {
 
 
         String validateCheckCodeSql = sqlQueries.get(ChuheSqlQuery.VALIDATE_CHECKCODE);
@@ -1732,7 +1732,7 @@ public class ChuheDbServiceImpl implements ChuheDbService {
                                         newCheckcode.put("send_channel", MyValidate.validateEmail(receiver) ? "email" : "phone");  // or phone
                                         newCheckcode.put("client_ip", client_ip);
                                         newCheckcode.put("client_agent", client_agent);
-                                        return createCheckCodeSingle(newCheckcode, 90);
+                                        return createCheckCodeSingle(newCheckcode, expiredSeconds);
 
                                     }
 

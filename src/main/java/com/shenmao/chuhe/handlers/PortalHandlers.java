@@ -76,6 +76,7 @@ public class PortalHandlers extends BaseHandler {
     String checkcode = getString(routingContext, "checkcode");
     String checktype = getString(routingContext, "checktype");
     String receiver = getString(routingContext, "receiver") ;
+    int expiredSeconds = 15;
 
     if (sign.isEmpty() || checkcode.isEmpty() || checktype.isEmpty()) {
       throw new PurposeException("非法请求");
@@ -104,13 +105,13 @@ public class PortalHandlers extends BaseHandler {
             JsonObject result = new JsonObject();
 
             result.put("sign", newCheckcode.getString("code_sign"));
-            result.put("seconds", 90);
+            result.put("seconds", expiredSeconds);
 
             chainSerialization.putContextData(result);
 
             // publish to message queue
             // TODO
-            redisQueue.publish(newCheckcode.encodePrettily());
+            redisQueue.publish(newCheckcode.encode());
             chainSerialization.putMessage("validate code send");
             chainSerialization.serialize();
             return;
@@ -144,7 +145,7 @@ public class PortalHandlers extends BaseHandler {
     };
 
     if ("image".equals(checktype)) {
-      this.chuheDbService.validateCheckCodeImage(sign, checkcode, receiver, checktype, client_ip, client_agent, resultHandler);
+      this.chuheDbService.validateCheckCodeImage(sign, checkcode, receiver, expiredSeconds, checktype, client_ip, client_agent, resultHandler);
     }
 
 

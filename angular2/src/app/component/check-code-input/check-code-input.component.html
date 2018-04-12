@@ -2,8 +2,8 @@
   <span class="input-group-label" style="padding: 0 .425rem;color:black;">
     <i class="material-icons">&#xE8CE;</i>
   </span>
-  <input class="input-group-field checkcode-invalid" type="text" [disabled]="isDisable"
-         [ngClass]="{'checkcode-invalid': checkcodeInvalid}"
+  <input class="input-group-field checkcode-invalid" type="text" pattern="[a-z]{1,15}" [disabled]="isDisable"
+         [ngClass]="{'checkcode-invalid': checkcodeInvalid, 'input-freeze': validSuccess != null && validSuccess}"
          (keyup)="onKeyup($event)"
          (keydown)="onKeydown($event)"
          placeholder="{{placeholder}}" [(ngModel)]="checkCode" id="check_code" name="check_code" required>
@@ -22,11 +22,19 @@
         class="input-group-label checkcode-valid-button checkcode-correct"
         [ngClass]="{'checkcode-correct': validSuccess != null && validSuccess,
                     'checkcode-wrong': validSuccess != null && !validSuccess,
-                    'checkcode-disable-button': isDisable || !(checkCode && checkCode.trim().length > 3 && checkCode.trim().length < 8) }">
+                    'checkcode-progress': validSuccess == null && validProgress,
+                    'checkcode-disable-button': isDisable || !(checkCode && checkCode.trim().length > 3) }">
         &ensp;验证&ensp;
   </span>
+  <span *ngIf="steps==='clicked_checkcode' && !validSuccess"
+        (click)="resendCode(true)"
+        class="input-group-label checkcode-time-button"
+        style="width: auto;border-left:none;"
+        [ngClass]="{'checkcode-disable-button': isDisable}">
+        重试
+  </span>
   <span *ngIf="steps==='clicked_checkcode'"
-        (click)="resendCode()"
+        (click)="resendCode(false)"
         class="input-group-label checkcode-time-button"
         [ngClass]="{'checkcode-disable-button': isDisable}">
         <i>{{checkcodeTimeButtonText}}</i>

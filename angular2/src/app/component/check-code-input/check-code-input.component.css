@@ -58,3 +58,11 @@
   background-position-x: 41px;
   background-position-y: 3px;
 }
+
+.checkcode-progress {
+  background-image: url('/assets/images/icons/loading.gif');
+  background-size: auto 80%;
+  background-repeat: no-repeat;
+  background-position-x: 37px;
+  background-position-y: -10px;
+}

@@ -35,6 +35,7 @@ export class CheckCodeInputComponent implements OnInit, AfterViewInit {
   checkCodeSign: String;
   checkNewSign: String;             // 通过图片验证之后，服务器会返回一个新的sign, 拿着这个新的sign去服务器验证用户收到的短信验证码(或邮件验证码)
   validSuccess: boolean;
+  validProgress: boolean;
   timer: any;
 
   @Output()
@@ -107,11 +108,19 @@ export class CheckCodeInputComponent implements OnInit, AfterViewInit {
     this.checkCodeSrc = '/checkcode?sign=' + this.checkCodeSign + '&receiver=' + this.phoneOrEmail;
   }
 
-  resendCode(): void {
+  resendCode(clearTimer: boolean): void {
 
-    if (this.timer !== null || this.validSuccess) {
-      return;
+    if (clearTimer) {
+      if (this.timer != null) {
+        this.timer.unsubscribe();
+        this.timer = null;
+      }
+    } else {
+      if (this.timer !== null || this.validSuccess) {
+        return;
+      }
     }
+
 
     this.changeSteps('clicked_send_click');
     this.changeCode();
@@ -128,14 +137,21 @@ export class CheckCodeInputComponent implements OnInit, AfterViewInit {
 
     if (this.checkNewSign && this.checkCode) {
 
+      this.validateProgress();
+
       this.checkcodeService.check(this.checkNewSign, this.checkCode, this.phoneOrEmail, 'email').subscribe(result => {
 
-        if (result.code !== 200) {
-          this.validateFailed();
-          return;
-        }
+        setTimeout(() => {
 
-        this.validateSuccess();
+          if (result.code !== 200) {
+
+            this.validateFailed();
+            return;
+          }
+
+          this.validateSuccess();
+
+        }, 500);
 
       });
 
@@ -145,16 +161,34 @@ export class CheckCodeInputComponent implements OnInit, AfterViewInit {
 
   }
 
+  validateProgress(): void {
+    this.validSuccess = null;
+    this.validProgress = true;
+    this.freezeInputBox(true);
+  }
+
   validateFailed(): void {
     this.validSuccess = false;
     this.checkcodeInvalid = true;
+    this.validProgress = false;
+    this.freezeInputBox(false);
+  }
+
+  freezeInputBox(t: boolean): void {
+    if (!t) {
+      $(this.check_input_element).removeClass('input-freeze');
+      return;
+    }
+    $(this.check_input_element).addClass('input-freeze');
   }
 
   validateSuccess(): void {
 
     this.validSuccess = true;
     this.checkcodeInvalid = false;
+    this.validProgress = false;
     this.setCheckcodeTimeButtonText('验证成功');
+    this.freezeInputBox(true);
 
     if (this.timer != null) {
       this.timer.unsubscribe();
@@ -211,6 +245,7 @@ export class CheckCodeInputComponent implements OnInit, AfterViewInit {
           this.timerCount = result.data.seconds;
         }
 
+        this.freezeInputBox(true);
         this.steps = 'clicked_checkcode';
         this.checkCode = null;
         this.placeholder = '已发送, 请输入验证码';
@@ -253,9 +288,16 @@ export class CheckCodeInputComponent implements OnInit, AfterViewInit {
     return false;
   }
 
-  onKeydown(event): void {
+  onKeydown(event) {
 
     const code = event.keyCode || event.which;
+
+    if (code === 229) {
+
+      event.preventDefault();
+      event.stopPropagation();
+      return;
+    }
 
     if (this.validSuccess) {
       // 一旦验证成功，冻结输入框，不让用户在改, 但是可以按tab键

@@ -89,6 +89,11 @@ textarea {
   background-color: transparent !important;
 }
 
+.input-freeze {
+  color:dodgerblue;
+  font-weight: bold;
+}
+
 /*** angular ***/
 .ng-trigger-comp {
   display: inline-block;
