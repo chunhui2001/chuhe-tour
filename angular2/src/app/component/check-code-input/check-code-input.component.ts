@@ -127,6 +127,7 @@ export class CheckCodeInputComponent implements OnInit, AfterViewInit {
     this.checkcodeInvalid = false;
     this.checkCode = null;
     this.validSuccess = null;
+    this.freezeInputBox(false);
   }
 
   validateCheckCode(): void {
@@ -171,7 +172,6 @@ export class CheckCodeInputComponent implements OnInit, AfterViewInit {
     this.validSuccess = false;
     this.checkcodeInvalid = true;
     this.validProgress = false;
-    this.freezeInputBox(false);
   }
 
   freezeInputBox(t: boolean): void {
@@ -268,6 +268,7 @@ export class CheckCodeInputComponent implements OnInit, AfterViewInit {
         // invalide checkcode
         this.checkNewSign = null;
         this.checkcodeInvalid = true;
+        this.freezeInputBox(false);
       }
     });
 
