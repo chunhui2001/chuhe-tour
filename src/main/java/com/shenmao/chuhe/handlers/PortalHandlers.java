@@ -110,7 +110,10 @@ public class PortalHandlers extends BaseHandler {
             chainSerialization.putContextData(result);
 
             // publish to message queue
-            // TODO
+
+            newCheckcode.remove("client_ip");
+            newCheckcode.remove("client_agent");
+
             redisQueue.publish(newCheckcode.encode());
             chainSerialization.putMessage("validate code send");
             chainSerialization.serialize();

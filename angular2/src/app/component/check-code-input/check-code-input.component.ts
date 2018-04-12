@@ -105,7 +105,7 @@ export class CheckCodeInputComponent implements OnInit, AfterViewInit {
     }
 
     this.checkCodeSign = this.randomStr();
-    this.checkCodeSrc = '/checkcode?sign=' + this.checkCodeSign + '&receiver=' + this.phoneOrEmail;
+    this.checkCodeSrc = '/checkcode?sign=' + this.checkCodeSign + '&receiver=' + this.phoneOrEmail.replace(/\s+/g, '');
   }
 
   resendCode(clearTimer: boolean): void {

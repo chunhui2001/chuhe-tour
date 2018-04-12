@@ -1718,7 +1718,6 @@ public class ChuheDbServiceImpl implements ChuheDbService {
                                 .flatMap(autoCommit -> conn.rxQueryWithParams(validateCheckCodeSql, data))
                                 // process result set
                                 .map(resultSet -> {
-                                    System.out.println(resultSet.getRows().size() + ", dssds");
                                     return getCheckCode(resultSet);
                                 })
                                 // insert into email check code
