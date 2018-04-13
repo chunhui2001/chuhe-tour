@@ -115,7 +115,7 @@ public interface ChuheDbService {
     ChuheDbService validateCheckCode(String sign, String code, String receiver, Handler<AsyncResult<String>> resultHandler) ;
 
     @Fluent
-    ChuheDbService validateCheckCodeImage(String sign, String code, String receiver, int expiredSeconds, String checktype, String client_ip, String client_agent, Handler<AsyncResult<JsonObject>> resultHandler) ;
+    ChuheDbService validateCheckCodeImage(String sign, String code, String receiver, Integer expiredSeconds, String checktype, String client_ip, String client_agent, Handler<AsyncResult<JsonObject>> resultHandler) ;
 
     @Fluent
     ChuheDbService validateCheckCodePhoneOrEmail(String sign, String code, String receiver, String checktype, String client_ip, String client_agent, Handler<AsyncResult<JsonObject>> resultHandler) ;

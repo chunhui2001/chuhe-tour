@@ -76,7 +76,7 @@ public class PortalHandlers extends BaseHandler {
     String checkcode = getString(routingContext, "checkcode");
     String checktype = getString(routingContext, "checktype");
     String receiver = getString(routingContext, "receiver") ;
-    int expiredSeconds = 15;
+    Integer expiredSeconds = 90;
 
     if (sign.isEmpty() || checkcode.isEmpty() || checktype.isEmpty()) {
       throw new PurposeException("非法请求");
@@ -113,6 +113,10 @@ public class PortalHandlers extends BaseHandler {
 
             newCheckcode.remove("client_ip");
             newCheckcode.remove("client_agent");
+
+            newCheckcode.put("from", "系统注册验证码通知 <76920104@qq.com>");
+            newCheckcode.put("subject", "系统注册验证码, 编号: " + newCheckcode.getString("code_sign").replaceAll("[^0-9]+", ""));
+            newCheckcode.put("expired_seconds", expiredSeconds);
 
             redisQueue.publish(newCheckcode.encode());
             chainSerialization.putMessage("validate code send");
@@ -183,7 +187,6 @@ public class PortalHandlers extends BaseHandler {
 
       if (reply.succeeded()) {
 
-        // publish checkcode to message queue
         ByteArrayOutputStream baos = checkCode.createImgStream();
 
         routingContext.getDelegate().response().putHeader("Content-Length",String.valueOf(baos.size()));

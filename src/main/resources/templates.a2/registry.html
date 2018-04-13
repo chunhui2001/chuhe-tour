@@ -24,13 +24,9 @@
 
 {{#partial "content" }}
 
-{{#if errorTrace }}
-<pre>{{errorTrace}}</pre>
-{{/if}}
-
-{{#if flashMessage}}
-<div class="flash-message">
-    {{flashMessage}}
+{{#if errorTrace or flashMessage}}
+<div class="flash-message" style="margin-bottom: 0; margin-top: 1em;">
+    注册失败用户名可能重复
 </div>
 {{/if}}
 

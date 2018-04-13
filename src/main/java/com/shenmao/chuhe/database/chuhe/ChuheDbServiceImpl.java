@@ -1572,6 +1572,18 @@ public class ChuheDbServiceImpl implements ChuheDbService {
     @Override
     public ChuheDbService createCheckCode(JsonObject checkcode, Integer seconds, Handler<AsyncResult<Long>> resultHandler) {
 
+        Calendar now = Calendar.getInstance();
+
+        if (!checkcode.containsKey("created_at")) {
+            checkcode.put("created_at", _DATE_FM_T.format(now.getTime()));
+        }
+
+
+        if (seconds != null) {
+            now.add(Calendar.SECOND, seconds);
+            checkcode.put("expired_at", _DATE_FM_T.format(now.getTime()));
+        }
+
         Single<UpdateResult> updateResultSingle = this.createCheckCodeSingle(checkcode, seconds);
 
         updateResultSingle.subscribe(updateResult -> {
@@ -1592,8 +1604,6 @@ public class ChuheDbServiceImpl implements ChuheDbService {
 
         JsonArray data = new JsonArray();
 
-        Calendar now = Calendar.getInstance();
-
         data.add(checkcode.getString("code_sign"));
         data.add(checkcode.getString("code_value"));
         data.add(checkcode.getString("send_channel"));
@@ -1607,11 +1617,10 @@ public class ChuheDbServiceImpl implements ChuheDbService {
 
         data.add(checkcode.getString("client_ip"));
         data.add(checkcode.getString("client_agent"));
-        data.add(_DATE_FM_T.format(now.getTime()));
+        data.add(checkcode.getString("created_at"));
 
-        if (seconds != null) {
-            now.add(Calendar.SECOND, seconds);
-            data.add(_DATE_FM_T.format(now.getTime()));
+        if (checkcode.containsKey("expired_at")) {
+            data.add(checkcode.getString("expired_at"));
         } else {
             data.addNull();
         }
@@ -1693,7 +1702,7 @@ public class ChuheDbServiceImpl implements ChuheDbService {
     }
 
     @Override
-    public ChuheDbService validateCheckCodeImage(String sign, String code, String receiver, int expiredSeconds, String checktype, String client_ip, String client_agent, Handler<AsyncResult<JsonObject>> resultHandler) {
+    public ChuheDbService validateCheckCodeImage(String sign, String code, String receiver, Integer expiredSeconds, String checktype, String client_ip, String client_agent, Handler<AsyncResult<JsonObject>> resultHandler) {
 
 
         String validateCheckCodeSql = sqlQueries.get(ChuheSqlQuery.VALIDATE_CHECKCODE);
@@ -1731,6 +1740,15 @@ public class ChuheDbServiceImpl implements ChuheDbService {
                                         newCheckcode.put("send_channel", MyValidate.validateEmail(receiver) ? "email" : "phone");  // or phone
                                         newCheckcode.put("client_ip", client_ip);
                                         newCheckcode.put("client_agent", client_agent);
+
+                                        Calendar now = Calendar.getInstance();
+                                        newCheckcode.put("created_at", _DATE_FM_T.format(now.getTime()));
+
+                                        if (expiredSeconds != null) {
+                                            now.add(Calendar.SECOND, expiredSeconds);
+                                            newCheckcode.put("expired_at", _DATE_FM_T.format(now.getTime()));
+                                        }
+
                                         return createCheckCodeSingle(newCheckcode, expiredSeconds);
 
                                     }
@@ -1740,6 +1758,20 @@ public class ChuheDbServiceImpl implements ChuheDbService {
                                 })
                                 // update confirm time
                                 .flatMap(returnCheckCoce -> {
+
+                                    // convert time string to long
+
+                                    try {
+
+                                        newCheckcode.put("created_at", _DATE_FM_T.parse(newCheckcode.getString("created_at")).getTime());
+
+                                        if (newCheckcode.containsKey("expired_at") && newCheckcode.getString("expired_at") != null) {
+                                            newCheckcode.put("expired_at", _DATE_FM_T.parse(newCheckcode.getString("expired_at")).getTime());
+                                        }
+
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
 
                                     if (returnCheckCoce != null) {
                                         return updateCheckCodeConfirmTimeSingle(sign, receiver, checktype);
