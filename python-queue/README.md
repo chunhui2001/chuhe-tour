@@ -1,2 +1,2 @@
 ## Requirement:
-sudo pip install email_validator redis phonenumbers
+sudo pip install redis requests python-dateutil pandas tzlocal

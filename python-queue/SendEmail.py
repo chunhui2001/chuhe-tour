@@ -1,4 +1,6 @@
+# -*- coding: UTF-8 -*-
 
+import requests
 
 # curl -s --user 'api:key-a5179b50c49cbbea7aedcf1b12165d70' \
 #    https://api.mailgun.net/v3/mg.snnmo.com/messages \
@@ -29,16 +31,35 @@ print 'Body:   {0}'.format(request.text)
 
 class Email():
 
-	email_address = None
-	content = None
+	apiKey = None
+	sandbox = None
+	emailFrom = None
+	emailSubject = None
 	
 	def __init__(self):
-		self.email_address = None
-		self.content = None
+		self.sandbox = 'mg.snnmo.com'
+		self.emailFrom = u'系统通知'.encode('utf-8') + ' <mailgun@mg.snnmo.com>'
+		self.apiKey = 'key-a5179b50c49cbbea7aedcf1b12165d70'
+		self.emailSubject = '系统通知'
 
-	def send(self, email, content):
-		print 'send email'
-		print email
-		print content
+
+	def send(self, receiver, content, _from, subject):
+
+		if not receiver:
+			print 'ERROR: Send email to: None'
+			return
+
+		print 'Send email to: ' + receiver
+
+		request_url = 'https://api.mailgun.net/v3/{0}/messages'.format(self.sandbox)
+		request = requests.post(request_url, auth=('api', self.apiKey), data = {
+		    'from': _from or self.emailFrom,
+		    'to':  receiver,
+		    'subject': subject or self.emailSubject,
+		    'html': content
+		})
+
+		print 'Status: {0}'.format(request.status_code)
+		print 'Body:   {0}'.format(request.text)
 		
 		
