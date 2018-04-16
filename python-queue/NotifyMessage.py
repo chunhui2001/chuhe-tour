@@ -36,7 +36,7 @@ class Notify():
 			self.expiredSeconds = self.message.get('expired_seconds', None)
 
 			if not self.expiredSeconds:
-				self.expiredSeconds = 60;
+				self.expiredSeconds = 60
 
 			if self.expiredTime: 
 				# self.expiredTime = datetime.strptime(self.expiredTime, '%Y-%m-%dT%H:%M:%S.%f')		#'2018-04-13T12:26:15.556'
@@ -78,9 +78,6 @@ class Notify():
 		if not self.channel:
 			print 'ERROR: Send Channel is None, Ignore notifycation.'
 			return
-
-		print self.createdAt
-		print self.expiredTime
 
 		if self.channel == 'email':
 			_from = self.message.get('from', None)
