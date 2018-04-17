@@ -6,8 +6,7 @@ from dateutil.parser import parse
 import tzlocal
 import pandas as pd
 
-from SendEmail import Email
-from SendSMS import SMS
+from send import SMS, Email
 
 class Notify():
 	
@@ -89,11 +88,10 @@ class Notify():
 			return
 
 		if self.channel == 'phone':
-			self.send_sms()
+			_content = u'你的注册验证码: '.encode('utf-8') + str(self.codeValue) + u', 请在'.encode('utf-8') + str(self.expiredSeconds) + u'秒内输入'.encode('utf-8')
+			SMS().send(self.receiver, _content)
 			return
 
 		print 'ERROR: not support send channel: ' + self.channel
 		
-
-	def send_sms(self):
-		SMS().send(self.receiver, self.codeValue)
+		

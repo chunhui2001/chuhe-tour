@@ -2,7 +2,7 @@ import redis
 import threading
 import json
 
-from NotifyMessage import Notify
+from notify import Notify
 
 
 class Listener(threading.Thread):
@@ -30,7 +30,7 @@ class Listener(threading.Thread):
 if __name__ == "__main__":
 
     r = redis.StrictRedis(
-        host='192.168.188.129', port=6379, password='Cc',
+        host='192.168.189.175', port=6379, password='Cc',
         socket_timeout=None,
         connection_pool=None,
         charset='utf8', errors='strict', unix_socket_path=None)
