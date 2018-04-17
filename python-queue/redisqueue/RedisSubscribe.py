@@ -27,15 +27,4 @@ class Listener(threading.Thread):
                 self.work(item)
 
 
-if __name__ == "__main__":
 
-    r = redis.StrictRedis(
-        host='192.168.189.175', port=6379, password='Cc',
-        socket_timeout=None,
-        connection_pool=None,
-        charset='utf8', errors='strict', unix_socket_path=None)
-
-    client = Listener(r, ['chuhe_checkcode_message'])
-    client.start()
-
-# r.publish('chuhe_checkcode_message', 'this is a message will reah the listener2')

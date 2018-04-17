@@ -5,6 +5,7 @@ from datetime import datetime
 from dateutil.parser import parse
 import tzlocal
 import pandas as pd
+from termcolor import colored
 
 from send import SMS, Email
 
@@ -22,7 +23,7 @@ class Notify():
 
 	def __init__(self, messageStr):
 
-		print 'INFO receiver a message,' + str(messageStr)
+		print colored('INFO receiver a message: ' + str(messageStr), 'blue') 
 
 		try:
 			self.message = json.loads(messageStr)
@@ -75,7 +76,8 @@ class Notify():
 	def notify(self):
 
 		if not self.channel:
-			print 'ERROR: Send Channel is None, Ignore notifycation.'
+			print colored('ERROR: Send Channel is None, Ignore notifycation.', 'red') 
+			print 
 			return
 
 		if self.channel == 'email':
