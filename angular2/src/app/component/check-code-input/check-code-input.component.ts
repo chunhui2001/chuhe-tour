@@ -155,8 +155,6 @@ export class CheckCodeInputComponent implements OnInit, AfterViewInit {
 
           _that.validateCodeSign = result.data;
 
-          alert(_that.validateCodeSign);
-
           this.validateSuccess();
 
         }, 500);
