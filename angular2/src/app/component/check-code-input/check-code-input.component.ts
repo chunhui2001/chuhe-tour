@@ -33,6 +33,7 @@ export class CheckCodeInputComponent implements OnInit, AfterViewInit {
   timerCount: any = 10;
   checkcodeTimeButtonText: String;
   checkCodeSign: String;
+  validateCodeSign: String;
   checkNewSign: String;             // 通过图片验证之后，服务器会返回一个新的sign, 拿着这个新的sign去服务器验证用户收到的短信验证码(或邮件验证码)
   validSuccess: boolean;
   validProgress: boolean;
@@ -136,6 +137,8 @@ export class CheckCodeInputComponent implements OnInit, AfterViewInit {
       return;
     }
 
+    const _that = this;
+
     if (this.checkNewSign && this.checkCode) {
 
       this.validateProgress();
@@ -146,9 +149,13 @@ export class CheckCodeInputComponent implements OnInit, AfterViewInit {
 
           if (result.code !== 200) {
 
-            this.validateFailed();
+            _that.validateFailed();
             return;
           }
+
+          _that.validateCodeSign = result.data;
+
+          alert(_that.validateCodeSign);
 
           this.validateSuccess();
 
@@ -157,7 +164,7 @@ export class CheckCodeInputComponent implements OnInit, AfterViewInit {
       });
 
     } else {
-      this.validateFailed();
+      _that.validateFailed();
     }
 
   }

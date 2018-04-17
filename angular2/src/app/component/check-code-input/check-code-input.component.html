@@ -7,6 +7,10 @@
          (keyup)="onKeyup($event)"
          (keydown)="onKeydown($event)"
          placeholder="{{placeholder}}" [(ngModel)]="checkCode" id="check_code" name="check_code" required>
+
+  <input type="hidden" id="check_code_sign" name="check_code_sign" [(ngModel)]="checkCodeSign" />
+  <input type="hidden" id="validate_code_sign" name="validate_code_sign" [(ngModel)]="validateCodeSign" />
+
   <span (click)="changeSteps('clicked_send_click')" *ngIf="steps==='pre_send_click'"
         class="input-group-label"
         [ngClass]="{'checkcode-disable-button': isDisable}"

@@ -250,8 +250,11 @@ public class PortalHandlers extends BaseHandler {
 
     user.put("user_name", getString(routingContext, "user_name"));
     user.put("user_passwd", getString(routingContext, "user_passwd"));
-    roles.add("role_user");
+    user.put("check_code", getString(routingContext, "check_code"));
+    user.put("check_code_sign", getString(routingContext, "check_code_sign"));
+    user.put("validate_code_sign", getString(routingContext, "validate_code_sign"));
 
+    roles.add("role_user");
 
     ChainSerialization chainSerialization =
             ChainSerialization.create(routingContext.getDelegate());
