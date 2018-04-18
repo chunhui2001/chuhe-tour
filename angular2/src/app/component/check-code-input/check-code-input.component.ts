@@ -6,7 +6,7 @@ import * as _ from 'lodash';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/from';
 import 'rxjs/add/observable/interval';
-import { CheckcodeService } from '../../_services/_index';
+import { ValidatorService, CheckcodeService } from '../../_services/_index';
 
 @Component({
   selector: 'app-check-code-input',
@@ -16,9 +16,6 @@ import { CheckcodeService } from '../../_services/_index';
 export class CheckCodeInputComponent implements OnInit, AfterViewInit {
 
   @Input() check_input_element: ElementRef;
-
-  @Input()
-  isDisable: Boolean;
 
   @Input()
   phoneOrEmail: any;
@@ -52,8 +49,12 @@ export class CheckCodeInputComponent implements OnInit, AfterViewInit {
     this.checkCodeChange.emit(this.checkCodeValue);
   }
 
-  constructor(private element: ElementRef, private renderer: Renderer2, private checkcodeService: CheckcodeService) {
+  constructor(private element: ElementRef, private renderer: Renderer2, private validatorService: ValidatorService, private checkcodeService: CheckcodeService) {
 
+  }
+
+  phoneOrEmailInValid(): boolean {
+    return !(this.validatorService.validEmail(this.phoneOrEmail) || this.validatorService.validPhone(this.phoneOrEmail));
   }
 
   ngOnInit() {
@@ -82,7 +83,7 @@ export class CheckCodeInputComponent implements OnInit, AfterViewInit {
 
   changeSteps(val: String): void {
 
-    if (this.isDisable) {
+    if (this.phoneOrEmailInValid()) {
       return ;
     }
 
@@ -101,12 +102,27 @@ export class CheckCodeInputComponent implements OnInit, AfterViewInit {
 
   changeCode(): void {
 
-    if (this.isDisable) {
+    if (this.phoneOrEmailInValid()) {
       return ;
     }
 
     this.checkCodeSign = this.randomStr();
-    this.checkCodeSrc = '/checkcode?sign=' + this.checkCodeSign + '&receiver=' + this.phoneOrEmail.replace(/\s+/g, '');
+    this.checkCodeSrc = '/checkcode?sign=' + this.checkCodeSign + '&receiver=' + this.getNormalPhoneOrEmail();
+  }
+
+  getNormalPhoneOrEmail(): String {
+
+    let phoneoremail = this.phoneOrEmail;
+
+    if (this.validatorService.validPhone(this.phoneOrEmail)) {
+      phoneoremail = this.validatorService.validPhone(this.phoneOrEmail);
+    }
+
+    if (this.validatorService.validEmail(this.phoneOrEmail)) {
+      phoneoremail = this.validatorService.validEmail(this.phoneOrEmail);
+    }
+
+    return phoneoremail;
   }
 
   resendCode(clearTimer: boolean): void {
@@ -143,7 +159,7 @@ export class CheckCodeInputComponent implements OnInit, AfterViewInit {
 
       this.validateProgress();
 
-      this.checkcodeService.check(this.checkNewSign, this.checkCode, this.phoneOrEmail, 'email').subscribe(result => {
+      this.checkcodeService.check(this.checkNewSign, this.checkCode, this.getNormalPhoneOrEmail(), 'email').subscribe(result => {
 
         setTimeout(() => {
 
@@ -239,7 +255,7 @@ export class CheckCodeInputComponent implements OnInit, AfterViewInit {
 
     this.checkcodeInvalid = false;
 
-    this.checkcodeService.check(this.checkCodeSign, this.checkCodeValue, this.phoneOrEmail, 'image').subscribe(result => {
+    this.checkcodeService.check(this.checkCodeSign, this.checkCodeValue, this.getNormalPhoneOrEmail(), 'image').subscribe(result => {
 
       if (result.code === 200) {
 

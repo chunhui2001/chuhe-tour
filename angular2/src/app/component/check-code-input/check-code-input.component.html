@@ -2,7 +2,7 @@
   <span class="input-group-label" style="padding: 0 .425rem;color:black;">
     <i class="material-icons">&#xE8CE;</i>
   </span>
-  <input class="input-group-field checkcode-invalid" type="text" pattern="[a-z]{1,15}" [disabled]="isDisable"
+  <input class="input-group-field checkcode-invalid" type="text" pattern="[a-z]{1,15}" [disabled]="this.phoneOrEmailInValid()"
          [ngClass]="{'checkcode-invalid': checkcodeInvalid, 'input-freeze': validSuccess != null && validSuccess}"
          (keyup)="onKeyup($event)"
          (keydown)="onKeydown($event)"
@@ -13,7 +13,7 @@
 
   <span (click)="changeSteps('clicked_send_click')" *ngIf="steps==='pre_send_click'"
         class="input-group-label"
-        [ngClass]="{'checkcode-disable-button': isDisable}"
+        [ngClass]="{'checkcode-disable-button': this.phoneOrEmailInValid()}"
         style="cursor: pointer; padding: 0 .425rem;color: blueviolet;background-color: antiquewhite;">
         发送验证码
   </span>
@@ -27,20 +27,20 @@
         [ngClass]="{'checkcode-correct': validSuccess != null && validSuccess,
                     'checkcode-wrong': validSuccess != null && !validSuccess,
                     'checkcode-progress': validSuccess == null && validProgress,
-                    'checkcode-disable-button': isDisable || !(checkCode && checkCode.trim().length > 3) }">
+                    'checkcode-disable-button': this.phoneOrEmailInValid() || !(checkCode && checkCode.trim().length > 3) }">
         &ensp;验证&ensp;
   </span>
   <span *ngIf="steps==='clicked_checkcode' && !validSuccess && checkcodeTimeButtonText !== '重新发送'"
         (click)="resendCode(true)"
         class="input-group-label checkcode-time-button"
         style="width: auto;border-left:none;"
-        [ngClass]="{'checkcode-disable-button': isDisable}">
+        [ngClass]="{'checkcode-disable-button': this.phoneOrEmailInValid()}">
         重试
   </span>
   <span *ngIf="steps==='clicked_checkcode'"
         (click)="resendCode(false)"
         class="input-group-label checkcode-time-button"
-        [ngClass]="{'checkcode-disable-button': isDisable}">
+        [ngClass]="{'checkcode-disable-button': this.phoneOrEmailInValid()}">
         <i>{{checkcodeTimeButtonText}}</i>
   </span>
 </div>

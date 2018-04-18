@@ -6,6 +6,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import * as $ from 'jquery';
 
 import {fallIn, moveIn, comp} from '../../routers/router.animations';
+import {ValidatorService} from "../../_services/_index";
 
 @Component({
   selector: 'app-signup',
@@ -21,14 +22,14 @@ export class SignupComponent implements OnInit {
 
   username: String = '';
   passwd: String = '';
-  phone: String = '';
+  phoneOrEmail: String = '';
   checkCode: any;
   address: String = '';
   isAgreeRule: Boolean = false;
 
   @ViewChild('check_code_input') check_code_input;
 
-  constructor(private http: HttpClient, private router: Router ) {
+  constructor(private http: HttpClient, private router: Router, private validatorService: ValidatorService ) {
 
   }
 
@@ -36,6 +37,12 @@ export class SignupComponent implements OnInit {
 
     if (!formData.valid) {
       return;
+    }
+
+    if (this.phoneOrEmail && this.phoneOrEmail.trim().length > 0) {
+      if (this.validatorService.validPhone(this.phoneOrEmail.toString())) {
+        this.phoneOrEmail = this.validatorService.validPhone(this.phoneOrEmail.toString());
+      }
     }
 
     $('.signup-component #signup-form').submit();
@@ -78,6 +85,10 @@ export class SignupComponent implements OnInit {
 
   ngOnInit() {
     // this.check_code_input.isDisable = false;
+  }
+
+  disableSubmit(): boolean {
+    return !(this.isAgreeRule && this.check_code_input.validSuccess) || !this.phoneOrEmail || this.phoneOrEmail.length === 0;
   }
 
 
