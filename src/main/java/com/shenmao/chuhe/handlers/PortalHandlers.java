@@ -322,6 +322,28 @@ public class PortalHandlers extends BaseHandler {
       .serialize();
   }
 
+
+  public void usernameDuplicate(RoutingContext routingContext) {
+
+
+    String username = getString(routingContext, "username");
+
+    if (username == null || username.trim().isEmpty()) {
+      throw new PurposeException("非法请求");
+    }
+
+    this.chuheDbService.userNameDuplicate(username, reply -> {
+
+      ChainSerialization chainSerialization =
+              ChainSerialization.create(routingContext.getDelegate());
+
+      chainSerialization.setSerializeType(SerializeType.JSON);
+      chainSerialization.putContextData(reply.result());
+      chainSerialization.serialize();
+
+    });
+  }
+
   public void logout(RoutingContext routingContext) {
 
     if (routingContext.user() != null) {

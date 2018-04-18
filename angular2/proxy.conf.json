@@ -4,17 +4,7 @@
      "secure": false,
      "logLevel": "debug"
   },
-  "/p/*.josn|/store/p/*.json" : {
-    "target": "http://localhost:8081",
-    "secure": false,
-    "logLevel": "debug"
-  },
-  "/mans/products.json|/mans/products/*.json": {
-    "target": "http://localhost:8081",
-    "secure": false,
-    "logLevel": "debug"
-  },
-  "/access_token.json": {
+  "/**/*.json": {
     "target": "http://localhost:8081",
     "secure": false,
     "logLevel": "debug"

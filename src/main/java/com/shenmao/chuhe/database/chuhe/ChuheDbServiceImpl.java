@@ -1359,6 +1359,28 @@ public class ChuheDbServiceImpl implements ChuheDbService {
         return this;
     }
 
+
+
+    @Override
+    public ChuheDbService userNameDuplicate(String username, Handler<AsyncResult<Boolean>> resultHandler) {
+
+        String userNameExistsSql = sqlQueries.get(ChuheSqlQuery.USERNAME_EXISTS);
+
+        LOGGER.info(userNameExistsSql);
+
+        JsonArray params = new JsonArray().add(username);
+
+
+        this.dbClient.rxQuerySingleWithParams(userNameExistsSql, params)
+                .subscribe(resultSet -> {
+                    resultHandler.handle(Future.succeededFuture(true));
+                }, error -> {
+                    resultHandler.handle(Future.succeededFuture(false));
+                });
+
+        return this;
+    }
+
     @Override
     public ChuheDbService updateUser(Long userId, JsonObject newUser, Handler<AsyncResult<Integer>> resultHandler) {
 

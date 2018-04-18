@@ -7,6 +7,7 @@ import * as $ from 'jquery';
 
 import {fallIn, moveIn, comp} from '../../routers/router.animations';
 import {ValidatorService} from "../../_services/_index";
+import {UserService} from "../../_services/user/user.service";
 
 @Component({
   selector: 'app-signup',
@@ -29,7 +30,12 @@ export class SignupComponent implements OnInit {
 
   @ViewChild('check_code_input') check_code_input;
 
-  constructor(private http: HttpClient, private router: Router, private validatorService: ValidatorService ) {
+  constructor(
+      private http: HttpClient,
+      private router: Router,
+      private validatorService: ValidatorService,
+      private userService: UserService
+  ) {
 
   }
 
@@ -45,7 +51,18 @@ export class SignupComponent implements OnInit {
       }
     }
 
-    $('.signup-component #signup-form').submit();
+    this.userService.userNameDuplicate(this.username).subscribe(result => {
+
+      if (result.data) {
+        alert('用户名 [' + this.username + '] 已经存在!');
+        return;
+      }
+
+      $('.signup-component #signup-form').submit();
+
+    });
+
+
 
 
     // validate user

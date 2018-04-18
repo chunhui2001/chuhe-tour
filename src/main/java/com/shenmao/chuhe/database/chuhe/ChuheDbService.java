@@ -97,6 +97,9 @@ public interface ChuheDbService {
     @Fluent
     ChuheDbService validateUser(String username, String passwd, Handler<AsyncResult<Boolean>> resultHandler) ;
 
+    @Fluent
+    ChuheDbService userNameDuplicate(String username, Handler<AsyncResult<Boolean>> resultHandler) ;
+
     // dealers
     @Fluent
     ChuheDbService createDealer(JsonObject dealer, JsonArray userRoles, Handler<AsyncResult<Long>> resultHandler) ;

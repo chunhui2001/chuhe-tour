@@ -146,6 +146,10 @@ public class PortalRouter  implements ChuheRouter {
       .handler(CSRFHandler.create("csrf secret here"))
       .handler(portalHandlers::login);
 
+    this.router.routeWithRegex(HttpMethod.POST, "/username_duplicate" + GlobalHandlers._SUPPORT_EXTS_PATTERN)
+            //.handler(CSRFHandler.create("csrf secret here"))
+            .handler(portalHandlers::usernameDuplicate);
+
     // JWT access token
     // curl -v -L -X POST -F "username=keesh" -F "password=keesh" "http://localhost:8081/access_token"
     // curl -v -L -X POST -H "Content-Type:application/x-www-form-urlencoded" -d '{"username": "keesh", "password": "keesh"}' "http://localhost:8081/access_token"

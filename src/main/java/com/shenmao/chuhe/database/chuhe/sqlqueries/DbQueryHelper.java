@@ -44,6 +44,7 @@ public class DbQueryHelper {
         sqlQueries.put(ChuheSqlQuery.ALL_USERS, queriesProps.getProperty("all-users"));
         sqlQueries.put(ChuheSqlQuery.GET_USER, queriesProps.getProperty("get-user"));
         sqlQueries.put(ChuheSqlQuery.VALIDATE_USER, queriesProps.getProperty("validate-user"));
+        sqlQueries.put(ChuheSqlQuery.USERNAME_EXISTS, queriesProps.getProperty("username-duplicate"));
         sqlQueries.put(ChuheSqlQuery.GET_USER_ROLES, queriesProps.getProperty("get-user-roles"));
         sqlQueries.put(ChuheSqlQuery.UPDATE_USER_ROLES, queriesProps.getProperty("update-user-roles"));
 
