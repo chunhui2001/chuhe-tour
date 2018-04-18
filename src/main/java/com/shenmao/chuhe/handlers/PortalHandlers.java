@@ -14,6 +14,7 @@ import com.shenmao.chuhe.serialization.SerializeType;
 import com.shenmao.chuhe.passport.AuthHandlerImpl;
 import com.shenmao.chuhe.serialization.ChainSerialization;
 import io.vertx.core.AsyncResult;
+import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.json.JsonArray;
@@ -246,20 +247,29 @@ public class PortalHandlers extends BaseHandler {
   public void userRegistry(RoutingContext routingContext) {
 
     JsonObject user = new JsonObject();
-    JsonArray roles = new JsonArray();
+    JsonArray roles = new JsonArray().add("role_user");
 
     user.put("user_name", getString(routingContext, "user_name"));
     user.put("user_passwd", getString(routingContext, "user_passwd"));
-    user.put("check_code", getString(routingContext, "check_code"));
-    user.put("check_code_sign", getString(routingContext, "check_code_sign"));
-    user.put("validate_code_sign", getString(routingContext, "validate_code_sign"));
 
-    roles.add("role_user");
+    String check_code = getString(routingContext, "check_code");
+    String check_code_sign = getString(routingContext, "check_code_sign");
+    String validate_code_sign = getString(routingContext, "validate_code_sign");
+
 
     ChainSerialization chainSerialization =
             ChainSerialization.create(routingContext.getDelegate());
 
-    this.chuheDbService.createUser(user, roles, reply -> {
+    if (check_code.isEmpty() || check_code_sign.isEmpty() || validate_code_sign.isEmpty()) {
+      chainSerialization
+              .putMessage("请输入验证码")
+              .putFlashMessage("请输入验证码")
+              .redirect("/registry");
+      return;
+    }
+
+
+    Handler<AsyncResult<Long>> createUserResultHandler = reply -> {
 
       if (reply.succeeded()) {
         chainSerialization
@@ -268,13 +278,35 @@ public class PortalHandlers extends BaseHandler {
                 .redirect("/login");
       } else {
         chainSerialization
-                .putFlashMessage(reply.cause().getMessage())
+                .putFlashMessage("注册失败用户名可能重复")
                 .putMessage(reply.cause().getMessage())
                 .putException(reply.cause())
                 .putFlashException(reply.cause())
                 .redirect("/registry");
       }
 
+    };
+
+    Handler<AsyncResult<Long>> createUserBeforeCheckFailedHandler = reply -> {
+
+      chainSerialization
+              .putFlashMessage(reply.cause().getMessage())
+              .putMessage(reply.cause().getMessage())
+              .putException(reply.cause())
+              .putFlashException(reply.cause())
+              .redirect("/registry");
+
+    };
+
+
+    this.chuheDbService.createUserBeforeCheck(user, check_code, check_code_sign, validate_code_sign, reply -> {
+      if (reply.failed()) {
+        createUserBeforeCheckFailedHandler.handle(Future.failedFuture(reply.cause().getMessage()));
+      } if (reply.succeeded() && !reply.result()) {
+        createUserBeforeCheckFailedHandler.handle(Future.failedFuture("验证码错误"));
+      } else {
+        this.chuheDbService.createUser(user, check_code, check_code_sign, validate_code_sign, roles, createUserResultHandler);
+      }
     });
 
 

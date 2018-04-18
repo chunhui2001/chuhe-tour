@@ -62,6 +62,7 @@ public enum ChuheSqlQuery {
     // check_code
     CREATE_CHECKCODE_TABLE,
     SAVE_CHECKCODE,
+    CONFIRM_CHECKCODE,
     VALIDATE_CHECKCODE,
     UPDATE_CONFIRM_TIME
 

@@ -103,7 +103,7 @@ public class ManageCustomerHandlers extends BaseHandler {
         userRoles.add("role_user");
         userRoles.add("role_customer");
 
-        this.chuheDbService.createUser(customer, userRoles, reply -> {
+        this.chuheDbService.createCustomer(customer, userRoles, reply -> {
 
             if (reply.succeeded()) {
                 chainSerialization

@@ -73,7 +73,14 @@ public interface ChuheDbService {
     ChuheDbService fetchAllUsers(Handler<AsyncResult<List<JsonObject>>> resultHandler);
 
     @Fluent
-    ChuheDbService createUser(JsonObject user, JsonArray userRoles, Handler<AsyncResult<Long>> resultHandler) ;
+    ChuheDbService createCustomer(JsonObject user, JsonArray userRoles, Handler<AsyncResult<Long>> resultHandler) ;
+
+    @Fluent
+    ChuheDbService createUserBeforeCheck(JsonObject user, String check_code, String check_code_sign, String validate_code_sign, Handler<AsyncResult<Boolean>> resultHandler) ;
+
+
+    @Fluent
+    ChuheDbService createUser(JsonObject user, String check_code, String check_code_sign, String validate_code_sign, JsonArray userRoles, Handler<AsyncResult<Long>> resultHandler) ;
 
     @Fluent
     ChuheDbService deleteUserBatch(List<Long> userIdList, Handler<AsyncResult<Integer>> resultHandler);

@@ -1023,29 +1023,59 @@ public class ChuheDbServiceImpl implements ChuheDbService {
     }
 
     @Override
-    public ChuheDbService createUser(JsonObject user, JsonArray userRoles, Handler<AsyncResult<Long>> resultHandler) {
+    public ChuheDbService createCustomer(JsonObject user, JsonArray userRoles, Handler<AsyncResult<Long>> resultHandler) {
+        return this.createUser(user, null, null, null, userRoles, resultHandler);
+    }
+
+
+    @Override
+    public ChuheDbService createUserBeforeCheck(JsonObject user, String check_code, String check_code_sign, String validate_code_sign, Handler<AsyncResult<Boolean>> resultHandler) {
+
+        String validateCheckCodeSql = this.sqlQueries.get(ChuheSqlQuery.VALIDATE_CHECKCODE);
+
+        LOGGER.info("ChuheSqlQuery.VALIDATE_CHECKCODE: " + validateCheckCodeSql);
+
+        JsonArray validateCheckCodeParam = new JsonArray();
+
+        validateCheckCodeParam.add(validate_code_sign);
+        validateCheckCodeParam.add(check_code);
+        // validateCheckCodeParam.add(check_code_sign);
+
+        this.dbClient
+                .rxQuerySingleWithParams(validateCheckCodeSql, validateCheckCodeParam)
+                .subscribe(resultSet -> {
+                    resultHandler.handle(Future.succeededFuture(!resultSet.isEmpty()));
+                }, error -> {
+                    resultHandler.handle(Future.failedFuture(error.getMessage()));
+                });
+
+        return this;
+    }
+
+    @Override
+    public ChuheDbService createUser(JsonObject user, String check_code, String check_code_sign, String validate_code_sign, JsonArray userRoles, Handler<AsyncResult<Long>> resultHandler) {
 
 
         String createUserSql = this.sqlQueries.get(ChuheSqlQuery.SAVE_USER);
 
-        LOGGER.info(createUserSql);
-
-        JsonArray params = new JsonArray();
-
-        addParams(user, params, "user_name", true);
-        addParams(user, params, "user_passwd", true);
-        addParams(user, params, "user_name", true);
-        addParams(user, params, "user_gender", true);
-        addParams(user, params, "user_identity", true);
-        addParams(user, params, "user_phone", true);
-        addParams(user, params, "user_home_tel", true);
-        addParams(user, params, "home_address", true);
-        addParams(user, params, "wchat_id", true);
-        addParams(user, params, "user_source_from", true);
-        params.add(getRolesString(userRoles));
+        LOGGER.info("ChuheSqlQuery.SAVE_USER: " + createUserSql);
 
 
-        this.dbClient.rxUpdateWithParams(createUserSql, params)
+        JsonArray createUserParams = new JsonArray();
+        addParams(user, createUserParams, "user_name", true);
+        addParams(user, createUserParams, "user_passwd", true);
+        addParams(user, createUserParams, "user_name", true);
+        addParams(user, createUserParams, "user_gender", true);
+        addParams(user, createUserParams, "user_identity", true);
+        addParams(user, createUserParams, "user_phone", true);
+        addParams(user, createUserParams, "user_home_tel", true);
+        addParams(user, createUserParams, "home_address", true);
+        addParams(user, createUserParams, "wchat_id", true);
+        addParams(user, createUserParams, "user_source_from", true);
+        createUserParams.add(getRolesString(userRoles));
+
+
+        this.dbClient.rxUpdateWithParams(createUserSql, createUserParams)
                 .subscribe(updateResult -> {
                     resultHandler.handle(Future.succeededFuture(updateResult.getKeys().getLong(0)));
                 }, error -> {
@@ -1057,8 +1087,12 @@ public class ChuheDbServiceImpl implements ChuheDbService {
         return this;
     }
 
+    public void rxError(Handler<AsyncResult<String>> resultHandler) {
+        resultHandler.handle(Future.succeededFuture("错误...."));
+    }
 
-    @Override
+
+        @Override
     public ChuheDbService deleteUserBatch(List<Long> userIdList, Handler<AsyncResult<Integer>> resultHandler) {
 
         String deleteUserSqlBatch = sqlQueries.get(ChuheSqlQuery.DELETE_USER_BATCH);
@@ -1634,7 +1668,7 @@ public class ChuheDbServiceImpl implements ChuheDbService {
     @Override
     public ChuheDbService validateCheckCodePhoneOrEmail(String sign, String code, String receiver, String checktype, String client_ip, String client_agent, Handler<AsyncResult<JsonObject>> resultHandler) {
 
-        String validateCheckCodeSql = sqlQueries.get(ChuheSqlQuery.VALIDATE_CHECKCODE);
+        String validateCheckCodeSql = sqlQueries.get(ChuheSqlQuery.CONFIRM_CHECKCODE);
 
         LOGGER.info(validateCheckCodeSql);
 
@@ -1705,7 +1739,7 @@ public class ChuheDbServiceImpl implements ChuheDbService {
     public ChuheDbService validateCheckCodeImage(String sign, String code, String receiver, Integer expiredSeconds, String checktype, String client_ip, String client_agent, Handler<AsyncResult<JsonObject>> resultHandler) {
 
 
-        String validateCheckCodeSql = sqlQueries.get(ChuheSqlQuery.VALIDATE_CHECKCODE);
+        String validateCheckCodeSql = sqlQueries.get(ChuheSqlQuery.CONFIRM_CHECKCODE);
 
         LOGGER.info(validateCheckCodeSql);
 
@@ -1807,7 +1841,7 @@ public class ChuheDbServiceImpl implements ChuheDbService {
     @Override
     public ChuheDbService validateCheckCode(String sign, String code, String receiver, Handler<AsyncResult<String>> resultHandler) {
 
-        String validateCheckCodeSql = sqlQueries.get(ChuheSqlQuery.VALIDATE_CHECKCODE);
+        String validateCheckCodeSql = sqlQueries.get(ChuheSqlQuery.CONFIRM_CHECKCODE);
 
         LOGGER.info(validateCheckCodeSql);
 
