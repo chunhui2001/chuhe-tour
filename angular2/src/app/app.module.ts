@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
 // import { HttpModule } from '@angular/http';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -20,12 +21,13 @@ import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
 
 
 // google material
+// https://material.angular.io
 import {
   MatIconModule, MatToolbarModule, MatMenuModule, MatCardModule,
   MatButtonModule, MatCheckboxModule, MatChipInputEvent, MatSelectModule,
   MatChipsModule, MatProgressBarModule, MAT_LABEL_GLOBAL_OPTIONS, MatTabsModule,
   MatFormFieldModule, MatAutocompleteModule, MatOptionModule,
-  MatInputModule
+  MatInputModule, MatSnackBarModule
 } from '@angular/material';
 
 
@@ -43,7 +45,8 @@ import { HttpIntercepor } from './_interceptor/http.interceptor';
 import { routers } from './routers/app.router';
 
 // _service
-import { ValidatorService, VoteService, ProductService, CheckcodeService,
+import { ValidatorService, SnackbarService } from './services/_index';
+import { VoteService, ProductService, CheckcodeService,
          UserService } from './_services/_index';
 
 // doc: https://swimlane.gitbooks.io/ngx-charts/content/intro/installing.html
@@ -92,7 +95,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     MatIconModule, MatToolbarModule, MatMenuModule, MatCardModule,
     MatButtonModule, MatCheckboxModule, MatSelectModule,
     MatChipsModule, MatProgressBarModule, MatTabsModule,
-    MatFormFieldModule, MatAutocompleteModule, MatOptionModule, MatInputModule
+    MatFormFieldModule, MatAutocompleteModule, MatOptionModule, MatInputModule,
+    MatSnackBarModule
   ],
   declarations: [ ]
 })
@@ -161,7 +165,7 @@ export class GoogleMaterialModule {}
       provide: HTTP_INTERCEPTORS,
       useClass: HttpIntercepor,
       multi: true,
-    }, ValidatorService, VoteService, ProductService, CheckcodeService, UserService
+    }, ValidatorService, VoteService, ProductService, CheckcodeService, UserService, SnackbarService
   ],
   bootstrap: [AppComponent]
 })

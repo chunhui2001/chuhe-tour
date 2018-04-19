@@ -24,10 +24,10 @@
   </span>
   <span (click)="validateCheckCode()" *ngIf="steps==='clicked_checkcode'"
         class="input-group-label checkcode-valid-button checkcode-correct"
-        [ngClass]="{'checkcode-correct': validSuccess != null && validSuccess,
-                    'checkcode-wrong': validSuccess != null && !validSuccess,
-                    'checkcode-progress': validSuccess == null && validProgress,
-                    'checkcode-disable-button': this.phoneOrEmailInValid() || !(checkCode && checkCode.trim().length > 3) }">
+        [ngClass]="{'checkcode-correct': this.checkcodeWrap('correct'),
+                    'checkcode-wrong': this.checkcodeWrap('wrong'),
+                    'checkcode-progress': this.checkcodeWrap('progress'),
+                    'checkcode-disable-button': this.checkcodeWrap('disable') }">
         &ensp;验证&ensp;
   </span>
   <span *ngIf="steps==='clicked_checkcode' && !validSuccess && checkcodeTimeButtonText !== '重新发送'"

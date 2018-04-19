@@ -1,12 +1,12 @@
 import {
-  AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, Renderer2,
-  ViewChild
+  AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, Renderer2
 } from '@angular/core';
 import * as _ from 'lodash';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/from';
 import 'rxjs/add/observable/interval';
-import { ValidatorService, CheckcodeService } from '../../_services/_index';
+import { ValidatorService } from '../../services/_index';
+import { CheckcodeService } from '../../_services/_index';
 
 @Component({
   selector: 'app-check-code-input',
@@ -235,7 +235,7 @@ export class CheckCodeInputComponent implements OnInit, AfterViewInit {
 
     if ( this.steps === 'clicked_send_click') {
 
-      if (this.checkCodeValue.length >= this.checkCodeLength) {
+      if (this.checkCodeValue && this.checkCodeValue.length >= this.checkCodeLength) {
 
         if (this.checkCodeValue.length > this.checkCodeLength) {
           this.checkcodeInvalid = true;
@@ -248,6 +248,29 @@ export class CheckCodeInputComponent implements OnInit, AfterViewInit {
       }
 
     }
+
+  }
+
+  checkcodeWrap (status: string): boolean {
+
+    if ('correct' === status) {
+      return this.validSuccess != null && this.validSuccess;
+    }
+
+    if ('wrong' === status) {
+      return (this.validSuccess != null && !this.validSuccess)
+        && !(this.phoneOrEmailInValid() || !(this.checkCode && this.checkCode.trim().length > 3));
+    }
+
+    if ('progress' === status) {
+      return this.validSuccess == null && this.validProgress;
+    }
+
+    if ('disable' === status) {
+      return this.phoneOrEmailInValid() || !(this.checkCode && this.checkCode.trim().length > 3);
+    }
+
+    return false;
 
   }
 

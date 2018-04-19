@@ -6,8 +6,8 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import * as $ from 'jquery';
 
 import {fallIn, moveIn, comp} from '../../routers/router.animations';
-import {ValidatorService} from "../../_services/_index";
-import {UserService} from "../../_services/user/user.service";
+import { ValidatorService, SnackbarService } from '../../services/_index';
+import { UserService } from '../../_services/_index';
 
 @Component({
   selector: 'app-signup',
@@ -34,7 +34,8 @@ export class SignupComponent implements OnInit {
       private http: HttpClient,
       private router: Router,
       private validatorService: ValidatorService,
-      private userService: UserService
+      private userService: UserService,
+      private snackBarService: SnackbarService
   ) {
 
   }
@@ -54,7 +55,8 @@ export class SignupComponent implements OnInit {
     this.userService.userNameDuplicate(this.username).subscribe(result => {
 
       if (result.data) {
-        alert('用户名 [' + this.username + '] 已经存在!');
+        // alert('用户名 [' + this.username + '] 已经存在!');
+        this.snackBarService.show('用户名 [' + this.username + '] 已被占用，请更换用户名再试!');
         return;
       }
 

@@ -33,3 +33,7 @@ input.mat-chip-input {
 .mat-input-infix [type=text]:focus {
   border: none;
 }
+
+.cdk-overlay-pane {
+  margin-bottom: 1em !important;
+}
