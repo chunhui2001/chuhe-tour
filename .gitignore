@@ -1,3 +1,6 @@
+env.*.yaml
+
+
 uploads
 file_uploads
 target/
