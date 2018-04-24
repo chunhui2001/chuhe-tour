@@ -42,6 +42,7 @@ class Notify():
 				# self.expiredTime = datetime.strptime(self.expiredTime, '%Y-%m-%dT%H:%M:%S.%f')		#'2018-04-13T12:26:15.556'
 				self.expiredTime = datetime.fromtimestamp(self.expiredTime/1000.0, self.local_timezone)
 
+
 			if self.createdAt: 
 				# self.createdAt = datetime.strptime(self.createdAt, '%Y-%m-%dT%H:%M:%S.%f')		#'2018-04-13T12:26:15.556'
 				self.createdAt = datetime.fromtimestamp(self.createdAt/1000.0, self.local_timezone)

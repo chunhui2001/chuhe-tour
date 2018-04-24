@@ -2,7 +2,8 @@
 import serial
 import time
 
-class SMSMessage:
+class PhoneMessage:
+
     
     def __init__(self, recipient='', message=''):
         self.recipient = recipient
@@ -35,8 +36,10 @@ class SMSMessage:
         
     def disconnectPhone(self):
         self.ser.close()
+
+
         
-sms = SMSMessage('18500183080', 'Hello 12131231 GGG')
-sms.connectPhone()
-sms.sendMessage()
-sms.disconnectPhone()
+# sms = SMSMessage('18500183080', 'Hello 12131231 GGG')
+# sms.connectPhone()
+# sms.sendMessage()
+# sms.disconnectPhone()
