@@ -21,7 +21,7 @@ class SMS():
     
     
     def send(self, phone, content):
-        sms = SMSMessage(phone, 'Hello 12131231 GGG')
+        sms = SMSMessage(phone, content)
         sms.connectPhone()
         sms.sendMessage()
         sms.disconnectPhone()
