@@ -16,6 +16,8 @@ const defaultProps = {
 };
 
 class SignupComponent extends Component {
+
+  // https://reactjs.org/docs/react-component.html
   componentWillMount() {
     console.log("componentWillMount");
   }
@@ -25,23 +27,23 @@ class SignupComponent extends Component {
   }
 
   componentWillUpdate(prevProps, prevState) {
-    console.log(
-      this.props,
-      this.state,
-      prevProps,
-      prevState,
-      "componentWillUpdated"
-    );
+    // console.log(
+    //   this.props,
+    //   this.state,
+    //   prevProps,
+    //   prevState,
+    //   "componentWillUpdated"
+    // );
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    console.log(
-      this.props,
-      this.state,
-      nextProps,
-      nextState,
-      "shouldComponentUpdate"
-    );
+    // console.log(
+    //   this.props,
+    //   this.state,
+    //   nextProps,
+    //   nextState,
+    //   "shouldComponentUpdate"
+    // );
     return true; // or true;
   }
 

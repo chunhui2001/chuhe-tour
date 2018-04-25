@@ -5,3 +5,8 @@
 .check-code-input-component .checkcode-invalid {
     color:red;
 }
+
+.check-code-input-component .checkcode-disable-button {
+    background-color: #c5c5c5!important;
+    color: grey!important;
+}
