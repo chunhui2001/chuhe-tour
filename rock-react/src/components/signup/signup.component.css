@@ -1,0 +1,30 @@
+
+
+.signup-component {
+    background-color: white;
+    max-width: 800px;
+    min-width: 400px;
+}
+
+.signup-component-wapper {
+    max-width: 450px;
+    margin: auto;
+    padding: 1.625em;
+    background-color: white;
+}
+
+#root2 {
+    display: table-cell;
+    vertical-align: middle;
+    -webkit-transform: translateY(-2em);
+    -ms-transform: translateY(-2em);
+    transform: translateY(-2em);
+}
+
+.main-content {
+    background-color: transparent;
+    display: table;
+    /* position: absolute; */
+    height: 100%;
+    /* width: 100%; */
+}

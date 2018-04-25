@@ -1,0 +1,7 @@
+.check-code-input-component .checkcode{
+    cursor: pointer;
+}
+
+.check-code-input-component .checkcode-invalid {
+    color:red;
+}
