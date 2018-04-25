@@ -34,28 +34,19 @@ class CheckCodeInputComponent extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    // this.setState({
-    //   likesIncreasing: nextProps.likeCount > this.props.likeCount
-    // });
-    console.log(nextProps.phoneOrEmail,
-        "CheckCodeInputComponent componentDidUpdate"
-      );
+
+    if (nextProps.phoneOrEmail === '666') {
+        this.setState({
+            phoneOrEmailInValid: false
+        });
+    } else {
+        
+    }
   }
 
   componentDidUpdate(nextProps, nextState) {
 
-    // console.log(this.props.phoneOrEmail,
-    //   "CheckCodeInputComponent componentDidUpdate"
-    // );
-
-    // if (this.props.phoneOrEmail === '666') {
-    //     this.setState({
-    //         phoneOrEmailInValid: false
-    //     });
-    //     return true;
-    // } else {
-        
-    // }
+  
     
     return true; // or true;
 
