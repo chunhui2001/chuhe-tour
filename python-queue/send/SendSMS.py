@@ -21,11 +21,11 @@ class SMS():
     
     
     def send(self, phone, content):
-        sms = SMSMessage(phone, content)
+        sms = PhoneMessage(phone.encode('ascii'), content)
         sms.connectPhone()
         sms.sendMessage()
         sms.disconnectPhone()
-        
+
     def notify(self, phone, content):
         # send sms by twilio service
         client = Client("AC60be392e84c7586d1d83df41cdc6e5a3",

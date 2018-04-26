@@ -24,22 +24,19 @@ class PhoneMessage:
         time.sleep(1)
         self.ser.write('AT+CMGF=1\r')
         time.sleep(1)
-        self.ser.write('AT+CMGS="' + self.recipient + '"\r')
+        self.ser.write('AT+CMGS="' + self.recipient.encode('ascii') + '"\r')
         time.sleep(1)
         self.ser.write(self.content + '\r')
         time.sleep(1)
         self.ser.write(chr(26))
         time.sleep(1)
         
-        print self.recipient
-        print self.recipient
-        
     def disconnectPhone(self):
         self.ser.close()
 
 
         
-# sms = SMSMessage('18500183080', 'Hello 12131231 GGG')
+# sms = PhoneMessage('18500183080', 'Hello 12131231 GGG')
 # sms.connectPhone()
 # sms.sendMessage()
 # sms.disconnectPhone()
