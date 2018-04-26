@@ -43,13 +43,10 @@ class CheckCodeInputComponent extends Component {
 
   componentWillReceiveProps(nextProps) {
 
-    if (nextProps.phoneOrEmail === '18500183080') {
-        this.setState({
-          phoneOrEmailInValid: false
-        });
-    } else {
-        
-    }
+    this.setState({
+      phoneOrEmailInValid: nextProps.phoneOrEmail !== '18500183080'
+    });
+
   }
 
   componentDidUpdate(nextProps, nextState) {
@@ -178,7 +175,7 @@ class CheckCodeInputComponent extends Component {
   }
 
   render() {
-    
+
     const { placeholder, phoneOrEmail, watch } = this.props;
 
     // watch(phoneOrEmail, (newPhoneOrEmail) => {

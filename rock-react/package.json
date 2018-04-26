@@ -71,12 +71,18 @@
   },
   "scripts": {
     "start": "node scripts/start.js",
-    "build": "node scripts/build.js",
-    "test": "node scripts/test.js --env=jsdom"
+    "build": "node scripts/build.js && npm run build-rename",
+    "test": "node scripts/test.js --env=jsdom",
+    "build-rename": "npm run build-rename-js && npm run build-rename-js-map && npm run build-rename-css && npm run build-rename-css-map",
+    "build-rename-js": "renamer --regex --find 'main\\.[^\\.]+\\.js' --replace 'main.js' build/static/js/*.js",
+    "build-rename-js-map": "renamer --regex --find 'main\\.[^\\.]+\\.js.map' --replace 'main.js.map' build/static/js/*.js.map",
+    "build-rename-css": "renamer --regex --find 'main\\.[^\\.]+\\.css' --replace 'main.css' build/static/css/*.css",
+    "build-rename-css-map": "renamer --regex --find 'main\\.[^\\.]+\\.css.map' --replace 'main.css.map' build/static/css/*.css.map"
   },
   "devDependencies": {
     "babel-plugin-transform-class-properties": "^6.24.1",
-    "babel-plugin-transform-decorators-legacy": "^1.3.4"
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "renamer": "^0.6.1"
   },
   "babel": {
     "plugins": [
