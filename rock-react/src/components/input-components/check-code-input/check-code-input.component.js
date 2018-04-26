@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 
+import { Subject, Observable } from 'rxjs';
+
 import _times from "lodash/times";
 import _random from "lodash/random";
 
@@ -23,9 +25,15 @@ class CheckCodeInputComponent extends Component {
     super(props);
 
     this.state = {
+      placeholder: this.props.placeholder,
       checkCodeSign: this.getCheckCodeSign(),
-      defaultStep: "pre_send_click", // pre_send_click, clicked_send_click
-      checkcodeInvalid: false
+      checkNewSign: null,                   // 通过图片验证后返回的新签名
+      timerCount: 10,                       // 默认倒计时时间
+      checkcodeTimeButtonText: null,        // 
+      defaultStep: "pre_send_click",        // pre_send_click, clicked_send_click, clicked_checkcode
+      checkcodeInvalid: null,              // 针对图片验证码是否通过的标识
+      checkcodeIsValid: null,              // 针对手机或邮件验证码是否通过的标识 
+      phoneOrEmailInValid: true,            // 针对手机或邮箱格式是否正确的标识   
     };
 
     this.changeCheckCodeImage = this.changeCheckCodeImage.bind(this);
@@ -35,25 +43,14 @@ class CheckCodeInputComponent extends Component {
 
   componentWillReceiveProps(nextProps) {
 
-    if (nextProps.phoneOrEmail === '666') {
-        this.setState({
-            phoneOrEmailInValid: false
-        });
-    } else {
-        
-    }
+    this.setState({
+      phoneOrEmailInValid: nextProps.phoneOrEmail !== '18500183080'
+    });
+
   }
 
   componentDidUpdate(nextProps, nextState) {
-
-  
-    
     return true; // or true;
-
-  }
-
-  phoneOrEmailInValid() {
-      return this.phoneOrEmail !== '666';
   }
 
   changeSteps(step) {
@@ -73,13 +70,23 @@ class CheckCodeInputComponent extends Component {
   }
 
   onCheckCodeChange(event) {
-    console.log(event.target.value, "onCheckCodeChange");
+    // console.log(event.target.value, "onCheckCodeChange");
+  }
+
+  onValidateCheckCode() {
+    alert(this.checkCodeInput.value);
   }
 
   onCheckCheckCode(event) {
+
     const code = event.keyCode || event.which;
 
-    if (code !== 13) {
+    if (code !== 13 || this.checkCodeInput.value.trim().length == 0) {
+      return;
+    }
+
+    if (this.state.checkcodeInvalid !== null && !this.state.checkcodeInvalid) {
+      this.onValidateCheckCode();
       return;
     }
 
@@ -92,17 +99,83 @@ class CheckCodeInputComponent extends Component {
       receiver: this.props.phoneOrEmail,
       sign: this.state.checkCodeSign
     }).then(result => {
+
+      let good = false;
+
+      if (result.code === 200) {
+        good = true;
+      }
+      
       this.setState({
-        checkcodeInvalid: result.code !== 200
+        checkcodeInvalid: !good,
+        placeholder: good ? "验证码已发送" : this.props.placeholder,
+        checkNewSign: good ? result.data.sign : null,
+        timerCount: good ? result.data.seconds : this.state.timerCount
       });
 
-      if (result.code !== 200) {
+      if (!good) {
         return;
       }
+
+      this.runTimerInterval();
+      this.changeSteps('clicked_checkcode') ;
+      this.checkCodeInput.value = null;
+
     });
   }
 
+  retry() {
+    
+    if (this.state.interval) clearInterval(this.state.interval);
+
+    this.setState({
+      checkcodeInvalid: null,
+      placeholder: this.props.placeholder,
+      checkNewSign: null,
+      timerCount: 10
+    });
+
+    this.changeSteps("clicked_send_click");
+    this.changeCheckCodeImage();
+
+  }
+
+  runTimerInterval() {
+    this.runInterval(() => {
+      this.setState({
+        checkcodeTimeButtonText: this.getTimeStr(this.state.timerCount)
+      });
+    }, () => {
+      this.setState({
+        timerCount: this.state.timerCount - 1
+      });
+    }, () => {
+      return this.state.timerCount <= 0;
+    });
+
+  }
+
+  runInterval(func, prefunc, stop) {
+
+    func();
+
+    this.state.interval = setInterval(() => {
+      if (prefunc) prefunc();
+      if (stop()) clearInterval(this.state.interval);
+      func();
+    } , 1000);
+
+  }
+
+  getTimeStr(timeCount) {
+    const s = timeCount.toString().length === 1 ? '0' + timeCount : timeCount;
+    
+    return (<span style={{fontSize: '.825em'}}>倒计时 <b style={{display:'inline-block', width: '22px',fontSize: '1.5em'}}> {s} </b> 秒</span>);
+
+  }
+
   render() {
+
     const { placeholder, phoneOrEmail, watch } = this.props;
 
     // watch(phoneOrEmail, (newPhoneOrEmail) => {
@@ -125,11 +198,11 @@ class CheckCodeInputComponent extends Component {
           }
           type="text"
           pattern="[a-z0-9]{1,15}"
-          disabled={ phoneOrEmail !== '666'}
+          disabled={ this.state.phoneOrEmailInValid }
           ref={input => (this.checkCodeInput = input)}
           onChange={this.onCheckCodeChange}
           onKeyDown={this.onCheckCheckCode}
-          placeholder={placeholder}
+          placeholder={this.state.placeholder}
           id="check_code"
           name="check_code"
           required
@@ -143,7 +216,7 @@ class CheckCodeInputComponent extends Component {
         />
 
         <span
-          className="input-group-label checkcode-disable-button"
+          className={"input-group-label " + (this.state.phoneOrEmailInValid ? "checkcode-disable-button" : "")}
           onClick={() => this.changeSteps("clicked_send_click")}
           style={{
             cursor: "pointer",
@@ -176,21 +249,23 @@ class CheckCodeInputComponent extends Component {
         />
         <span
           className="input-group-label checkcode-valid-button checkcode-correct"
-          style={{ display: "none" }}
+          onClick={() => this.onValidateCheckCode() }
+          style={{ borderLeft: "none", display: this.state.checkcodeInvalid === null || this.state.checkcodeInvalid ? "none" : "flex" }}
         >
-          &ensp;验证&ensp;
+        验证
         </span>
         <span
-          className="input-group-label checkcode-time-button"
-          style={{ width: "auto", borderLeft: "none", display: "none" }}
+          className="input-group-label checkcode-valid-button"
+          onClick={() => this.retry()}
+          style={{ width: "auto", borderLeft: "none", display: this.state.checkcodeInvalid === null || this.state.checkcodeInvalid ? "none" : "flex" }}
         >
           重试
         </span>
         <span
           className="input-group-label checkcode-time-button"
-          style={{ display: "none" }}
+          style={{ display: this.state.checkcodeInvalid === null || this.state.checkcodeInvalid ? "none" : "flex" }}
         >
-          <i>checkcodeTimeButtonText</i>
+          {this.state.checkcodeTimeButtonText}
         </span>
       </div>
     );

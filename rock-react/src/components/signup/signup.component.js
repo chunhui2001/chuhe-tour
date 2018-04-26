@@ -53,7 +53,7 @@ class SignupComponent extends Component {
 
     this.state = {
       title: "Sign up Component",
-      phoneOrEmail: null
+      phoneOrEmail: null,
     };
 
     this.onSubmit = this.onSubmit.bind(this);
@@ -62,11 +62,12 @@ class SignupComponent extends Component {
   }
 
   onSubmit(event) {
-    event.preventDefault();
 
-    console.log(this.userName.value, 'this.userName');
-    console.log(this.passwd.value, 'this.passwd');
-    console.log(this.phoneOrEmail.value, 'this.phoneOrEmail');
+    event.preventDefault();
+    console.log(this.checkcodeInput.state.checkcodeInvalid, 'this.checkcodeInput.state.checkcodeInvalid');
+    // console.log(this.userName.value, 'this.userName');
+    // console.log(this.passwd.value, 'this.passwd');
+    // console.log(this.phoneOrEmail.value, 'this.phoneOrEmail');
   }
 
   onPhoneOrEmailChange(event) {
@@ -130,7 +131,8 @@ class SignupComponent extends Component {
                   placeholder="请输入手机号码或电子邮箱地址" id="user_phone" name="user_phone" required />
               </div>
 
-              <CheckCodeInputComponent phoneOrEmail={ this.state.phoneOrEmail } placeholder={'请输入验证码'} />
+              <CheckCodeInputComponent ref={(checkcode) => {this.checkcodeInput = checkcode;}} 
+                                       phoneOrEmail={ this.state.phoneOrEmail } placeholder={'请输入验证码'} />
 
               <div style={{textAlign: 'right', fontSize: '.9em'}}>
                 <a href="/login">登录</a>
