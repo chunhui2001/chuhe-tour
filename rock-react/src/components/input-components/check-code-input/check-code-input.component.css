@@ -10,3 +10,21 @@
     background-color: #c5c5c5!important;
     color: grey!important;
 }
+
+.check-code-input-component .checkcode-time-button {
+    background-color: antiquewhite;
+}
+
+.check-code-input-component .checkcode-valid-button {
+    border-left: none;
+    background-color: #faebd7;
+    color: brown;
+    font-weight: 700;
+    text-shadow: 0 1px 0 #d8d8d8;
+    cursor: pointer;
+}
+
+
+.check-code-input-component .input-group-label {
+    padding: 0 .725rem;
+}
