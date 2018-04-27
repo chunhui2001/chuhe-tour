@@ -93,8 +93,8 @@ class Notify():
 		if self.channel == 'phone':
 			_content = 'Your code is: ' + str(self.codeValue) + ', available in: '.encode('utf-8') + str(self.expiredSeconds) + ' seconds'
 			SMS().send(self.receiver, _content)
-			_content = u'你的注册验证码: '.encode('utf-8') + str(self.codeValue) + u', 请在'.encode('utf-8') + str(self.expiredSeconds) + u'秒内输入'.encode('utf-8')
-			SMS().notify(self.receiver, _content)
+			# _content = u'你的注册验证码: '.encode('utf-8') + str(self.codeValue) + u', 请在'.encode('utf-8') + str(self.expiredSeconds) + u'秒内输入'.encode('utf-8')
+			# SMS().notify(self.receiver, _content)
 			return
 
 		print 'ERROR: not support send channel: ' + self.channel
