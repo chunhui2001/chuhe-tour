@@ -1,0 +1,236 @@
+
+
+/***** table theme basic *****/
+table.table-basic {
+  background: white;
+  border-collapse: separate;
+  /*box-shadow: 0px 0px 3px 1px #9a9a9a;*/
+  font-size: 12px;
+  line-height: 24px;
+  text-align: left;
+  width: 100%;
+  margin-bottom: 0;
+  border-collapse: separate;
+  border-spacing: 0px;
+}
+
+table.table-basic tbody tr:nth-child(even) {
+  background: white;
+}
+
+table.table-basic th {
+  background: linear-gradient(#777, #444);
+  border-left: 1px solid #555;
+  /*border-right: 1px solid #777;*/
+  /*border-top: 1px solid #555;*/
+  border-bottom: 1px solid #333;
+  box-shadow: inset 0 1px 0 #999;
+  color: #fff;
+  font-weight: bold;
+  padding: 10px 15px;
+  position: relative;
+  /*text-shadow: 0 1px 0 #000;*/
+}
+
+
+table.table-basic th:first-child {
+  border-left: 1px solid #777;
+  /*box-shadow: inset 1px 1px 0 #999;*/
+}
+table.table-basic td {
+  /*border-right: 1px solid #fff;*/
+  border-left: 1px solid #e8e8e8;
+  /*border-top: 1px solid #fff;*/
+  border-bottom: 1px solid #e8e8e8;
+  padding: 10px 15px;
+  position: relative;
+  transition: all 300ms;
+  line-height: 1.5em;
+}
+
+
+table.table-basic td:last-child {
+  border-right: 1px solid #e8e8e8;
+  /*box-shadow: inset -1px 0 0 #fff;*/
+}
+
+table.table-basic tr {
+  /*background: url(https://jackrugile.com/images/misc/noise-diagonal.png);*/
+}
+
+table.table-basic tr:nth-child(odd) td {
+  background: white ;
+}
+table.table-basic thead th {
+  padding: .425rem .625rem;
+  line-height: 1.2rem;
+  text-align: center;
+}
+table.table-basic tbody td {
+  /*color: transparent;*/
+  /*text-shadow: 0 0 3px #aaa;*/
+  padding: .325rem .625rem;
+}
+
+table.table-basic th input[type="checkbox"],table.table-basic td input[type="checkbox"] {
+  margin: 0 auto;
+  transform: scale(1.25);
+}
+
+
+table.table-basic tbody:hover tr:hover td {
+  /*color: #444;*/
+  /*text-shadow: 1px 1px 1px #b7b7b7;*/
+}
+/***** table theme basic end *****/
+
+
+
+/***** table theme cells *****/
+
+table.table-cells {
+  background: white;
+  border-collapse: separate;
+  /*box-shadow: 0px 0px 3px 1px #9a9a9a;*/
+  font-size: 12px;
+  line-height: 24px;
+  text-align: left;
+  width: 100%;
+  margin-bottom: 0;
+  border-collapse: separate;
+  border-spacing: 0px;
+}
+
+table.table-cells th {
+  background: linear-gradient(#777, #444);
+  border-left: 1px solid #555;
+  /*border-right: 1px solid #777;*/
+  /*border-top: 1px solid #555;*/
+  border-bottom: 1px solid #333;
+  box-shadow: inset 0 1px 0 #999;
+  color: #fff;
+  font-weight: bold;
+  padding: 10px 15px;
+  position: relative;
+  /*text-shadow: 0 1px 0 #000;*/
+  line-height: 1.2rem;
+}
+
+
+table.table-cells th:first-child {
+  border-left: 1px solid #777;
+  /*box-shadow: inset 1px 1px 0 #999;*/
+}
+table.table-cells td {
+  /*border-right: 1px solid #fff;*/
+  border-left: 1px solid #e8e8e8;
+  /*border-top: 1px solid #fff;*/
+  border-bottom: 1px solid #e8e8e8;
+  padding: 10px 15px;
+  position: relative;
+  transition: all 300ms;
+}
+
+
+table.table-cells td:last-child {
+  border-right: 1px solid #e8e8e8;
+  /*box-shadow: inset -1px 0 0 #fff;*/
+}
+
+table.table-cells tr {
+  /*background: url(https://jackrugile.com/images/misc/noise-diagonal.png);*/
+}
+
+table.table-cells tr:nth-child(odd) td {
+  background: white ;
+}
+table.table-cells thead th {
+  padding: .425rem .625rem;
+}
+table.table-cells tbody td {
+  /*color: transparent;*/
+  /*text-shadow: 0 0 3px #aaa;*/
+  padding: .325rem .625rem;
+}
+
+table.table-cells th input[type="checkbox"],table.table-cells td input[type="checkbox"] {
+  margin: 0 auto;
+  transform: scale(1.25);
+}
+
+
+table.table-cells tbody:hover tr:hover td {
+  /*color: #444;*/
+  /*text-shadow: 1px 1px 1px #b7b7b7;*/
+}
+
+table.table-cells {
+  border-collapse: separate;
+  border-spacing: 0px;
+  width: 100%;
+}
+
+table.table-cells input[type="text"] {
+  padding: 0 .2em;
+  height: 24px;
+  margin: 0;
+  border: none;
+  width: 100%;
+}
+
+table.table-cells input[type="text"]:hover, table.table-cells input[type="text"]:focus {
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+
+table.table-cells input[type="text"]:focus {
+  border: dashed 1px gray;
+  background-color: burlywood;
+  color: white;
+}
+
+table.table-cells input[type="text"]:active {
+  /*background-color: #3e8e41;*/
+  box-shadow: none;
+  /*transform: translateY(1px);*/
+  /*color:red !important;*/
+}
+
+table.table-cells input:disabled{
+  /*border: 1px solid #DDD;*/
+  background-color: #F5F5F5;
+  color:#ACA899;
+}
+
+table.table-cells th {
+  height: 30px;
+  text-align: center;
+}
+
+table.table-cells td {
+  background-color: white;
+  border-left: solid 1px #f1f1f1;
+}
+
+table.table-cells td:last-child {
+  border-left: solid 1px #f1f1f1;
+}
+
+
+table.table-cells td, table.table-cells th {
+  padding:0 !important;
+  font-size: .9em;
+}
+
+
+table.table-cells td a {
+  padding: 0;
+  height: auto;
+  margin: 0;
+  border: none;
+  width: 100%;
+}
+
+
+/***** table theme cells end *****/

@@ -129,6 +129,10 @@ public class PortalRouter  implements ChuheRouter {
 
   private void mainRouter() {
 
+
+    this.router.route(HttpMethod.GET, "/signup").handler(routingContext ->
+            routingContext.reroute("/registry"));
+
     this.router.route(HttpMethod.GET, "/registry")
             //.handler(CSRFHandler.create("csrf secret here"))
             .handler(portalHandlers::registry);

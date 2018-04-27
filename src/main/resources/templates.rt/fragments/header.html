@@ -1,0 +1,10 @@
+
+<div class="header">
+  <a href="/">首页</a>
+  {{#if viewUser.isAuthenticated }}
+  <a href="/signout">退出 ({{viewUser.username}})</a>
+  {{else}}
+  <a href="/login">登录</a>
+  <a href="/registry">用户注册</a>
+  {{/if}}
+</div>

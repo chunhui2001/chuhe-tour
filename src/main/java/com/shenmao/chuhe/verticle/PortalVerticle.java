@@ -107,6 +107,9 @@ public class PortalVerticle extends AbstractVerticle {
     router.route("/images/*").handler(StaticHandler.create("static/images").setCachingEnabled(false).setIncludeHidden(true).setDirectoryListing(true));
     router.route("/uploads/*").handler(StaticHandler.create("static/uploads").setCachingEnabled(false).setIncludeHidden(true).setDirectoryListing(true));
 
+    router.route("/react/*").handler(StaticHandler.create("static/react").setCachingEnabled(false).setIncludeHidden(true).setDirectoryListing(true));
+    router.route("/service-worker.js").handler(StaticHandler.create("static/react").setCachingEnabled(false).setIncludeHidden(true).setDirectoryListing(true));
+
     // router.route().handler(TimeoutHandler.create(50000));
     // router.route().handler(VertxExceptionHandler.create(5000));
     // router.route().failureHandler(ErrorHandler.create(true));

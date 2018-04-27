@@ -33,7 +33,8 @@ public class HtmlSerialization {
   public static final TemplateEngine templateEngine = getHandlebarsTemplateEngine();
 
   // public static final TemplateHandler htmlTemplateHandler = TemplateHandler.create(templateEngine);
-  // public static final String templateFolderName = "templates.bs";
+//   public static final String templateFolderName = "templates.bs";
+//  public static final String templateFolderName = "templates.rt";
   public static final String templateFolderName = "templates.a2";
 
 
@@ -109,6 +110,9 @@ public class HtmlSerialization {
     if (context.get("X-XSRF-TOKEN") != null) {
       context.put("xsrfToken", context.get("X-XSRF-TOKEN"));
     }
+
+    System.out.println(templateFolderName + ", templateFolderName");
+    System.out.println(viewName + ", viewName");
 
     templateEngine.render(context, templateFolderName, viewName, ar -> {
 
